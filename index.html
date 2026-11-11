@@ -160,7 +160,7 @@ const STAND = {
   trayZ: 2.74,            // altura do rebaixo central do forro
   open: { x0: 0.70, x1: 4.30, y0: 0.75, y1: 3.30 },   // vão aberto do forro
   tray: { x0: 1.35, x1: 3.65, y0: 1.15, y1: 2.90 },   // aro suspenso
-  trayBand: 0.18, cutX0: 2.45, cutK: 0.1765, bridgeX0: 2.30, bridgeX1: 2.70,
+  trayBand: 0.18, cutX0: 2.45, cutK: 0.1765, sideCutY0: 1.00, sideCutK: 0.17, bridgeX0: 2.30, bridgeX1: 2.70,
   spots: [[1.0, 0.52], [2.0, 0.52], [3.0, 0.52], [4.0, 0.52],
           [1.0, 3.60], [2.0, 3.60], [3.0, 3.60], [4.0, 3.60],
           [0.43, 1.70], [4.57, 1.70]],
@@ -569,14 +569,16 @@ function buildElevations() {
     const q = [];
     q.push(`<svg viewBox="0 0 ${vbW3} ${vbH}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Parede ${mirror ? 'direita' : 'esquerda'} vista de dentro"><style>${SVG_CSS}</style>${SVG_DEFS}<rect class="bg" width="${vbW3}" height="${vbH}"/>`);
     const rw = (y0, y1, z0, z1, fill, stroke = '#1b2a30', extra = '') => { const a = Yw(y0), b = Yw(y1); return `<rect x="${Math.min(a, b)}" y="${Z(z1)}" width="${Math.abs(b - a)}" height="${(z1 - z0) * s}" fill="${fill}" stroke="${stroke}" stroke-width="1.2" ${extra}/>`; };
-    q.push(rw(0, 4, 0, 3, mirror ? TEAL2 : '#f6f6f3', TEAL) + rw(0, 4, 2.55, 3, '#0e3039', '#0b2630'));
+    q.push(rw(0, 4, 0, 3, TEAL2, TEAL) + rw(0, 4, 2.55, 3, '#0e3039', '#0b2630'));
+    { const yc = (z) => STAND.sideCutY0 - STAND.sideCutK * z;   // corte diagonal com LED: frente (sem texto) branca, resto azul
+      q.push(`<polygon points="${Yw(0)},${Z(0)} ${Yw(yc(0))},${Z(0)} ${Yw(yc(3))},${Z(3)} ${Yw(0)},${Z(3)}" fill="#f6f6f3" stroke="${TEAL}" stroke-width="1.2"/><line x1="${Yw(yc(0))}" y1="${Z(0)}" x2="${Yw(yc(3))}" y2="${Z(3)}" stroke="#ffc928" stroke-width="3"/>`); }
     SLATS.filter((i) => i.slat.wall === side).forEach((i) => { q.push(rw(i.y, i.y + i.d, 0, 2.55, 'url(#pw)', '#6e3d12')); i.slat.led.forEach((y) => q.push(rw(y - 0.004, y + 0.004, 0, 2.55, YEL, YEL))); });
     const v = byTag[mirror ? 'V2' : 'V1'];
-    q.push(rw(v.y, v.y + v.d, v.z0, v.z0 + v.h, mirror ? 'rgba(255,255,255,.07)' : 'rgba(9,56,84,.05)', YEL, 'stroke-dasharray="5 3"'));
+    q.push(rw(v.y, v.y + v.d, v.z0, v.z0 + v.h, 'rgba(255,255,255,.07)', YEL, 'stroke-dasharray="5 3"'));
     const cxp = (Yw(v.y) + Yw(v.y + v.d)) / 2;
-    q.push(logoSvg(cxp, Z(2.2), 32, mirror ? '#fff' : '#093854'));
+    q.push(logoSvg(cxp, Z(2.2), 32, '#fff'));
     if (!mirror) {
-      ['SOFTWARE', 'AUTOMAÇÃO', 'INTELIGÊNCIA ARTIFICIAL', 'SUPORTE ESPECIALIZADO'].forEach((tx, i) => { const zz = 1.80 - i * 0.40; q.push(`<circle cx="${cxp - 70}" cy="${Z(zz)}" r="9" fill="none" stroke="${YEL}" stroke-width="2"/><text x="${cxp - 52}" y="${Z(zz) + 4}" fill="#093854" style="font:700 9.5px sans-serif">${tx}</text>`); });
+      ['SOFTWARE', 'AUTOMAÇÃO', 'INTELIGÊNCIA ARTIFICIAL', 'SUPORTE ESPECIALIZADO'].forEach((tx, i) => { const zz = 1.80 - i * 0.40; q.push(`<circle cx="${cxp - 70}" cy="${Z(zz)}" r="9" fill="none" stroke="${YEL}" stroke-width="2"/><text x="${cxp - 52}" y="${Z(zz) + 4}" fill="#fff" style="font:700 9.5px sans-serif">${tx}</text>`); });
     } else {
       ['INOVAÇÃO', 'TECNOLOGIA', 'PARCERIA'].forEach((tx, i) => q.push(`<text x="${cxp}" y="${Z(1.78 - i * 0.22)}" text-anchor="middle" fill="#fff" style="font:800 14px sans-serif">${tx}</text>`));
       q.push(`<text x="${cxp}" y="${Z(1.78 - 3 * 0.22)}" text-anchor="middle" fill="${YEL}" style="font:800 14px sans-serif">CRESCIMENTO</text>`);
@@ -681,10 +683,10 @@ function init3D() {
     (c, x, y) => { c.beginPath(); c.arc(x, y - 2, 19, Math.PI, 0); c.stroke(); c.strokeRect(x - 22, y - 4, 9, 18); c.strokeRect(x + 13, y - 4, 9, 18); }
   ];
   const decalL = canvasTex(600, 1000, (c, w, h) => {
-    c.clearRect(0, 0, w, h); drawLogo(c, w / 2, 130, 190, '#093854');
+    c.clearRect(0, 0, w, h); drawLogo(c, w / 2, 130, 190);
     ['SOFTWARE', 'AUTOMAÇÃO', 'INTELIGÊNCIA|ARTIFICIAL', 'SUPORTE|ESPECIALIZADO'].forEach((t, i) => {
       const y = 360 + i * 150, lines = t.split('|'); c.strokeStyle = YELH; c.fillStyle = YELH; c.lineWidth = 4; c.textAlign = 'center'; iconPaint[i](c, 120, y);
-      c.fillStyle = '#093854'; c.textAlign = 'left'; c.font = '700 36px Arial,Helvetica,sans-serif'; lines.forEach((l, k) => c.fillText(l, 175, y + 12 + (k - (lines.length - 1) / 2) * 40));
+      c.fillStyle = '#fff'; c.textAlign = 'left'; c.font = '700 36px Arial,Helvetica,sans-serif'; lines.forEach((l, k) => c.fillText(l, 175, y + 12 + (k - (lines.length - 1) / 2) * 40));
     });
   });
   const decalR = canvasTex(600, 1000, (c, w, h) => {
@@ -857,6 +859,17 @@ function init3D() {
   imSide.count = ia; imBack.count = ib; lSide.count = glS.count = la; lBack.count = glB.count = lb;   // sem instâncias sobrando
   [imSide, imBack, lSide, lBack, glS, glB].forEach((m) => { m.instanceMatrix.needsUpdate = true; S.add(m); });
 
+  // paredes laterais cortadas na diagonal com LED amarelo: parte dos textos em azul, parte da frente (sem texto) em branco
+  { const yc = (z) => STAND.sideCutY0 - STAND.sideCutK * z;
+    const poly = (pts, m) => { const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute([pts[0], pts[1], pts[2], pts[0], pts[2], pts[3]].flatMap((v) => [v.x, v.y, v.z]), 3)); g.computeVertexNormals(); const me = new THREE.Mesh(g, m); me.receiveShadow = true; S.add(me); };
+    const wm = mat(0xf6f6f3, { roughness: 0.6, envMapIntensity: 0.6, side: THREE.DoubleSide }), tm = tealM.clone(); tm.side = THREE.DoubleSide;
+    poly([P(4.849, 0.30, 0), P(4.849, yc(0), 0), P(4.849, yc(3), 3), P(4.849, 0.30, 3)], wm);      // direita: frente branca
+    poly([P(0.151, yc(0), 0), P(0.151, 3.90, 0), P(0.151, 3.90, 3), P(0.151, yc(3), 3)], tm);       // esquerda: parte dos textos azul
+    [0.156, 4.844].forEach((xx) => {
+      const a = P(xx, yc(0), 0.012), b = P(xx, yc(3), 3), len = a.distanceTo(b), ang = Math.atan2(b.y - a.y, b.z - a.z);
+      const led = new THREE.Mesh(new THREE.BoxGeometry(0.010, 0.014, len), ledM); led.position.copy(a.clone().add(b).multiplyScalar(0.5)); led.rotation.x = -ang; S.add(led);
+      const gw = new THREE.Mesh(new THREE.PlaneGeometry(0.16, len), glowM(glowV, 0.4)); gw.position.copy(led.position); gw.position.x += (xx < 1 ? 1 : -1) * 0.004; gw.rotation.set(Math.PI / 2 - ang, Math.PI / 2, 0); S.add(gw);
+    }); }
   /* ---------- adesivos nas paredes laterais (com moldura de LED) ---------- */
   [['V1', decalL, 0.15, Math.PI / 2], ['V2', decalR, 4.85, -Math.PI / 2]].forEach(([k, tx, x, ry]) => {
     const v = byTag[k], zc = v.z0 + v.h / 2, yc = v.y + v.d / 2, sg = ry > 0 ? 1 : -1;
