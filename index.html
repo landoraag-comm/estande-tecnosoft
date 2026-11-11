@@ -766,7 +766,7 @@ function init3D() {
 
   // testeira: viga com face lisa + letras em relevo + halo de LED
   const headerFace = mat(0xffffff, { map: headerBase, roughness: 0.45, envMapIntensity: 0.7 });
-  bx(0, 5, 0, 0.30, 2.55, 3.00, sideMats(tealM, headerFace));
+  bx(0.15, 4.85, 0, 0.30, 2.55, 3.00, sideMats(tealM, headerFace));
   const hdrZ = 2 - 0.0, hdrMid = 2.775;
   const halo = new THREE.Mesh(new THREE.PlaneGeometry(5, 0.45), new THREE.MeshBasicMaterial({ map: haloTex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false, opacity: 0.95 }));
   halo.position.set(0, hdrMid, hdrZ + 0.0015); halo.scale.set(0.84, 0.84, 1); S.add(halo);
@@ -777,8 +777,8 @@ function init3D() {
     const pl = new THREE.Mesh(new THREE.PlaneGeometry(5, 0.45), m); pl.position.set(0, hdrMid, hdrZ + 0.004 + i * dz); pl.scale.set(0.84, 0.84, 1); S.add(pl);
   }
   // fitas de LED: sob a testeira e no topo do vão
-  addLED(0.03, 4.97, -0.006, 0.018, 2.55, 2.58);
-  addLED(0.045, 0.065, -0.006, 0.010, 2.575, 2.985);                 // LED vertical na ponta esquerda da testeira (como na referência)
+  addLED(0.15, 4.85, -0.006, 0.018, 2.55, 2.58);
+  addLED(0.15, 0.17, -0.006, 0.010, 2.575, 2.985);                 // LED vertical na ponta esquerda da testeira (como na referência)
   // paredes laterais até o fundo e parede de fundo
   bx(0, 0.15, 0, 4.00, 0, 3.00, mat(0xf6f6f3, { roughness: 0.6, envMapIntensity: 0.6 })); bx(4.85, 5.00, 0, 4.00, 0, 3.00, tealM);
   bx(0.15, 4.85, 3.90, 4.00, 0, 3.00, sideMats(tealM, washM));
