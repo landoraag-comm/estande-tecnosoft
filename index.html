@@ -512,7 +512,7 @@ function buildElevations() {
   [1.95, 3.05].forEach((x) => o.push(R(x - 0.04, x + 0.04, 1.01, 1.17, '#8fb8e8', '#2c5a8c')));
   o.push(plantBlob(X(1.80), Z(1.10), 0.16 * s, Z(1.30)));
   // testeira
-  o.push(R(0.15, 4.85, 2.55, 3.00, '#f6f6f3', '#0b2630') + R(0.15, 4.85, 3.55, 4.00, TEAL, '#0b2630') + R(0, 0.15, 3.00, 4.00, '#f6f6f3', '#0b2630') + R(4.85, 5, 3.00, 4.00, '#f6f6f3', '#0b2630') + R(0.15, 0.17, 3.55, 4.0, YEL, YEL));
+  o.push(R(0.15, 4.85, 2.55, 3.00, '#f6f6f3', '#0b2630') + R(0.15, 4.85, 3.55, 4.00, TEAL, '#0b2630') + R(0, 0.15, 3.00, 4.00, '#f6f6f3', '#0b2630') + R(4.85, 5, 3.00, 4.00, '#f6f6f3', '#0b2630') + R(0.15, 0.17, 3.55, 4.0, YEL, YEL) + R(4.83, 4.85, 3.55, 4.0, YEL, YEL));
   o.push(logoSvg(X(2.5) - 112, Z(3.775), 30) + `<text x="${X(2.5) - 78}" y="${Z(3.775) + 9}" text-anchor="start" fill="#fff" style="font:900 30px sans-serif;letter-spacing:.04em">TECNOSOFT</text><line x1="${X(0.15)}" y1="${Z(3.55)}" x2="${X(4.85)}" y2="${Z(3.55)}" stroke="${YEL}" stroke-width="3"/>`);
   o.push(`<line x1="${X(-0.2)}" y1="${Z(0)}" x2="${X(5.2)}" y2="${Z(0)}" stroke="#12404c" stroke-width="2"/>`);
   const yb = Z(0) + 38;
@@ -808,7 +808,8 @@ function init3D() {
   }
   // fitas de LED: sob a testeira e no topo do vão
   addLED(0.15, 4.85, -0.006, 0.018, 3.52, 3.55);
-  addLED(0.15, 0.17, -0.006, 0.010, 3.55, STAND.facadeH - 0.015);                 // LED vertical na ponta esquerda da testeira (como na referência)
+  addLED(0.15, 0.17, -0.006, 0.010, 3.55, STAND.facadeH - 0.015);
+  addLED(4.83, 4.85, -0.006, 0.010, 3.55, STAND.facadeH - 0.015);                 // LED vertical na ponta direita da testeira (espelho do esquerdo)                 // LED vertical na ponta esquerda da testeira (como na referência)
   // paredes laterais até o fundo e parede de fundo
   bx(0, 0.15, 0, 4.00, 0, 3.00, mat(0xf6f6f3, { roughness: 0.6, envMapIntensity: 0.6 })); bx(4.85, 5.00, 0.30, 4.00, 0, 3.00, tealM);
   bx(0.15, 4.85, 3.90, 4.00, 0, 3.00, sideMats(tealM, washM));
@@ -819,6 +820,7 @@ function init3D() {
   gl(4.7, 0.20, glowH, 0.55, P(2.5, -0.012, 3.535));                    // sob a testeira
   gl(4.7, 0.34, glowH, 0.5, P(2.5, 0.16, 0.003), 0, -Math.PI / 2);      // piso, frente
   gl(0.16, 0.44, glowV, 0.4, P(0.16, -0.012, 3.775));
+  gl(0.16, 0.44, glowV, 0.4, P(4.84, -0.012, 3.775));
   // parede de fundo cortada na diagonal com LED amarelo: lado esquerdo (TV) branco, lado direito (texto) azul
   { const xc = (z) => STAND.cutX0 + STAND.cutK * z, x0w = 0.15, yw = 3.899;
     const A = P(x0w, yw, 0), B = P(xc(0), yw, 0), Cc = P(xc(3), yw, 3), D = P(x0w, yw, 3);
