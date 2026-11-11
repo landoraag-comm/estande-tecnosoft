@@ -468,7 +468,7 @@ function buildElevations() {
   o.push(`<svg viewBox="0 0 ${vbW} ${vbH}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Elevação frontal"><style>${SVG_CSS}</style>${SVG_DEFS}<rect class="bg" width="${vbW}" height="${vbH}"/>`);
   const R = (x0, x1, z0, z1, fill, stroke = '#1b2a30', extra = '') => `<rect x="${X(x0)}" y="${Z(z1)}" width="${(x1 - x0) * s}" height="${(z1 - z0) * s}" fill="${fill}" stroke="${stroke}" stroke-width="1.2" ${extra}/>`;
   // fundo, paredes laterais (topo das paredes) e ripado do fundo
-  o.push(R(0.15, 4.85, 0, 3, TEAL2, TEAL) + R(0, 0.15, 0, 3, '#0e3039', '#0b2630') + R(4.85, 5, 0, 3, '#0e3039', '#0b2630'));
+  o.push(R(0.15, 4.85, 0, 3, TEAL2, TEAL) + R(0, 0.15, 0, 3, '#f6f6f3', '#0b2630') + R(4.85, 5, 0, 3, '#0e3039', '#0b2630'));
   SLATS.filter((i) => i.slat.wall === 'B').forEach((i) => o.push(R(i.x, i.x + i.w, 0, 2.55, 'url(#pw)', '#6e3d12')));
   o.push(`<text x="${X(3.5)}" y="${Z(1.86)}" text-anchor="middle" fill="#fff" style="font:700 11px sans-serif">TECNOLOGIA QUE IMPULSIONA</text><text x="${X(3.5)}" y="${Z(1.70)}" text-anchor="middle" fill="${YEL}" style="font:700 11px sans-serif">O SEU FUTURO</text>`);
   o.push(`<line x1="${X(0.15)}" y1="${Z(2.55)}" x2="${X(4.85)}" y2="${Z(2.55)}" stroke="#fff" stroke-width="2" stroke-dasharray="5 4"/>`);
@@ -779,7 +779,7 @@ function init3D() {
   addLED(0.03, 4.97, -0.006, 0.018, 2.55, 2.58);
   addLED(0.045, 0.065, -0.006, 0.010, 2.575, 2.985);                 // LED vertical na ponta esquerda da testeira (como na referência)
   // paredes laterais até o fundo e parede de fundo
-  bx(0, 0.15, 0, 4.00, 0, 3.00, sideMats(tealM, tealM, mat(0xf6f6f3, { roughness: 0.6, envMapIntensity: 0.6 }))); bx(4.85, 5.00, 0, 4.00, 0, 3.00, tealM);
+  bx(0, 0.15, 0, 4.00, 0, 3.00, mat(0xf6f6f3, { roughness: 0.6, envMapIntensity: 0.6 })); bx(4.85, 5.00, 0, 4.00, 0, 3.00, tealM);
   bx(0.15, 4.85, 3.90, 4.00, 0, 3.00, sideMats(tealM, washM));
   // LED nas bordas frontais das paredes e no piso (frente)
   bx(0.15, 4.85, -0.006, 0.02, 0, 0.012, ledM, { shadow: false });
