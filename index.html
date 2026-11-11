@@ -111,7 +111,7 @@
 
   <section id="elevacoes">
     <h2><span class="n">4</span>Elevações, paredes laterais e corte</h2>
-    <p class="lead">Alturas conferidas contra o limite de 3,00 m: paredes laterais e de fundo a 3,00 m, fachada da frente a 4,00 m (faixa do letreiro de 3,55 a 4,00 m, painel azul liso abaixo dela (de 2,55 a 3,55 m) e empenas triangulares cheias nas laterais), forro a 2,55 m, aro suspenso a 2,74 m, com vão aberto.</p>
+    <p class="lead">Alturas conferidas contra o limite de 3,00 m: paredes laterais e de fundo a 3,00 m, fachada da frente a 4,00 m (faixa do letreiro de 3,55 a 4,00 m, painel branco abaixo dela (de 3,00 a 3,55 m, completando o vão acima das paredes) e empenas triangulares cheias nas laterais), forro a 2,55 m, aro suspenso a 2,74 m, com vão aberto.</p>
     <div class="two">
       <div class="panel svgwrap" id="elev"></div>
       <div class="panel svgwrap" id="sect"></div>
@@ -181,9 +181,9 @@ const STAND = {
   R('E2', 'Parede lateral direita (até o fundo)', 'Estrutura', 4.85, 0, 0.15, 4.00, 3.00);
   R('E3', 'Parede de fundo', 'Estrutura', 0.15, 3.90, 4.70, 0.10, 3.00);
   R('E4', 'Testeira (faixa frontal com letreiro)', 'Estrutura', 0.15, 0, 4.70, 0.30, 0.45,
-    { z0: 3.55, floor: false, note: 'faixa de 0,45 m no alto da fachada, de 3,55 a 4,00 m; abaixo dela fica o painel azul liso (E13)' });
-  R('E13', 'Fachada, painel azul liso abaixo do letreiro', 'Estrutura', 0.15, 0, 4.70, 0.30, 1.00,
-    { z0: 2.55, floor: false, note: 'de 2,55 a 3,55 m, sem gráfica' });
+    { z0: 3.55, floor: false, note: 'faixa de 0,45 m no alto da fachada, de 3,55 a 4,00 m; abaixo dela fica o painel branco (E13)' });
+  R('E13', 'Fachada, painel branco entre as paredes e a faixa do letreiro', 'Estrutura', 0.15, 0, 4.70, 0.30, 0.55,
+    { z0: 3.0, floor: false, note: 'de 3,00 a 3,55 m, branco liso, completa o vão acima das paredes' });
   R('E9', 'Coluna da fachada, lado esquerdo (branca)', 'Estrutura', 0, 0, 0.15, 0.30, 1.00,
     { z0: 3.0, floor: false, note: 'continuação da parede branca esquerda, de 3,00 a 4,00 m' });
   R('E10', 'Coluna da fachada, lado direito', 'Estrutura', 4.85, 0, 0.15, 0.30, 1.00,
@@ -510,14 +510,14 @@ function buildElevations() {
   [1.95, 3.05].forEach((x) => o.push(R(x - 0.04, x + 0.04, 1.01, 1.17, '#8fb8e8', '#2c5a8c')));
   o.push(plantBlob(X(1.80), Z(1.10), 0.16 * s, Z(1.30)));
   // testeira
-  o.push(R(0.15, 4.85, 2.55, 3.55, TEAL, '#0b2630') + R(0.15, 4.85, 3.55, 4.00, TEAL, '#0b2630') + R(0, 0.15, 3.00, 4.00, '#f6f6f3', '#0b2630') + R(4.85, 5, 3.00, 4.00, '#0e3039', '#0b2630') + R(0.15, 0.17, 3.55, 4.0, YEL, YEL));
+  o.push(R(0.15, 4.85, 3.00, 3.55, '#f6f6f3', '#0b2630') + R(0.15, 4.85, 3.55, 4.00, TEAL, '#0b2630') + R(0, 0.15, 3.00, 4.00, '#f6f6f3', '#0b2630') + R(4.85, 5, 3.00, 4.00, '#0e3039', '#0b2630') + R(0.15, 0.17, 3.55, 4.0, YEL, YEL));
   o.push(logoSvg(X(2.5) - 112, Z(3.775), 30) + `<text x="${X(2.5) - 78}" y="${Z(3.775) + 9}" text-anchor="start" fill="#fff" style="font:900 30px sans-serif;letter-spacing:.04em">TECNOSOFT</text><line x1="${X(0.15)}" y1="${Z(3.55)}" x2="${X(4.85)}" y2="${Z(3.55)}" stroke="${YEL}" stroke-width="3"/>`);
   o.push(`<line x1="${X(-0.2)}" y1="${Z(0)}" x2="${X(5.2)}" y2="${Z(0)}" stroke="#12404c" stroke-width="2"/>`);
   const yb = Z(0) + 38;
   o.push(ext(X(0), Z(0) + 4, X(0), yb + 4) + ext(X(5), Z(0) + 4, X(5), yb + 4) + dimH(X(0), X(5), yb, '5,00 m', 14));
   const xr = X(5) + 38;
-  [4, 3.55, 2.55, 0].forEach((z) => o.push(ext(X(5) + 4, Z(z), xr + 4, Z(z))));
-  o.push(dimV(xr, Z(3.55), Z(4), '0,45') + dimV(xr, Z(2.55), Z(3.55), '1,00 (painel liso)') + dimV(xr, Z(0), Z(2.55), '2,55'));
+  [4, 3.55, 3, 2.55, 0].forEach((z) => o.push(ext(X(5) + 4, Z(z), xr + 4, Z(z))));
+  o.push(dimV(xr, Z(3.55), Z(4), '0,45') + dimV(xr, Z(3), Z(3.55), '0,55') + dimV(xr, Z(2.55), Z(3), '0,45') + dimV(xr, Z(0), Z(2.55), '2,55'));
   const xr2 = xr + 34; [4, 3, 0].forEach((z) => o.push(ext(xr, Z(z), xr2 + 40, Z(z)))); o.push(dimV(xr2, Z(0), Z(3), '3,00 m (paredes)', 13)); o.push(dimV(xr2 + 34, Z(0), Z(4), '4,00 m (fachada)', 13));
   o.push(`<text class="lblb" x="${ox}" y="38">ELEVAÇÃO FRONTAL (vista do corredor)</text>`);
   o.push('</svg>');
@@ -535,7 +535,7 @@ function buildElevations() {
   p.push(Rr(0.05, 0.45, 0, 0.60, GR, GS) + plantBlob(Y(0.25), Z(0.60), 0.35 * s, Z(1.50), '#b9c9bd'));
   p.push(Rr(3.375, 3.725, 0, 0.40, GR, GS) + plantBlob(Y(3.55), Z(0.40), 0.4 * s, Z(1.70), '#b9c9bd'));
   // cortados (x = 2,50)
-  p.push(Rr(3.90, 4.0, 0, 3.0, TEAL, '#0b2630') + Rr(0, 0.30, 2.55, 4.0, TEAL, '#0b2630'));
+  p.push(Rr(3.90, 4.0, 0, 3.0, TEAL, '#0b2630') + Rr(0, 0.30, 3.55, 4.0, TEAL, '#0b2630') + Rr(0, 0.30, 3.0, 3.55, '#f6f6f3', '#0b2630'));
   const t = STAND.tray, op = STAND.open, bw = STAND.trayBand, zt = STAND.trayZ, th = 0.10;
   const pl = (pts) => `<polygon points="${pts.map(([y, z]) => Y(y) + ',' + Z(z)).join(' ')}" fill="#f4f1ea" stroke="#1b2a30" stroke-width="1.2"/>`;
   p.push(pl([[0.30, 2.55], [op.y0, 2.55], [op.y0, 2.51], [0.30, 2.51]]) + pl([[op.y1, 2.55], [3.90, 2.55], [3.90, 2.51], [op.y1, 2.51]]));
@@ -550,8 +550,8 @@ function buildElevations() {
   p.push(ext(Y(0), Z(0) + 4, Y(0), yb2 + 4) + ext(Y(4), Z(0) + 4, Y(4), yb2 + 4) + dimH(Y(0), Y(4), yb2, '4,00 m', 14));
   const yb3 = Z(0) + 74; [0, 0.05, 0.55, 2.6, 4].forEach((y) => p.push(ext(Y(y), Z(0) + 40, Y(y), yb3 + 4)));
   p.push(dimH(Y(0), Y(0.05), yb3, '0,05', 8) + dimH(Y(0.05), Y(0.55), yb3, '0,50', 11) + dimH(Y(0.55), Y(2.6), yb3, '2,05') + dimH(Y(2.6), Y(4), yb3, '1,40'));
-  const xr3 = Y(4) + 38; [3.55, 2.55, 0].forEach((z) => p.push(ext(Y(4) + 4, Z(z), xr3 + 4, Z(z))));
-  p.push(dimV(xr3, Z(2.55), Z(3.55), '1,00') + dimV(xr3, Z(0), Z(2.55), '2,55'));
+  const xr3 = Y(4) + 38; [3.55, 3, 2.55, 0].forEach((z) => p.push(ext(Y(4) + 4, Z(z), xr3 + 4, Z(z))));
+  p.push(dimV(xr3, Z(3), Z(3.55), '0,55') + dimV(xr3, Z(2.55), Z(3), '0,45') + dimV(xr3, Z(0), Z(2.55), '2,55'));
   const xr4 = xr3 + 34; [4, 3, 0].forEach((z) => p.push(ext(xr3, Z(z), xr4 + 38, Z(z)))); p.push(dimV(xr4, Z(0), Z(3), '3,00 m', 13)); p.push(dimV(xr4 + 34, Z(0), Z(4), '4,00 m (fachada)', 13));
   p.push(dimV(Y(0.04), Z(0), Z(1.0), '1,00', 11) + dimV(Y(1.6), Z(0), Z(0.80), '0,80', 11));
   p.push(`<text class="mut" x="${Y(2.2)}" y="${Z(zt) - 14}" text-anchor="middle">vão aberto + aro suspenso preso por pontes</text>`);
@@ -783,7 +783,7 @@ function init3D() {
   const headerFace = mat(0xffffff, { map: headerBase, roughness: 0.45, envMapIntensity: 0.7 });
   // fachada: faixa de 0,45 m no alto (3,55–4,00 m) com o letreiro; abaixo dela o vão fica livre; colunas laterais seguem até 4,00 m
   bx(0.15, 4.85, 0, 0.30, 3.55, STAND.facadeH, sideMats(tealM, headerFace));
-  bx(0.15, 4.85, 0, 0.30, 2.55, 3.55, sideMats(tealM, headerFace));   // painel azul liso abaixo do letreiro (fecha a frente)
+  bx(0.15, 4.85, 0, 0.30, 3.00, 3.55, mat(0xf6f6f3, { roughness: 0.6, envMapIntensity: 0.6 }));   // painel branco: completa o vão entre o topo das paredes (3,00) e a faixa do letreiro
   bx(0, 0.15, 0, 0.30, 3.00, STAND.facadeH, mat(0xf6f6f3, { roughness: 0.6, envMapIntensity: 0.6 }));   // coluna branca (continua a parede esquerda)
   bx(4.85, 5.0, 0, 0.30, 3.00, STAND.facadeH, tealM);
   // empenas triangulares cheias (azul) nas laterais: do alto da fachada descem até o topo das paredes (3,00 m) a 1,90 m da frente
@@ -812,9 +812,9 @@ function init3D() {
   bx(0.15, 4.85, -0.006, 0.02, 0, 0.012, ledM, { shadow: false });
   // brilhos (additive) dos LEDs principais
   const gl = (w, h, tx, op, pos, ry = 0, rx = 0) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), glowM(tx, op)); m.position.copy(pos); m.rotation.set(rx, ry, 0); S.add(m); return m; };
-  gl(5.0, 0.20, glowH, 0.55, P(2.5, -0.012, 2.565));                    // sob a testeira
+  gl(4.7, 0.20, glowH, 0.55, P(2.5, -0.012, 3.535));                    // sob a testeira
   gl(4.7, 0.34, glowH, 0.5, P(2.5, 0.16, 0.003), 0, -Math.PI / 2);      // piso, frente
-  gl(0.16, 0.44, glowV, 0.4, P(0.055, -0.012, 2.78));
+  gl(0.16, 0.44, glowV, 0.4, P(0.16, -0.012, 3.775));
   [1, 2, 3, 4].forEach((x) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(1.0, 1.0), glowM(poolTex, 0.3)); m.position.copy(P(x, 3.894, 2.38)); S.add(m); });   // luz dos spots lavando o fundo
 
   /* ---------- ripado: painéis contínuos com LED amarelo nas bordas verticais ---------- */
