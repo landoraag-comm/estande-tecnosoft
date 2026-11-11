@@ -215,7 +215,7 @@ const STAND = {
   // ---------------- COMUNICAÇÃO VISUAL (adesivos nas paredes) ----------------
   R('V1', 'Adesivo da parede esquerda (logo + 4 tópicos)', 'Comunicação visual', 0.15, 1.10, 0.005, 1.20, 2.00,
     { z0: 0.45, floor: false, note: 'adesivo de 1,20 × 2,00 m na face interna', decal: 'L' });
-  R('V2', 'Adesivo da parede direita (texto)', 'Comunicação visual', 4.845, 1.15, 0.005, 1.20, 2.00,
+  R('V2', 'Adesivo da parede direita (logo + texto)', 'Comunicação visual', 4.845, 1.15, 0.005, 1.20, 2.00,
     { z0: 0.45, floor: false, note: 'adesivo de 1,20 × 2,00 m na face interna', decal: 'R' });
 
   // ---------------- MOBILIÁRIO ----------------
@@ -488,7 +488,7 @@ function buildElevations() {
   const c0 = 1.60, cw = 1.8, bx = (f) => X(c0 + f * cw);
   o.push(R(c0, c0 + cw, 0, 0.96, TEAL, '#0b2630') + R(c0, c0 + cw, 0.96, 1.00, '#fff', '#0b2630'));
   o.push(`<polygon points="${bx(0.78)},${Z(0)} ${bx(1)},${Z(0)} ${bx(1)},${Z(0.96)} ${bx(0.93)},${Z(0.96)}" fill="#fff"/><line x1="${bx(0.78)}" y1="${Z(0)}" x2="${bx(0.93)}" y2="${Z(0.96)}" stroke="${YEL}" stroke-width="2.5"/>`);
-  o.push(logoSvg(bx(0.38) - 52, Z(0.46) - 4, 14) + `<text x="${bx(0.38) - 34}" y="${Z(0.46)}" text-anchor="start" fill="#fff" style="font:800 14px sans-serif">TECNOSOFT</text>`);
+  o.push(logoSvg(bx(0.38) - 44, Z(0.46) - 4, 11) + `<text x="${bx(0.38) - 30}" y="${Z(0.46)}" text-anchor="start" fill="#fff" style="font:800 11px sans-serif">TECNOSOFT</text>`);
   o.push(R(2.25, 2.75, 1.12, 1.42, '#0a2a66', '#000') + R(2.48, 2.52, 1.00, 1.12, '#222', '#000') + R(2.41, 2.59, 1.00, 1.012, '#222', '#000'));
   [1.95, 3.05].forEach((x) => o.push(R(x - 0.04, x + 0.04, 1.01, 1.17, '#8fb8e8', '#2c5a8c')));
   o.push(plantBlob(X(1.80), Z(1.10), 0.16 * s, Z(1.30)));
@@ -558,7 +558,7 @@ function buildElevations() {
     const v = byTag[mirror ? 'V2' : 'V1'];
     q.push(rw(v.y, v.y + v.d, v.z0, v.z0 + v.h, mirror ? 'rgba(255,255,255,.07)' : 'rgba(9,56,84,.05)', YEL, 'stroke-dasharray="5 3"'));
     const cxp = (Yw(v.y) + Yw(v.y + v.d)) / 2;
-    if (!mirror) q.push(logoSvg(cxp, Z(2.2), 32, '#093854'));
+    q.push(logoSvg(cxp, Z(2.2), 32, mirror ? '#fff' : '#093854'));
     if (!mirror) {
       ['SOFTWARE', 'AUTOMAÇÃO', 'INTELIGÊNCIA ARTIFICIAL', 'SUPORTE ESPECIALIZADO'].forEach((tx, i) => { const zz = 1.80 - i * 0.40; q.push(`<circle cx="${cxp - 70}" cy="${Z(zz)}" r="9" fill="none" stroke="${YEL}" stroke-width="2"/><text x="${cxp - 52}" y="${Z(zz) + 4}" fill="#093854" style="font:700 9.5px sans-serif">${tx}</text>`); });
     } else {
@@ -671,8 +671,8 @@ function init3D() {
     });
   });
   const decalR = canvasTex(600, 1000, (c, w, h) => {
-    c.clearRect(0, 0, w, h); c.textAlign = 'center'; c.font = '800 70px Arial,Helvetica,sans-serif'; c.fillStyle = '#fff';
-    ['INOVAÇÃO', 'TECNOLOGIA', 'PARCERIA'].forEach((t, i) => c.fillText(t, w / 2, 400 + i * 100)); c.fillStyle = YELH; c.fillText('CRESCIMENTO', w / 2, 700);
+    c.clearRect(0, 0, w, h); drawLogo(c, w / 2, 160, 230); c.textAlign = 'center'; c.font = '800 70px Arial,Helvetica,sans-serif'; c.fillStyle = '#fff';
+    ['INOVAÇÃO', 'TECNOLOGIA', 'PARCERIA'].forEach((t, i) => c.fillText(t, w / 2, 460 + i * 100)); c.fillStyle = YELH; c.fillText('CRESCIMENTO', w / 2, 760);
   });
   const taglineTex = canvasTex(750, 250, (c, w, h) => {
     c.clearRect(0, 0, w, h); c.font = '800 64px Arial,Helvetica,sans-serif'; c.fillStyle = '#fff'; c.textAlign = 'left';
@@ -693,7 +693,7 @@ function init3D() {
   });
   const counterTex = canvasTex(900, 480, (c, w, h) => {
     const g0 = c.createLinearGradient(0, 0, 0, h); g0.addColorStop(0, '#17505e'); g0.addColorStop(1, '#0f3946'); c.fillStyle = g0; c.fillRect(0, 0, w, h);
-    c.save(); c.translate(-70, 0); logoWord(c, w, h, TEALH, 130, 84); c.restore();
+    c.save(); c.translate(-60, 0); logoWord(c, w, h, TEALH, 104, 68); c.restore();
     c.fillStyle = '#f4f4f1'; c.beginPath(); c.moveTo(w * 0.78, h); c.lineTo(w, h); c.lineTo(w, 0); c.lineTo(w * 0.93, 0); c.closePath(); c.fill();
   });
   const keysTex = canvasTex(440, 140, (c, w, h) => { c.fillStyle = '#23282c'; c.fillRect(0, 0, w, h); c.fillStyle = '#3a4147'; for (let r = 0; r < 5; r++) for (let k = 0; k < 15; k++) c.fillRect(8 + k * 28, 8 + r * 25, 24, 21); });
