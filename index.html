@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estande Tecnosoft em escala</title>
+<style>
+  /* layout: cabeçalho escuro, modelo 3D em destaque, depois desenhos técnicos sobre fundo branco. Uma página, tema claro por escolha. */
+  :root{color-scheme:light;--teal:#12404c;--teal2:#1a5666;--yel:#f6b800;--ink:#12313a;--mut:#5d7078;--line:#dbe3e6;--bg:#f2f5f6;--card:#fff}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;background:#f2f5f6}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #f6b800;outline-offset:2px}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.5}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+  header.top{background:var(--teal);color:#fff;border-bottom:5px solid var(--yel)}
+  header.top .wrap{padding:26px 20px 22px}
+  h1{margin:0 0 4px;font-size:clamp(22px,3.4vw,32px);letter-spacing:-.01em}
+  header .sub{margin:0;color:#cfe3e8;font-size:15px}
+  nav{display:flex;gap:6px;flex-wrap:wrap;margin-top:16px}
+  nav a{color:#fff;text-decoration:none;font-size:13.5px;padding:6px 12px;border:1px solid rgba(255,255,255,.28);border-radius:999px}
+  nav a:hover{background:rgba(255,255,255,.12)}
+  section{margin:34px 0}
+  h2{font-size:20px;margin:0 0 4px;display:flex;align-items:center;gap:10px}
+  h2 .n{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--teal);color:#fff;font-size:14px}
+  .lead{margin:0 0 14px;color:var(--mut);font-size:14.5px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .view{position:relative;height:clamp(380px,64vh,660px);background:linear-gradient(#eef2f4,#dfe6ea)}
+  .view canvas{display:block;width:100%;height:100%;outline:none;touch-action:none}
+  #viewmsg{position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:30px;color:var(--mut);font-size:15px}
+  .bar{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;justify-content:space-between;padding:12px 14px;border-top:1px solid var(--line);background:#fafcfc}
+  .grpb{display:flex;flex-wrap:wrap;gap:6px}
+  .btn{font:inherit;font-size:13.5px;padding:6px 12px;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:8px;cursor:pointer}
+  .btn:hover{border-color:var(--teal)}
+  .btn.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+  .tg2{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13.5px}
+  .tg2 label{display:flex;align-items:center;gap:6px;cursor:pointer}
+  .hint{padding:0 14px 12px;color:var(--mut);font-size:12.5px;background:#fafcfc}
+  .svgwrap{overflow-x:auto;background:#fff}
+  .svgwrap svg{display:block;width:100%;height:auto;min-width:760px}
+  .two{display:grid;grid-template-columns:1fr;gap:16px}
+  @media(min-width:1000px){.two{grid-template-columns:1.25fr 1fr}.two .svgwrap svg{min-width:0}}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .chips span{background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:13px;color:var(--teal)}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-bottom:14px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;border-top:4px solid var(--yel)}
+  .card .k{font-size:12.5px;color:var(--mut)} .card .v{font-size:26px;font-weight:700;color:var(--teal);letter-spacing:-.01em} .card .s{font-size:12.5px;color:var(--mut)}
+  .tbl{overflow-x:auto}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:860px}
+  th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+  th{background:#eaf1f3;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#3d5560;position:sticky;top:0}
+  td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+  tr.grp td{background:var(--teal);color:#fff;font-weight:700;letter-spacing:.04em;padding:6px 10px}
+  .tag{display:inline-block;min-width:30px;text-align:center;background:var(--teal);color:#fff;border-radius:6px;padding:1px 6px;font-size:12px;font-weight:700}
+  .note{color:var(--mut);font-size:12px} .mut{color:var(--mut)}
+  .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+  .cols .panel{padding:16px 18px}
+  .cols h3{margin:0 0 8px;font-size:15px;color:var(--teal)}
+  .cols ul{margin:0;padding-left:18px;font-size:14px} .cols li{margin:4px 0}
+  footer{padding:10px 0 40px;color:var(--mut);font-size:12.5px}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/lights/RectAreaLightUniformsLib.js"></script>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <h1>Estande Tecnosoft em escala real</h1>
+  <p class="sub">5,00 m de largura × 4,00 m de profundidade × 3,00 m de altura · 20,00 m² de piso</p>
+  <nav><a href="#modelo">Modelo 3D</a><a href="#planta">Planta baixa</a><a href="#itens">Itens e m²</a><a href="#elevacoes">Elevações e corte</a><a href="#premissas">Premissas</a></nav>
+</div></header>
+
+<main class="wrap">
+  <section id="modelo">
+    <h2><span class="n">1</span>Modelo 3D</h2>
+    <p class="lead">Todas as peças estão nas medidas reais. A pessoa de 1,70 m ajuda a conferir a escala; ligue as cotas ou os quadrantes de 1 m² quando quiser.</p>
+    <div class="panel">
+      <div class="view" id="view"><div id="viewmsg"></div></div>
+      <div class="bar">
+        <div class="grpb">
+          <button class="btn" data-view="persp">Perspectiva</button><button class="btn" data-view="front">Frente</button><button class="btn" data-view="top">Planta (topo)</button><button class="btn" data-view="side">Lateral</button><button class="btn" data-view="eye">Do corredor</button><button class="btn" data-view="inside">Dentro do estande</button><button class="btn" data-view="totem">Totem</button>
+        </div>
+        <div class="tg2">
+          <label><input type="checkbox" id="t-ceil" checked> Teto e forro</label>
+          <label><input type="checkbox" id="t-dim" checked> Cotas</label>
+          <label><input type="checkbox" id="t-grid"> Quadrantes de 1 m²</label>
+          <label><input type="checkbox" id="t-person" checked> Pessoa 1,70 m</label>
+        </div>
+      </div>
+      <div class="hint">Arraste para girar · roda do mouse (ou pinça) para aproximar · botão direito (ou dois dedos) para deslocar.</div>
+    </div>
+  </section>
+
+  <section id="planta">
+    <h2><span class="n">2</span>Planta baixa</h2>
+    <p class="lead">Origem no canto frontal esquerdo (x para a direita, y para o fundo). Cada quadrado do fundo tem 1 m² e recebe uma letra (A–E) e um número (1–4); o número 1 fica junto ao corredor.</p>
+    <div class="panel svgwrap" id="plan"></div>
+  </section>
+
+  <section id="itens">
+    <h2><span class="n">3</span>Itens, posições e áreas em m²</h2>
+    <p class="lead">Posição medida a partir do canto frontal esquerdo. A área é a ocupada no piso; itens sobre o balcão, sobre as mesas, na parede ou suspensos não ocupam piso.</p>
+    <div class="cards" id="cards"></div>
+    <div class="panel tbl">
+      <table>
+        <thead><tr><th>Cód.</th><th>Item</th><th>Dimensões (L × P × A, m)</th><th>Área no piso (m²)</th><th>Centro x ; y (m)</th><th>Canto x ; y (m)</th><th>Quadrantes de 1 m²</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="elevacoes">
+    <h2><span class="n">4</span>Elevações, paredes laterais e corte</h2>
+    <p class="lead">Alturas conferidas contra o limite de 3,00 m: testeira de 2,55 a 3,00 m, forro a 2,55 m, rebaixo a 2,70 m.</p>
+    <div class="two">
+      <div class="panel svgwrap" id="elev"></div>
+      <div class="panel svgwrap" id="sect"></div>
+    </div>
+    <p class="lead" style="margin-top:18px">Paredes laterais vistas por dentro, com os adesivos (logo e tópicos à esquerda; textos do totem à direita) e o ripado.</p>
+    <div class="two">
+      <div class="panel svgwrap" id="wallL"></div>
+      <div class="panel svgwrap" id="wallR"></div>
+    </div>
+    <div class="chips"><span>Balcão 1,00 m</span><span>Mesa 0,72 m</span><span>Cadeira 0,80 m (assento 0,45)</span><span>Totem 1,75 m (tela de 0,65 a 1,60)</span><span>TV de parede 1,45 a 2,14 m</span><span>Palmeiras 1,70 m</span><span>Forro 2,55 m</span><span>Rebaixo 2,70 m</span><span>Testeira 2,55 a 3,00 m</span></div>
+  </section>
+
+  <section id="premissas">
+    <h2><span class="n">5</span>Premissas</h2>
+    <p class="lead">O que veio de você, o que eu assumi e o que mudou em relação à imagem gerada por IA.</p>
+    <div class="cols">
+      <div class="panel"><h3>Medidas informadas</h3><ul>
+        <li>Estande de 5,00 × 4,00 × 3,00 m (largura × profundidade × altura).</li>
+        <li>Balcão de 1,80 × 0,50 × 1,00 m.</li>
+        <li>Totem = TV de 43" em pé: tela 16:9 de 0,535 × 0,952 m; gabinete de 0,62 × 0,14 × 1,75 m.</li>
+      </ul></div>
+      <div class="panel"><h3>Medidas assumidas (ajustáveis)</h3><ul>
+        <li>Balcão e vaso grande no limite da frente: 5 cm para dentro da linha do corredor (podem ir a 0 cm, se preferir). Balcão centralizado.</li>
+        <li>Paredes laterais e de fundo de 0,15 e 0,10 m; testeira de 0,45 m de altura.</li>
+        <li>TV de parede de 55" (1,22 × 0,69 m), centro a 1,80 m do piso, centrada em x = 2,00 m.</li><li>Totem encostado na parede direita (x 4,71 a 4,85; y 0,35 a 0,97), com a tela voltada para dentro do estande.</li><li>Corte branco/azul do balcão: diagonal de 78% (base) a 93% (topo) da largura, com faixa branca à direita e lateral direita branca.</li><li>Teto fechado por cima (laje de 0,05 m a 2,95 m); o forro e o rebaixo ficam por baixo.</li>
+        <li>Mesas bistrô Ø 0,60 × 0,72 m; cadeiras 0,45 × 0,45 × 0,80 m.</li>
+        <li>Monitor de 22", dois smartphones em suporte e quatro vasinhos.</li>
+      </ul></div>
+      <div class="panel"><h3>Diferenças em relação à imagem</h3><ul>
+        <li>Na imagem, mesa e duas cadeiras lado a lado ocupam cerca de 1,8 m cada; três conjuntos não cabem em 5 m com circulação. Aqui só as mesas ficam alinhadas; as cadeiras ficam à frente e atrás, levemente giradas, como numa montagem real.</li>
+        <li>Não há pilares: as paredes laterais vão até o fundo, e logo, tópicos e textos do totem são adesivos nas faces internas.</li><li>Ripado em um painel contínuo em cada parede lateral (ao fundo, atrás do adesivo); a parede de fundo fica lisa, azul; LED amarelo nas bordas verticais dos painéis, na base da testeira, na ponta esquerda da testeira, no piso da frente, no rebaixo do forro e no balcão; plantas mais finas.</li>
+        <li>Folhagens são volumes ilustrativos; o que vale para montagem são as cotas.</li>
+      </ul></div>
+    </div>
+  </section>
+  <footer>Planta, tabela, elevações e modelo 3D são gerados a partir da mesma lista de medidas.</footer>
+</main>
+
+<script>
+// Fonte única de verdade do estande: planta, elevações, tabela e modelo 3D leem daqui.
+// Sistema de coordenadas (metros): origem no canto FRONTAL ESQUERDO do estande.
+//   x -> para a direita (0 a 5,00)   y -> para o fundo (0 a 4,00)   z -> altura (0 a 3,00)
+const STAND = {
+  W: 5.0, D: 4.0, H: 3.0,
+  ceilZ: 2.55,            // altura do forro
+  trayZ: 2.70,            // altura do rebaixo central do forro
+  tray: { x0: 1.30, x1: 3.70, y0: 0.90, y1: 2.50 },
+  spots: [[1.0, 0.55], [2.0, 0.55], [3.0, 0.55], [4.0, 0.55],
+          [1.0, 3.00], [2.0, 3.00], [3.0, 3.00], [4.0, 3.00],
+          [0.95, 1.70], [4.05, 1.70]],
+  items: []
+};
+
+(function () {
+  const add = (o) => STAND.items.push(Object.assign({ z0: 0, floor: true, rot: 0 }, o));
+  // retângulo: x,y = canto frontal esquerdo; w = largura (x); d = profundidade (y); h = altura
+  const R = (tag, name, group, x, y, w, d, h, o) =>
+    add(Object.assign({ tag, name, group, shape: 'rect', x, y, w, d, h }, o || {}));
+  // círculo: cx,cy = centro; dia = diâmetro
+  const C = (tag, name, group, cx, cy, dia, h, o) =>
+    add(Object.assign({ tag, name, group, shape: 'circle', x: cx - dia / 2, y: cy - dia / 2, w: dia, d: dia, h }, o || {}));
+
+  // ---------------- ESTRUTURA ----------------
+  R('E1', 'Parede lateral esquerda (até o fundo)', 'Estrutura', 0, 0, 0.15, 4.00, 3.00);
+  R('E2', 'Parede lateral direita (até o fundo)', 'Estrutura', 4.85, 0, 0.15, 4.00, 3.00);
+  R('E3', 'Parede de fundo', 'Estrutura', 0.15, 3.90, 4.70, 0.10, 3.00);
+  R('E4', 'Testeira (viga frontal com letreiro)', 'Estrutura', 0, 0, 5.00, 0.30, 0.45,
+    { z0: 2.55, floor: false, note: 'suspensa: de 2,55 a 3,00 m do piso' });
+  R('E5', 'Forro com rebaixo central e LED', 'Estrutura', 0.15, 0.30, 4.70, 3.60, 0.15,
+    { z0: 2.55, floor: false, note: 'forro a 2,55 m; rebaixo de 2,40 × 1,60 m a 2,70 m' });
+  R('E6', 'Cobertura (teto fechado por cima)', 'Estrutura', 0.15, 0.30, 4.70, 3.60, 0.05,
+    { z0: 2.95, floor: false, note: 'laje de 2,95 a 3,00 m' });
+  // Ripado: blocos de ripas espalhados (pitch irregular, determinístico). Cada ripa: 0,04 m de largura × 0,03 m de espessura × 2,55 m de altura.
+  // Algumas frestas entre ripas recebem fita de LED amarelo.
+  const slatBlock = (a0, a1, seed, wall) => {
+    const pos = [], led = []; let a = a0 + 0.02;
+    while (a <= a1 - 0.02 + 1e-9) { pos.push(+a.toFixed(3)); a += 0.04 + 0.012; }   // ripas de 4 cm com 1,2 cm de fresta
+    const b0 = +(pos[0] - 0.02).toFixed(3), b1 = +(pos[pos.length - 1] + 0.02).toFixed(3);
+    const lim = wall === 'B' ? [0.15, 4.85] : [0.15, 3.87];
+    if (b0 - 0.014 > lim[0]) led.push(+(b0 - 0.014).toFixed(3));                    // LED amarelo nas bordas verticais do painel
+    if (b1 + 0.014 < lim[1]) led.push(+(b1 + 0.014).toFixed(3));
+    return { pos, led, a0: b0, a1: b1 };
+  };
+  const SL = [
+    ['L', 2.03, 3.86, 3, 'esquerda'],
+    ['R', 2.45, 3.86, 13, 'direita']
+  ];
+  const cnt = { L: 0, R: 0, B: 0 };
+  SL.forEach(([w, a0, a1, seed, nm], i) => {
+    const b = slatBlock(a0, a1, seed, w), len = +(b.a1 - b.a0).toFixed(3), k = ++cnt[w];
+    const o = { slat: { wall: w, pos: b.pos, led: b.led }, floor: true,
+      note: b.pos.length + ' ripas' + (b.led.length ? ' + ' + b.led.length + ' fita(s) de LED nas bordas' : '') };
+    const nome = 'Ripado de madeira, parede ' + nm + ' (bloco ' + k + ')';
+    if (w === 'L') R('E' + (7 + i), nome, 'Estrutura', 0.15, b.a0, 0.03, len, 2.55, o);
+    else if (w === 'R') R('E' + (7 + i), nome, 'Estrutura', 4.82, b.a0, 0.03, len, 2.55, o);
+    else R('E' + (7 + i), nome, 'Estrutura', b.a0, 3.87, len, 0.03, 2.55, o);
+  });
+
+  // ---------------- COMUNICAÇÃO VISUAL (adesivos nas paredes) ----------------
+  R('V1', 'Adesivo da parede esquerda (logo + 4 tópicos)', 'Comunicação visual', 0.15, 0.75, 0.005, 1.20, 2.00,
+    { z0: 0.45, floor: false, note: 'adesivo de 1,20 × 2,00 m na face interna', decal: 'L' });
+  R('V2', 'Adesivo da parede direita (logo + texto)', 'Comunicação visual', 4.845, 1.15, 0.005, 1.20, 2.00,
+    { z0: 0.45, floor: false, note: 'adesivo de 1,20 × 2,00 m na face interna', decal: 'R' });
+
+  // ---------------- MOBILIÁRIO ----------------
+  // balcão no limite da frente do estande (5 cm para dentro da linha do corredor), centralizado, alinhado ao vaso grande
+  R('M1', 'Balcão de atendimento', 'Mobiliário', 1.60, 0.05, 1.80, 0.50, 1.00);
+  // mesas alinhadas
+  C('M2', 'Mesa bistrô 1 (esquerda)', 'Mobiliário', 1.15, 2.60, 0.60, 0.72);
+  C('M3', 'Mesa bistrô 2 (centro)', 'Mobiliário', 2.50, 2.60, 0.60, 0.72);
+  C('M4', 'Mesa bistrô 3 (direita)', 'Mobiliário', 3.85, 2.60, 0.60, 0.72);
+  // cadeiras soltas (não alinhadas): deslocamento e giro próprios; face = lado para onde a cadeira olha (+1 fundo, -1 frente)
+  const ch = [
+    ['C1', 1.15, -1, 'mesa 1', 'frente', -0.05, -0.04, 14],
+    ['C2', 1.15, +1, 'mesa 1', 'fundo', 0.07, 0.03, -9],
+    ['C3', 2.50, -1, 'mesa 2', 'frente', 0.04, -0.02, -7],
+    ['C4', 2.50, +1, 'mesa 2', 'fundo', -0.06, 0.04, 12],
+    ['C5', 3.85, -1, 'mesa 3', 'frente', -0.03, -0.05, 6],
+    ['C6', 3.85, +1, 'mesa 3', 'fundo', 0.05, 0.02, -15]
+  ];
+  ch.forEach(([tag, tx, side, mesa, lado, dx, dy, rot]) => {
+    const cx = tx + dx, cy = 2.60 + side * 0.425 + dy;
+    R(tag, 'Cadeira, ' + mesa + (lado === 'frente' ? ' (lado da frente)' : ' (lado do fundo)'), 'Mobiliário',
+      cx - 0.225, cy - 0.225, 0.45, 0.45, 0.80, { face: -side, rot, tuck: true });
+  });
+
+  // ---------------- EQUIPAMENTOS ----------------
+  // totem encostado na parede direita, sob a testeira, com a tela voltada para DENTRO do estande (para a esquerda)
+  R('Q1', 'Totem de autoatendimento (TV 43" em pé)', 'Equipamentos', 4.71, 0.35, 0.14, 0.62, 1.75,
+    { face: 'esq', note: 'tela de 0,535 × 0,952 m, de 0,65 a 1,60 m do piso, voltada para o interior' });
+  R('Q2', 'TV de parede 55"', 'Equipamentos', 1.39, 3.85, 1.22, 0.05, 0.69,
+    { z0: 1.45, floor: false, note: 'fixada no fundo; centro a 1,80 m do piso', support: 'wall' });
+  R('Q3', 'Monitor 22" (sobre o balcão)', 'Equipamentos', 2.25, 0.13, 0.50, 0.20, 0.42, { z0: 1.00, floor: false, support: 'M1' });
+  R('Q4', 'Teclado', 'Equipamentos', 2.28, 0.40, 0.44, 0.14, 0.02, { z0: 1.00, floor: false, support: 'M1' });
+  R('Q5', 'Mouse', 'Equipamentos', 2.80, 0.42, 0.06, 0.10, 0.03, { z0: 1.00, floor: false, support: 'M1' });
+  R('Q6', 'Smartphone em suporte (esquerda)', 'Equipamentos', 1.90, 0.20, 0.10, 0.08, 0.17, { z0: 1.00, floor: false, support: 'M1' });
+  R('Q7', 'Smartphone em suporte (direita)', 'Equipamentos', 3.00, 0.20, 0.10, 0.08, 0.17, { z0: 1.00, floor: false, support: 'M1' });
+
+  // ---------------- DECORAÇÃO ----------------
+  R('D1', 'Vaso grande com planta fina (preto)', 'Decoração', 0.22, 0.05, 0.40, 0.40, 1.50, { note: 'vaso de 0,60 m + folhagem até 1,50 m' });
+  C('D2', 'Palmeira fina em vaso (esquerda)', 'Decoração', 0.55, 3.55, 0.35, 1.70);
+  C('D3', 'Palmeira fina em vaso (direita)', 'Decoração', 4.45, 3.55, 0.35, 1.70);
+  C('D4', 'Vasinho sobre a mesa 1', 'Decoração', 1.15, 2.60, 0.18, 0.30, { z0: 0.72, floor: false, support: 'M2' });
+  C('D5', 'Vasinho sobre a mesa 2', 'Decoração', 2.50, 2.60, 0.18, 0.30, { z0: 0.72, floor: false, support: 'M3' });
+  C('D6', 'Vasinho sobre a mesa 3', 'Decoração', 3.85, 2.60, 0.18, 0.30, { z0: 0.72, floor: false, support: 'M4' });
+  C('D7', 'Vasinho sobre o balcão', 'Decoração', 1.80, 0.30, 0.16, 0.30, { z0: 1.00, floor: false, support: 'M1' });
+})();
+
+STAND.LOGO = {"w": 1263, "h": 1381, "gear": "M514.511 0.881836C527.225 -1.05417 580.977 0.397627 611.554 3.30176C630.704 5.23774 646.636 6.85119 646.638 7.0127C646.819 7.05167 660.652 32.8511 677.376 64.2891L707.953 121.404L745.29 133.021L782.627 144.638L841.528 116.726L900.27 88.8135L921.191 99.3008C944.849 111.401 978.322 133.344 1002.14 152.221C1024.51 170.13 1048.65 190.459 1049.29 191.911C1049.62 192.719 1044.63 221.115 1038.35 255.157C1032.08 289.039 1027.25 318.081 1027.57 319.372C1028.05 321.473 1068.44 377.445 1069.41 377.455C1073.59 377.939 1202.91 400.03 1203.31 400.365C1203.63 400.688 1208.94 412.467 1215.38 426.665C1235.5 471.679 1247.4 511.209 1257.22 565.742L1262.21 593.654L1256.9 598.172C1254 600.755 1231.63 619.793 1207.33 640.282C1156.16 683.683 1161.63 674.164 1160.02 719.501L1158.89 747.736L1203.31 794.203C1234.53 826.955 1247.4 841.476 1246.92 843.412C1246.44 844.864 1242.74 857.772 1238.71 871.97C1230.51 900.689 1217.95 933.603 1205.08 959.579C1193.65 983.135 1170.48 1022.83 1168.22 1022.99C1167.09 1022.99 1136.84 1024.92 1100.96 1027.34L1035.78 1031.86L1025.15 1042.99C1019.36 1049.29 1002.3 1068 987.013 1084.94C971.725 1101.72 958.529 1115.6 957.401 1115.44C955.309 1115.27 856.508 1047.2 856.495 1046.06C856.495 1045.57 883.693 1015.56 917.007 979.263C967.54 924.084 978.323 913.112 982.668 912.467C985.404 911.983 1011.96 910.046 1041.57 908.11C1071.15 906.337 1095.59 904.726 1095.64 904.562C1095.8 904.4 1098.86 897.301 1102.56 888.911L1109 873.583L1104.5 868.743C1102.08 866.162 1084.86 847.93 1066.35 828.407L1032.56 792.912L1037.06 715.468C1039.48 672.875 1041.41 633.831 1041.41 628.827L1041.57 619.63L1084.86 583.006L1127.99 546.381L1122.84 528.794C1119.95 519.115 1117.21 510.888 1116.73 510.401C1116.4 509.917 1090.01 505.238 1058.31 499.914C1026.45 494.591 1000.06 489.752 999.566 489.104C994.417 483.458 897.695 351.801 897.212 349.865C896.569 347.762 912.179 258.385 915.559 244.187C916.041 241.444 914.432 239.346 906.868 234.021C901.719 230.472 896.73 227.407 895.764 227.406C894.798 227.406 870.979 238.378 842.977 251.77L791.8 276.132L707.471 249.672L623.141 223.373L569.389 122.373L549.111 122.856L528.994 123.341L504.05 172.066C490.371 198.848 478.3 221.435 477.495 222.243C476.53 223.05 468.966 225.955 460.598 228.536C452.229 231.279 415.053 243.38 377.877 255.642L310.445 277.745L257.338 253.383L204.068 229.02L197.631 233.376C182.825 243.057 166.249 256.61 166.893 258.546C167.215 259.518 173.009 283.718 179.768 311.95L191.998 363.418L158.685 413.596C140.338 441.185 119.416 472.647 111.853 483.457L98.4951 503.141L48.9277 467.646C21.7299 448.123 -0.317962 431.343 0.00390625 430.375C0.329916 429.401 13.8461 408.751 30.2588 384.393L60.0322 340.185L45.2266 278.068L30.2588 215.79L51.0195 195.3C84.9767 161.902 121.187 134.634 170.755 104.786L195.539 90.1045L206.16 94.7832C211.954 97.526 239.152 109.95 266.35 122.373C293.708 134.958 317.204 145.122 318.653 145.122C320.102 145.122 337.161 139.797 356.473 133.344L391.718 121.728L420.363 65.4189C436.134 34.443 449.974 8.62882 451.263 7.98047C452.389 7.3351 466.391 5.56048 482.323 4.1084C498.256 2.49497 512.74 1.04318 514.511 0.881836ZM526.55 280.811C538.459 280.165 551.977 279.843 556.322 280.004C560.828 280.327 572.416 280.972 582.072 281.456C605.73 282.585 634.537 287.426 664.632 295.17C697.14 303.721 715.165 310.498 746.386 325.825C853.729 378.907 931.782 473.937 960.268 586.231C992.133 712.24 958.819 842.928 869.501 941.992C849.223 964.419 802.552 1004.27 797.885 1003.14C794.019 1002.17 692.642 928.445 693.438 927.148C693.76 926.503 703.899 919.404 715.647 911.498C770.526 874.712 803.518 837.28 826.531 786.135C879.318 668.355 837.153 530.569 725.465 455.061C687.806 429.568 642.422 412.789 591.245 405.689C562.599 401.656 517.376 402.947 489.856 408.755C416.149 424.405 352.419 463.934 310.254 520.242C293.034 543.314 280.965 566.709 265.032 607.69L260.525 619.307L251.514 612.854C246.525 609.304 223.51 592.847 200.336 576.229C177.001 559.61 158.011 545.09 158.011 543.96C158.011 539.926 183.116 489.749 193.255 473.453C214.981 439.087 249.421 400.204 280.32 375.357C350.488 318.888 436.588 285.812 526.55 280.811Z", "tee": "M59.3984 741.283V830.828H175.271H291.144V1105.92V1381.01H404.602H518.061V1105.92V830.828H633.934H749.806V741.283V651.738H404.602H59.3984V741.283Z", "g0": "#FFA800", "g1": "#FFC107"};
+
+if (typeof module !== 'undefined') module.exports = STAND;
+
+</script>
+<script>
+/* ===================== utilidades ===================== */
+const $ = (s) => document.querySelector(s);
+const f2 = (n) => (Math.round(n * 100) / 100).toFixed(2).replace('.', ',');
+const areaOf = (it) => (it.shape === 'circle' ? Math.PI * (it.w / 2) ** 2 : it.w * it.d);
+const cxOf = (it) => it.x + it.w / 2;
+const cyOf = (it) => it.y + it.d / 2;
+const byTag = Object.fromEntries(STAND.items.map((i) => [i.tag, i]));
+const SLATS = STAND.items.filter((i) => i.slat);
+const GROUPS = ['Estrutura', 'Comunicação visual', 'Mobiliário', 'Equipamentos', 'Decoração'];
+
+function bbox(it) { // retângulo envolvente (considera giro)
+  const a = ((it.rot || 0) * Math.PI) / 180, ex = (Math.abs(Math.cos(a)) * it.w + Math.abs(Math.sin(a)) * it.d) / 2, ey = (Math.abs(Math.sin(a)) * it.w + Math.abs(Math.cos(a)) * it.d) / 2;
+  return [cxOf(it) - ex, cxOf(it) + ex, cyOf(it) - ey, cyOf(it) + ey];
+}
+function inside(it, x, y) {
+  if (it.rot) { const cx = cxOf(it), cy = cyOf(it), a = (-it.rot * Math.PI) / 180, dx = x - cx, dy = y - cy; x = cx + dx * Math.cos(a) - dy * Math.sin(a); y = cy + dx * Math.sin(a) + dy * Math.cos(a); }
+  if (it.shape === 'circle') { const r = it.w / 2, dx = x - (it.x + r), dy = y - (it.y + r); return dx * dx + dy * dy <= r * r; }
+  return x >= it.x && x <= it.x + it.w && y >= it.y && y <= it.y + it.d;
+}
+function unionArea(list) {
+  const st = 0.01; let n = 0;
+  for (let x = st / 2; x < STAND.W; x += st) for (let y = st / 2; y < STAND.D; y += st) if (list.some((i) => inside(i, x, y))) n++;
+  return n * st * st;
+}
+function quadrants(it) {
+  const b = bbox(it), out = [];
+  for (let i = 0; i < 5; i++) for (let j = 0; j < 4; j++) {
+    const ox = Math.min(i + 1, b[1]) - Math.max(i, b[0]), oy = Math.min(j + 1, b[3]) - Math.max(j, b[2]);
+    if (ox > 0.005 && oy > 0.005) out.push('ABCDE'[i] + (j + 1));
+  }
+  return out;
+}
+
+/* ===================== tabela e resumo de áreas ===================== */
+function buildTable() {
+  const floor = STAND.items.filter((i) => i.floor);
+  const g = (n) => unionArea(floor.filter((i) => i.group === n));
+  const total = STAND.W * STAND.D, occ = unionArea(floor);
+  const cards = [
+    ['Área total do estande', f2(total) + ' m²', '5,00 × 4,00 m'],
+    ['Estrutura (paredes e ripado)', f2(g('Estrutura')) + ' m²', 'ocupa o piso'],
+    ['Mobiliário, totem e vasos', f2(g('Mobiliário') + g('Equipamentos') + g('Decoração')) + ' m²', 'balcão, mesas, cadeiras, totem, plantas'],
+    ['Livre para circulação', f2(total - occ) + ' m²', f2(((total - occ) / total) * 100) + '% do estande']
+  ];
+  $('#cards').innerHTML = cards.map((c) => `<div class="card"><div class="k">${c[0]}</div><div class="v">${c[1]}</div><div class="s">${c[2]}</div></div>`).join('');
+  let rows = '';
+  GROUPS.forEach((gr) => {
+    rows += `<tr class="grp"><td colspan="7">${gr}</td></tr>`;
+    STAND.items.filter((i) => i.group === gr).forEach((it) => {
+      const dims = it.shape === 'circle' ? `Ø ${f2(it.w)} × ${f2(it.h)}` : `${f2(it.w)} × ${f2(it.d)} × ${f2(it.h)}`;
+      const ar = it.floor ? f2(areaOf(it)) : '<span class="mut">sobre/suspenso</span>';
+      const q = ['E4', 'E5', 'E6'].includes(it.tag) ? 'todos (A1 a E4)' : quadrants(it).join(', ');
+      const pos = `${f2(cxOf(it))} ; ${f2(cyOf(it))}`;
+      const corner = it.shape === 'circle' ? '—' : `${f2(it.x)} ; ${f2(it.y)}`;
+      const note = [it.note, it.rot ? `girada ${Math.abs(it.rot)}° (${it.rot > 0 ? 'anti-horário' : 'horário'}, vista de cima)` : '',
+        it.z0 && it.floor === false && it.support !== 'wall' && !['E4', 'E5', 'E6'].includes(it.tag) && !it.decal ? 'base a ' + f2(it.z0) + ' m do piso' : ''].filter(Boolean).join(' · ');
+      rows += `<tr><td><span class="tag">${it.tag}</span></td><td>${it.name}${note ? `<div class="note">${note}</div>` : ''}</td>` +
+        `<td class="num">${dims}</td><td class="num">${ar}</td><td class="num">${pos}</td><td class="num">${corner}</td><td>${q}</td></tr>`;
+    });
+  });
+  $('#tbody').innerHTML = rows;
+}
+
+/* ===================== desenho: helpers SVG ===================== */
+const TEAL = '#12404c', TEAL2 = '#1a5666', YEL = '#f6b800', WOOD = '#c9792b', GRN = '#4f9a4a';
+function tagSvg(px, py, t, r = 9) { return `<g class="tg"><circle cx="${px}" cy="${py}" r="${r}"/><text x="${px}" y="${py + 3.2}">${t}</text></g>`; }
+function dimH(x0, x1, y, label, size = 12) {
+  const m = (x0 + x1) / 2;
+  return `<g class="dim"><line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}"/>` + [x0, x1].map((x) => `<line x1="${x - 4}" y1="${y + 4}" x2="${x + 4}" y2="${y - 4}"/>`).join('') +
+    `<text x="${m}" y="${y - 6}" text-anchor="middle" style="font-size:${size}px">${label}</text></g>`;
+}
+function dimV(x, y0, y1, label, size = 12) {
+  const m = (y0 + y1) / 2;
+  return `<g class="dim"><line x1="${x}" y1="${y0}" x2="${x}" y2="${y1}"/>` + [y0, y1].map((y) => `<line x1="${x - 4}" y1="${y + 4}" x2="${x + 4}" y2="${y - 4}"/>`).join('') +
+    `<text transform="translate(${x - 6},${m}) rotate(-90)" text-anchor="middle" style="font-size:${size}px">${label}</text></g>`;
+}
+const ext = (x1, y1, x2, y2) => `<line class="ext" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
+const SVG_CSS = `
+ .bg{fill:#fff} .gridl{stroke:#e3e8ea;stroke-width:1} .cellt{fill:#b9c4c9;font-size:11px;font-family:inherit}
+ .dim line{stroke:#0b5cad;stroke-width:1.1} .dim text{fill:#0b5cad;font-family:inherit;paint-order:stroke;stroke:#fff;stroke-width:3px}
+ .ext{stroke:#8db4dd;stroke-width:.8;stroke-dasharray:2 3}
+ .tg circle{fill:#fff;stroke:#12404c;stroke-width:1.4} .tg text{font-size:9.5px;font-weight:700;text-anchor:middle;fill:#12404c;font-family:inherit}
+ .lbl{font-size:12px;fill:#12404c;font-family:inherit} .lblb{font-size:13px;font-weight:700;fill:#12404c;font-family:inherit;letter-spacing:.08em}
+ .dash{fill:none;stroke:#7a8b93;stroke-width:1.2;stroke-dasharray:6 4} .mut{fill:#6b7c84;font-size:11px;font-family:inherit;paint-order:stroke;stroke:#fff;stroke-width:3px}
+`;
+const SVG_DEFS = `<defs><linearGradient id="lgG" gradientUnits="userSpaceOnUse" x1="1262" y1="0" x2="0" y2="1113.7"><stop offset="0" stop-color="#FFA800"/><stop offset="1" stop-color="#FFC107"/></linearGradient><pattern id="pw" width="5" height="5" patternUnits="userSpaceOnUse"><rect width="5" height="5" fill="${WOOD}"/><line x1="2.5" y1="0" x2="2.5" y2="5" stroke="#6e3d12" stroke-width="1"/></pattern>
+<pattern id="ph" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="${TEAL}"/><line x1="0" y1="0" x2="0" y2="6" stroke="#2c6a7b" stroke-width="2"/></pattern></defs>`;
+
+/* ===================== PLANTA BAIXA ===================== */
+function buildPlan() {
+  const s = 170, ox = 150, oy = 130, W = STAND.W, D = STAND.D;
+  const X = (x) => ox + x * s, Y = (y) => oy + (D - y) * s;
+  const vbW = ox + W * s + 170, vbH = oy + D * s + 200;
+  const o = [];
+  o.push(`<svg viewBox="0 0 ${vbW} ${vbH}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Planta baixa do estande, 5,00 por 4,00 metros"><style>${SVG_CSS}</style>${SVG_DEFS}<rect class="bg" width="${vbW}" height="${vbH}"/>`);
+  for (let i = 0; i <= 5; i++) o.push(`<line class="gridl" x1="${X(i)}" y1="${Y(0)}" x2="${X(i)}" y2="${Y(D)}"/>`);
+  for (let j = 0; j <= 4; j++) o.push(`<line class="gridl" x1="${X(0)}" y1="${Y(j)}" x2="${X(W)}" y2="${Y(j)}"/>`);
+  for (let i = 0; i < 5; i++) {
+    o.push(`<text class="lblb" x="${X(i + 0.5)}" y="${oy - 10}" text-anchor="middle">${'ABCDE'[i]}</text>`);
+    for (let j = 0; j < 4; j++) o.push(`<text class="cellt" x="${X(i) + 5}" y="${Y(j) - 5}">${'ABCDE'[i]}${j + 1}</text>`);
+  }
+  for (let j = 0; j < 4; j++) o.push(`<text class="lblb" x="${ox - 14}" y="${Y(j + 0.5) + 4}" text-anchor="end">${j + 1}</text>`);
+
+  // projeções aéreas (tracejadas)
+  const t = STAND.tray;
+  o.push(`<rect class="dash" x="${X(t.x0)}" y="${Y(t.y1)}" width="${(t.x1 - t.x0) * s}" height="${(t.y1 - t.y0) * s}"/>`);
+  o.push(`<text class="mut" x="${X(t.x0) + 6}" y="${Y(t.y1) + 15}">rebaixo do forro 2,40 × 1,60 (h 2,70)</text>`);
+  o.push(`<rect class="dash" x="${X(0)}" y="${Y(0.30)}" width="${W * s}" height="${0.30 * s}"/>`);
+  STAND.spots.forEach(([x, y]) => o.push(`<g stroke="#9aa9b0" fill="none" stroke-width="1"><circle cx="${X(x)}" cy="${Y(y)}" r="6"/><line x1="${X(x) - 4}" y1="${Y(y)}" x2="${X(x) + 4}" y2="${Y(y)}"/><line x1="${X(x)}" y1="${Y(y) - 4}" x2="${X(x)}" y2="${Y(y) + 4}"/></g>`));
+
+  const rect = (it, fill, stroke, extra = '') => `<rect x="${X(it.x)}" y="${Y(it.y + it.d)}" width="${it.w * s}" height="${it.d * s}" fill="${fill}" stroke="${stroke}" stroke-width="1.4" ${extra}/>`;
+  ['E1', 'E2', 'E3'].forEach((k) => o.push(rect(byTag[k], 'url(#ph)', TEAL)));
+  SLATS.forEach((it) => o.push(rect(it, 'url(#pw)', '#6e3d12')));
+  // adesivos das paredes (traço amarelo na face interna)
+  [['V1', 0.15], ['V2', 4.85]].forEach(([k, x]) => { const v = byTag[k]; o.push(`<line x1="${X(x)}" y1="${Y(v.y)}" x2="${X(x)}" y2="${Y(v.y + v.d)}" stroke="${YEL}" stroke-width="5"/>`); });
+  // balcão e itens sobre ele
+  const m1 = byTag.M1;
+  o.push(rect(m1, '#fff', TEAL, 'rx="2"') + `<line x1="${X(m1.x)}" y1="${Y(m1.y) - 1.5}" x2="${X(m1.x + m1.w)}" y2="${Y(m1.y) - 1.5}" stroke="${TEAL}" stroke-width="3"/>`);
+  o.push(rect(byTag.Q3, '#dfe7ea', '#4c5d64') + rect(byTag.Q4, '#cfd6da', '#4c5d64') + rect(byTag.Q5, '#cfd6da', '#4c5d64'));
+  [byTag.Q6, byTag.Q7].forEach((q) => o.push(rect(q, '#8fb8e8', '#2c5a8c')));
+  const d7 = byTag.D7; o.push(`<circle cx="${X(cxOf(d7))}" cy="${Y(cyOf(d7))}" r="${d7.w / 2 * s}" fill="${GRN}" stroke="#2f6b2c"/>`);
+  o.push(`<text class="mut" x="${X(2.5)}" y="${Y(0.55) - 9}" text-anchor="middle">Q3–Q7 e D7 sobre o balcão</text>`);
+  // mesas e cadeiras
+  ['M2', 'M3', 'M4'].forEach((k) => { const m = byTag[k]; o.push(`<circle cx="${X(cxOf(m))}" cy="${Y(cyOf(m))}" r="${m.w / 2 * s}" fill="#fff" stroke="#8a6a3a" stroke-width="1.6"/>`); });
+  ['C1', 'C2', 'C3', 'C4', 'C5', 'C6'].forEach((k) => {
+    const c = byTag[k], px = X(cxOf(c)), py = Y(cyOf(c));
+    const by = c.face > 0 ? c.y : c.y + c.d;
+    o.push(`<g transform="rotate(${-c.rot} ${px} ${py})"><rect x="${X(c.x)}" y="${Y(c.y + c.d)}" width="${c.w * s}" height="${c.d * s}" rx="8" fill="#efe3d2" stroke="#b07a3c" stroke-width="1.4"/>` +
+      `<line x1="${X(c.x) + 6}" y1="${Y(by)}" x2="${X(c.x + c.w) - 6}" y2="${Y(by)}" stroke="#b07a3c" stroke-width="5" stroke-linecap="round"/></g>`);
+    o.push(tagSvg(px, py + (c.face > 0 ? -4 : 4), k, 9));
+  });
+  ['D4', 'D5', 'D6'].forEach((k) => { const d = byTag[k]; o.push(`<circle cx="${X(cxOf(d))}" cy="${Y(cyOf(d))}" r="${d.w / 2 * s}" fill="${GRN}" stroke="#2f6b2c"/>`); });
+  // plantas de piso (folhagem fina)
+  const d1 = byTag.D1;
+  o.push(`<rect x="${X(d1.x)}" y="${Y(d1.y + d1.d)}" width="${d1.w * s}" height="${d1.d * s}" fill="#222" stroke="#000" rx="2"/><circle cx="${X(cxOf(d1))}" cy="${Y(cyOf(d1))}" r="${0.22 * s}" fill="${GRN}" fill-opacity=".8" stroke="#2f6b2c"/>`);
+  ['D2', 'D3'].forEach((k) => { const d = byTag[k]; o.push(`<circle cx="${X(cxOf(d))}" cy="${Y(cyOf(d))}" r="${0.24 * s}" fill="${GRN}" fill-opacity=".75" stroke="#2f6b2c"/><circle cx="${X(cxOf(d))}" cy="${Y(cyOf(d))}" r="${d.w / 2 * s * 0.8}" fill="#222"/>`); });
+  // totem e TV
+  const q1 = byTag.Q1; o.push(rect(q1, '#fff', TEAL) + `<rect x="${X(q1.x) - 1}" y="${Y(q1.y + q1.d) + 8}" width="4" height="${q1.d * s - 16}" fill="#111"/><path d="M${X(q1.x) - 8},${Y(cyOf(q1))} l-14,-6 v12 z" fill="${TEAL}"/>`);
+  o.push(rect(byTag.Q2, '#222', '#000'));
+
+  // marcações
+  o.push(tagSvg(X(cxOf(m1)) - 110, Y(cyOf(m1)), 'M1', 10));
+  ['M2', 'M3', 'M4'].forEach((k) => { const m = byTag[k]; o.push(tagSvg(X(cxOf(m) - 0.45), Y(cyOf(m)), k, 10)); });
+  o.push(tagSvg(X(q1.x) - 40, Y(cyOf(q1)), 'Q1', 10));
+  o.push(tagSvg(X(cxOf(byTag.Q2)), Y(D) - 26, 'Q2', 10) + `<line x1="${X(cxOf(byTag.Q2))}" y1="${Y(D) - 16}" x2="${X(cxOf(byTag.Q2))}" y2="${Y(3.875)}" stroke="${TEAL}" stroke-width="1"/>`);
+  o.push(tagSvg(X(cxOf(d1)) + 34, Y(cyOf(d1)) - 34, 'D1', 10), tagSvg(X(cxOf(byTag.D2)) + 28, Y(cyOf(byTag.D2)) - 30, 'D2', 10), tagSvg(X(cxOf(byTag.D3)) - 28, Y(cyOf(byTag.D3)) - 30, 'D3', 10));
+  o.push(tagSvg(X(0.15) + 22, Y(cyOf(byTag.V1)), 'V1', 10), tagSvg(X(4.85) - 22, Y(cyOf(byTag.V2)), 'V2', 10));
+  o.push(`<text class="mut" x="${X(1.39)}" y="${Y(3.85) + 14}" style="font-size:10px">TV 55" na parede (h 1,45–2,14)</text>`);
+  o.push(`<text class="mut" x="${X(3.50)}" y="${Y(0.15) + 4}" style="font-size:10px">testeira h 2,55–3,00 (projeção)</text>`);
+
+  // contorno e abertura frontal
+  o.push(`<rect x="${X(0)}" y="${Y(D)}" width="${W * s}" height="${D * s}" fill="none" stroke="#12404c" stroke-width="2.4"/>`);
+  o.push(`<line x1="${X(0.15)}" y1="${Y(0)}" x2="${X(4.85)}" y2="${Y(0)}" stroke="${YEL}" stroke-width="5"/>`);
+
+  // cotas — topo
+  const yT1 = oy - 52, yT2 = oy - 86;
+  [0, 0.15, 4.85, 5].forEach((x) => o.push(ext(X(x), oy - 22, X(x), yT1 + 4)));
+  o.push(dimH(X(0), X(0.15), yT1, '0,15', 10) + dimH(X(0.15), X(4.85), yT1, '4,70 (vão interno e entrada)') + dimH(X(4.85), X(5), yT1, '0,15', 10));
+  [0, 5].forEach((x) => o.push(ext(X(x), yT1, X(x), yT2 + 4)));
+  o.push(dimH(X(0), X(5), yT2, '5,00 m (largura)', 14));
+  // cotas — esquerda
+  const xL1 = ox - 52, xL2 = ox - 92;
+  [0, 0.05, 0.55, 2.60, 4].forEach((y) => o.push(ext(ox - 30, Y(y), xL1 - 4, Y(y))));
+  o.push(dimV(xL1, Y(0), Y(0.05), '0,05', 8) + dimV(xL1, Y(0.05), Y(0.55), '0,50', 10) + dimV(xL1, Y(0.55), Y(2.60), '2,05') + dimV(xL1, Y(2.60), Y(4), '1,40'));
+  [0, 4].forEach((y) => o.push(ext(xL1, Y(y), xL2 - 4, Y(y))));
+  o.push(dimV(xL2, Y(0), Y(D), '4,00 m (profundidade)', 14));
+  // cotas — direita
+  const xR = ox + W * s + 40;
+  [0, 2.60, 4].forEach((y) => o.push(ext(X(5) + 8, Y(y), xR + 4, Y(y))));
+  o.push(dimV(xR, Y(0), Y(2.60), '2,60 (até o eixo das mesas)') + dimV(xR, Y(2.60), Y(4), '1,40'));
+  // cotas — base
+  const yB1 = Y(0) + 62, yB2 = Y(0) + 96;
+  [0, 1.60, 3.40, 5].forEach((x) => o.push(ext(X(x), Y(0) + 40, X(x), yB1 + 4)));
+  o.push(dimH(X(0), X(1.60), yB1, '1,60') + dimH(X(1.60), X(3.40), yB1, '1,80 (balcão)') + dimH(X(3.40), X(5), yB1, '1,60'));
+  [0, 1.15, 2.5, 3.85, 5].forEach((x) => o.push(ext(X(x), Y(0) + 70, X(x), yB2 + 4)));
+  o.push(dimH(X(0), X(1.15), yB2, '1,15') + dimH(X(1.15), X(2.5), yB2, '1,35') + dimH(X(2.5), X(3.85), yB2, '1,35') + dimH(X(3.85), X(5), yB2, '1,15'));
+  o.push(`<text class="lblb" x="${X(2.5)}" y="${Y(0) + 140}" text-anchor="middle">▲ FRENTE / CORREDOR (acesso)</text>`);
+  const sx = X(0), sy = Y(0) + 168;
+  o.push(`<g><rect x="${sx}" y="${sy}" width="${s * 0.5}" height="7" fill="#12404c"/><rect x="${sx + s * 0.5}" y="${sy}" width="${s * 0.5}" height="7" fill="#fff" stroke="#12404c"/><text class="lbl" x="${sx}" y="${sy + 22}" style="font-size:11px">0</text><text class="lbl" x="${sx + s * 0.5}" y="${sy + 22}" text-anchor="middle" style="font-size:11px">0,5</text><text class="lbl" x="${sx + s}" y="${sy + 22}" text-anchor="middle" style="font-size:11px">1 m</text></g>`);
+  o.push(`<text class="mut" x="${X(5)}" y="${sy + 12}" text-anchor="end">Cotas em metros · origem no canto frontal esquerdo · quadrantes de 1 m² (A–E × 1–4)</text>`);
+  o.push('</svg>');
+  $('#plan').innerHTML = o.join('');
+}
+
+/* ===================== ELEVAÇÕES, CORTE E PAREDES ===================== */
+function plantBlob(cx, base, w, top, col = GRN) {
+  return `<ellipse cx="${cx}" cy="${(base + top) / 2}" rx="${w / 2}" ry="${(base - top) / 2}" fill="${col}" fill-opacity=".85" stroke="#2f6b2c"/>`;
+}
+function logoSvg(cx, cy, r) { // ícone oficial (T + engrenagem); r = meia altura
+  const L = STAND.LOGO, k = (2 * r) / L.h;
+  return `<g transform="translate(${cx - (L.w * k) / 2},${cy - r}) scale(${k})"><path d="${L.gear}" fill="url(#lgG)"/><path d="${L.tee}" fill="#fff"/></g>`;
+}
+function buildElevations() {
+  const s = 150, ox = 120, top = 70, W = STAND.W, H = STAND.H;
+  const X = (x) => ox + x * s, Z = (z) => top + (H - z) * s;
+  const vbW = ox + W * s + 150, vbH = top + H * s + 120;
+  const o = [];
+  o.push(`<svg viewBox="0 0 ${vbW} ${vbH}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Elevação frontal"><style>${SVG_CSS}</style>${SVG_DEFS}<rect class="bg" width="${vbW}" height="${vbH}"/>`);
+  const R = (x0, x1, z0, z1, fill, stroke = '#1b2a30', extra = '') => `<rect x="${X(x0)}" y="${Z(z1)}" width="${(x1 - x0) * s}" height="${(z1 - z0) * s}" fill="${fill}" stroke="${stroke}" stroke-width="1.2" ${extra}/>`;
+  // fundo, paredes laterais (topo das paredes) e ripado do fundo
+  o.push(R(0.15, 4.85, 0, 3, TEAL2, TEAL) + R(0, 0.15, 0, 3, '#0e3039', '#0b2630') + R(4.85, 5, 0, 3, '#0e3039', '#0b2630'));
+  SLATS.filter((i) => i.slat.wall === 'B').forEach((i) => o.push(R(i.x, i.x + i.w, 0, 2.55, 'url(#pw)', '#6e3d12')));
+  o.push(`<text x="${X(3.5)}" y="${Z(1.86)}" text-anchor="middle" fill="#fff" style="font:700 11px sans-serif">TECNOLOGIA QUE IMPULSIONA</text><text x="${X(3.5)}" y="${Z(1.70)}" text-anchor="middle" fill="${YEL}" style="font:700 11px sans-serif">O SEU FUTURO</text>`);
+  o.push(`<line x1="${X(0.15)}" y1="${Z(2.55)}" x2="${X(4.85)}" y2="${Z(2.55)}" stroke="#fff" stroke-width="2" stroke-dasharray="5 4"/>`);
+  o.push(R(1.39, 2.61, 1.45, 2.14, '#0a2a66', '#000') + `<text x="${X(2)}" y="${Z(1.795) + 4}" text-anchor="middle" fill="#fff" style="font:700 12px sans-serif">TECNOSOFT</text>`);
+  ['D2', 'D3'].forEach((k) => { const d = byTag[k]; o.push(plantBlob(X(cxOf(d)), Z(0.40), 0.40 * s, Z(1.70)) + R(d.x, d.x + d.w, 0, 0.40, '#1b1b1b', '#000')); });
+  [1.15, 2.5, 3.85].forEach((cx) => {
+    o.push(R(cx - 0.225, cx + 0.225, 0.40, 0.45, '#efe3d2', '#b07a3c') + R(cx - 0.225, cx + 0.225, 0.45, 0.80, '#efe3d2', '#b07a3c', 'fill-opacity=".9"'));
+    o.push(R(cx - 0.03, cx + 0.03, 0.02, 0.69, '#c7ccd0', '#7d8a90') + R(cx - 0.20, cx + 0.20, 0, 0.02, '#c7ccd0', '#7d8a90') + R(cx - 0.30, cx + 0.30, 0.69, 0.72, '#fff', '#8a6a3a'));
+    o.push(plantBlob(X(cx), Z(0.80), 0.16 * s, Z(1.02), GRN));
+  });
+  // totem (dentro do estande) e vaso grande
+  o.push(R(4.71, 4.85, 0, 1.75, '#fff', '#0b2630') + R(4.705, 4.72, 0.65, 1.60, '#0e3946', '#000'));
+  o.push(`<text x="${X(4.78)}" y="${Z(0.30)}" text-anchor="middle" fill="#5b6b72" style="font:600 8px sans-serif">totem (visto de lado)</text>`);
+  const d1 = byTag.D1;
+  o.push(plantBlob(X(cxOf(d1)), Z(0.60), 0.34 * s, Z(1.50)) + R(d1.x, d1.x + d1.w, 0, 0.60, '#1b1b1b', '#000'));
+  // balcão: faixa branca à direita, começando mais para dentro
+  const c0 = 1.60, cw = 1.8, bx = (f) => X(c0 + f * cw);
+  o.push(R(c0, c0 + cw, 0, 0.96, TEAL, '#0b2630') + R(c0, c0 + cw, 0.96, 1.00, '#fff', '#0b2630'));
+  o.push(`<polygon points="${bx(0.78)},${Z(0)} ${bx(1)},${Z(0)} ${bx(1)},${Z(0.96)} ${bx(0.93)},${Z(0.96)}" fill="#fff"/><line x1="${bx(0.78)}" y1="${Z(0)}" x2="${bx(0.93)}" y2="${Z(0.96)}" stroke="${YEL}" stroke-width="2.5"/>`);
+  o.push(logoSvg(bx(0.38) - 52, Z(0.46) - 4, 14) + `<text x="${bx(0.38) - 34}" y="${Z(0.46)}" text-anchor="start" fill="#fff" style="font:800 14px sans-serif">TECNOSOFT</text>`);
+  o.push(R(2.25, 2.75, 1.12, 1.42, '#0a2a66', '#000') + R(2.48, 2.52, 1.00, 1.12, '#222', '#000') + R(2.41, 2.59, 1.00, 1.012, '#222', '#000'));
+  [1.95, 3.05].forEach((x) => o.push(R(x - 0.04, x + 0.04, 1.01, 1.17, '#8fb8e8', '#2c5a8c')));
+  o.push(plantBlob(X(1.80), Z(1.10), 0.16 * s, Z(1.30)));
+  // testeira
+  o.push(R(0, 5, 2.55, 3.00, TEAL, '#0b2630'));
+  o.push(logoSvg(X(2.5) - 112, Z(2.775), 30) + `<text x="${X(2.5) - 78}" y="${Z(2.77) + 9}" text-anchor="start" fill="#fff" style="font:900 30px sans-serif;letter-spacing:.04em">TECNOSOFT</text><line x1="${X(0)}" y1="${Z(2.55)}" x2="${X(5)}" y2="${Z(2.55)}" stroke="${YEL}" stroke-width="3"/>`);
+  o.push(`<line x1="${X(-0.2)}" y1="${Z(0)}" x2="${X(5.2)}" y2="${Z(0)}" stroke="#12404c" stroke-width="2"/>`);
+  const yb = Z(0) + 38;
+  o.push(ext(X(0), Z(0) + 4, X(0), yb + 4) + ext(X(5), Z(0) + 4, X(5), yb + 4) + dimH(X(0), X(5), yb, '5,00 m', 14));
+  const xr = X(5) + 38;
+  [3, 2.55, 0].forEach((z) => o.push(ext(X(5) + 4, Z(z), xr + 4, Z(z))));
+  o.push(dimV(xr, Z(2.55), Z(3), '0,45') + dimV(xr, Z(0), Z(2.55), '2,55'));
+  const xr2 = xr + 34; [3, 0].forEach((z) => o.push(ext(xr, Z(z), xr2 + 4, Z(z)))); o.push(dimV(xr2, Z(0), Z(3), '3,00 m (altura total)', 13));
+  o.push(`<text class="lblb" x="${ox}" y="38">ELEVAÇÃO FRONTAL (vista do corredor)</text>`);
+  o.push('</svg>');
+  $('#elev').innerHTML = o.join('');
+
+  /* ---------- corte lateral em x = 2,50 m, visto pelo lado direito (frente à esquerda) ---------- */
+  const D = STAND.D, ox2 = 120, vbW2 = ox2 + D * s + 150;
+  const Y = (y) => ox2 + y * s;
+  const p = [];
+  p.push(`<svg viewBox="0 0 ${vbW2} ${vbH}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Corte lateral"><style>${SVG_CSS}</style>${SVG_DEFS}<rect class="bg" width="${vbW2}" height="${vbH}"/>`);
+  const Rr = (y0, y1, z0, z1, fill, stroke = '#1b2a30', extra = '') => `<rect x="${Y(y0)}" y="${Z(z1)}" width="${(y1 - y0) * s}" height="${(z1 - z0) * s}" fill="${fill}" stroke="${stroke}" stroke-width="1.2" ${extra}/>`;
+  const GR = '#d3dbdf', GS = '#9fb0b7';
+  // parede esquerda ao fundo (cinza) com adesivo e ripado, e itens além do plano de corte
+  p.push(Rr(0, 4, 0, 3, '#e6ecef', GS) + Rr(0.75, 1.95, 0.45, 2.45, '#f3e2a3', '#c9a526') + SLATS.filter((i) => i.slat.wall === 'L').map((i) => Rr(i.y, i.y + i.d, 0, 2.55, '#e0c3a3', '#b08a62')).join(''));
+  p.push(Rr(0.05, 0.45, 0, 0.60, GR, GS) + plantBlob(Y(0.25), Z(0.60), 0.35 * s, Z(1.50), '#b9c9bd'));
+  p.push(Rr(3.375, 3.725, 0, 0.40, GR, GS) + plantBlob(Y(3.55), Z(0.40), 0.4 * s, Z(1.70), '#b9c9bd'));
+  // cortados (x = 2,50)
+  p.push(Rr(3.90, 4.0, 0, 3.0, TEAL, '#0b2630') + Rr(0, 0.30, 2.55, 3.0, TEAL, '#0b2630') + Rr(0, 4, 2.95, 3.0, '#f4f1ea', '#1b2a30'));
+  const t = STAND.tray;
+  p.push(`<path d="M${Y(0.30)},${Z(2.55)} L${Y(t.y0)},${Z(2.55)} L${Y(t.y0)},${Z(2.70)} L${Y(t.y1)},${Z(2.70)} L${Y(t.y1)},${Z(2.55)} L${Y(3.90)},${Z(2.55)} L${Y(3.90)},${Z(2.58)} L${Y(t.y1)},${Z(2.58)} L${Y(t.y1)},${Z(2.73)} L${Y(t.y0)},${Z(2.73)} L${Y(t.y0)},${Z(2.58)} L${Y(0.30)},${Z(2.58)} Z" fill="#f4f1ea" stroke="#1b2a30" stroke-width="1.2"/>`);
+  p.push(`<line x1="${Y(t.y0)}" y1="${Z(2.70)}" x2="${Y(t.y1)}" y2="${Z(2.70)}" stroke="${YEL}" stroke-width="3"/>`);
+  p.push(Rr(3.85, 3.90, 1.45, 2.14, '#0a2a66', '#000'));
+  p.push(Rr(0.05, 0.55, 0, 0.96, TEAL, '#0b2630') + Rr(0.05, 0.55, 0.96, 1.00, '#fff', '#0b2630') + Rr(0.195, 0.22, 1.12, 1.42, '#0a2a66', '#000') + Rr(0.13, 0.27, 1.00, 1.012, '#222', '#000') + Rr(0.199, 0.215, 1.01, 1.12, '#222', '#000') + Rr(0.40, 0.54, 1.00, 1.02, '#444', '#000'));
+  p.push(Rr(2.30, 2.90, 0.69, 0.72, '#fff', '#8a6a3a') + Rr(2.57, 2.63, 0.02, 0.69, '#c7ccd0', '#7d8a90') + Rr(2.40, 2.80, 0, 0.02, '#c7ccd0', '#7d8a90'));
+  ['C3', 'C4'].forEach((k) => { const c = byTag[k], bk = c.face > 0 ? c.y : c.y + c.d - 0.05; p.push(Rr(c.y, c.y + c.d, 0.40, 0.45, '#efe3d2', '#b07a3c') + Rr(bk, bk + 0.05, 0.45, 0.80, '#efe3d2', '#b07a3c')); });
+  p.push(plantBlob(Y(2.60), Z(0.72), 0.16 * s, Z(1.02)));
+  p.push(`<line x1="${Y(-0.2)}" y1="${Z(0)}" x2="${Y(4.2)}" y2="${Z(0)}" stroke="#12404c" stroke-width="2"/>`);
+  const yb2 = Z(0) + 38;
+  p.push(ext(Y(0), Z(0) + 4, Y(0), yb2 + 4) + ext(Y(4), Z(0) + 4, Y(4), yb2 + 4) + dimH(Y(0), Y(4), yb2, '4,00 m', 14));
+  const yb3 = Z(0) + 74; [0, 0.05, 0.55, 2.6, 4].forEach((y) => p.push(ext(Y(y), Z(0) + 40, Y(y), yb3 + 4)));
+  p.push(dimH(Y(0), Y(0.05), yb3, '0,05', 8) + dimH(Y(0.05), Y(0.55), yb3, '0,50', 11) + dimH(Y(0.55), Y(2.6), yb3, '2,05') + dimH(Y(2.6), Y(4), yb3, '1,40'));
+  const xr3 = Y(4) + 38; [3, 2.95, 2.7, 2.55, 0].forEach((z) => p.push(ext(Y(4) + 4, Z(z), xr3 + 4, Z(z))));
+  p.push(dimV(xr3, Z(2.55), Z(3), '0,45') + dimV(xr3, Z(0), Z(2.55), '2,55'));
+  const xr4 = xr3 + 34; [3, 0].forEach((z) => p.push(ext(xr3, Z(z), xr4 + 4, Z(z)))); p.push(dimV(xr4, Z(0), Z(3), '3,00 m', 13));
+  p.push(dimV(Y(0.04), Z(0), Z(1.0), '1,00', 11) + dimV(Y(1.6), Z(0), Z(0.80), '0,80', 11));
+  p.push(`<text class="mut" x="${Y(2.2)}" y="${Z(2.70) - 10}" text-anchor="middle">rebaixo a 2,70</text>`);
+  p.push(`<text class="mut" x="${Y(1.35)}" y="${Z(2.0)}" text-anchor="middle" style="font-size:10px">adesivo (parede esq.)</text>`);
+  p.push(`<text class="lblb" x="${ox2}" y="38">CORTE A–A em x = 2,50 m (frente à esquerda)</text>`);
+  p.push('</svg>');
+  $('#sect').innerHTML = p.join('');
+
+  /* ---------- paredes laterais vistas de dentro: adesivos e ripado ---------- */
+  function wall(side) {
+    const mirror = side === 'R', ox3 = 120, vbW3 = ox3 + D * s + 90;
+    const Yw = (y) => ox3 + (mirror ? D - y : y) * s;
+    const q = [];
+    q.push(`<svg viewBox="0 0 ${vbW3} ${vbH}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Parede ${mirror ? 'direita' : 'esquerda'} vista de dentro"><style>${SVG_CSS}</style>${SVG_DEFS}<rect class="bg" width="${vbW3}" height="${vbH}"/>`);
+    const rw = (y0, y1, z0, z1, fill, stroke = '#1b2a30', extra = '') => { const a = Yw(y0), b = Yw(y1); return `<rect x="${Math.min(a, b)}" y="${Z(z1)}" width="${Math.abs(b - a)}" height="${(z1 - z0) * s}" fill="${fill}" stroke="${stroke}" stroke-width="1.2" ${extra}/>`; };
+    q.push(rw(0, 4, 0, 3, TEAL2, TEAL) + rw(0, 4, 2.55, 3, '#0e3039', '#0b2630'));
+    SLATS.filter((i) => i.slat.wall === side).forEach((i) => { q.push(rw(i.y, i.y + i.d, 0, 2.55, 'url(#pw)', '#6e3d12')); i.slat.led.forEach((y) => q.push(rw(y - 0.004, y + 0.004, 0, 2.55, YEL, YEL))); });
+    const v = byTag[mirror ? 'V2' : 'V1'];
+    q.push(rw(v.y, v.y + v.d, v.z0, v.z0 + v.h, 'rgba(255,255,255,.07)', YEL, 'stroke-dasharray="5 3"'));
+    const cxp = (Yw(v.y) + Yw(v.y + v.d)) / 2;
+    q.push(logoSvg(cxp, Z(2.2), 32));
+    if (!mirror) {
+      ['SOFTWARE', 'AUTOMAÇÃO', 'INTELIGÊNCIA ARTIFICIAL', 'SUPORTE ESPECIALIZADO'].forEach((tx, i) => { const zz = 1.80 - i * 0.40; q.push(`<circle cx="${cxp - 70}" cy="${Z(zz)}" r="9" fill="none" stroke="${YEL}" stroke-width="2"/><text x="${cxp - 52}" y="${Z(zz) + 4}" fill="#fff" style="font:700 9.5px sans-serif">${tx}</text>`); });
+    } else {
+      ['INOVAÇÃO', 'TECNOLOGIA', 'PARCERIA'].forEach((tx, i) => q.push(`<text x="${cxp}" y="${Z(1.78 - i * 0.22)}" text-anchor="middle" fill="#fff" style="font:800 14px sans-serif">${tx}</text>`));
+      q.push(`<text x="${cxp}" y="${Z(1.78 - 3 * 0.22)}" text-anchor="middle" fill="${YEL}" style="font:800 14px sans-serif">CRESCIMENTO</text>`);
+    }
+    // itens à frente da parede
+    if (!mirror) { const a = byTag.D1; q.push(rw(a.y, a.y + a.d, 0, 0.60, '#1b1b1b', '#000') + plantBlob(Yw(cyOf(a)), Z(0.60), 0.30 * s, Z(1.50)));
+      const b = byTag.D2; q.push(rw(b.y, b.y + b.d, 0, 0.40, '#1b1b1b', '#000') + plantBlob(Yw(cyOf(b)), Z(0.40), 0.30 * s, Z(1.70))); }
+    else { const a = byTag.Q1; q.push(rw(a.y, a.y + a.d, 0, 1.75, '#fff', '#0b2630') + rw(a.y + 0.01, a.y + a.d - 0.01, 0.65, 1.60, '#0e3946', '#000'));
+      const b = byTag.D3; q.push(rw(b.y, b.y + b.d, 0, 0.40, '#1b1b1b', '#000') + plantBlob(Yw(cyOf(b)), Z(0.40), 0.30 * s, Z(1.70))); }
+    q.push(`<line x1="${Yw(-0.2)}" y1="${Z(0)}" x2="${Yw(4.2)}" y2="${Z(0)}" stroke="#12404c" stroke-width="2"/>`);
+    // cotas
+    const yb4 = Z(0) + 38, ticks = mirror ? [0, 0.35, 0.97, v.y, v.y + v.d, 4] : [0, v.y, v.y + v.d, 4];
+    const lab = mirror ? ['0,35', '0,62 (totem)', '0,18', '1,20 (adesivo)', '1,65'] : ['0,75', '1,20 (adesivo)', '2,05'];
+    ticks.forEach((y) => q.push(ext(Yw(y), Z(0) + 4, Yw(y), yb4 + 4)));
+    ticks.slice(0, -1).forEach((y, i) => q.push(dimH(Yw(y), Yw(ticks[i + 1]), yb4, lab[i], Math.abs(ticks[i + 1] - y) < 0.3 ? 8 : 11)));
+    const xl = Yw(v.y) + (mirror ? 26 : -26); [0, 0.45, 2.45].forEach((z) => q.push(ext(Yw(v.y) + (mirror ? 4 : -4), Z(z), xl + (mirror ? 4 : -4), Z(z))));
+    q.push(dimV(xl, Z(0), Z(0.45), '0,45', 10) + dimV(xl, Z(0.45), Z(2.45), '2,00'));
+    q.push(`<text class="lblb" x="${ox3}" y="38">PAREDE ${mirror ? 'DIREITA' : 'ESQUERDA'} vista de dentro</text>`);
+    q.push(`<text class="mut" x="${ox3}" y="${Z(3) - 10}" style="font-size:10px">${mirror ? 'frente à direita, fundo à esquerda' : 'frente à esquerda, fundo à direita'}</text>`);
+    q.push('</svg>');
+    return q.join('');
+  }
+  $('#wallL').innerHTML = wall('L');
+  $('#wallR').innerHTML = wall('R');
+}
+
+/* ===================== iniciar ===================== */
+buildTable(); buildPlan(); buildElevations();
+
+</script>
+<script>
+/* ===================== MODELO 3D (three.js r128) ===================== */
+function init3D() {
+  const host = $('#view'), msg = $('#viewmsg');
+  const fail = (t) => { msg.style.display = 'flex'; msg.textContent = t; };
+  if (typeof THREE === 'undefined' || !THREE.OrbitControls) { fail('Não foi possível carregar o visualizador 3D. A planta, a tabela e as elevações abaixo continuam disponíveis.'); return; }
+  let renderer;
+  try { renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' }); } catch (e) { fail('Seu navegador não conseguiu iniciar o 3D (WebGL). A planta, a tabela e as elevações abaixo continuam disponíveis.'); return; }
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
+  renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  host.appendChild(renderer.domElement);
+  const scene = new THREE.Scene();
+  const C = (hex) => new THREE.Color(hex).convertSRGBToLinear();
+  const BG = 0xd9e0e5; scene.background = new THREE.Color(BG); scene.fog = new THREE.Fog(C(BG), 24, 52);
+  const camera = new THREE.PerspectiveCamera(40, 1, 0.05, 120);
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true; controls.dampingFactor = 0.08; controls.maxPolarAngle = Math.PI / 2 - 0.01; controls.minDistance = 0.8; controls.maxDistance = 26;
+  const aniso = renderer.capabilities.getMaxAnisotropy();
+  const hasRect = !window.__NORECT && !!(THREE.RectAreaLight && THREE.RectAreaLightUniformsLib);
+  if (hasRect) THREE.RectAreaLightUniformsLib.init();
+
+  /* ---------- utilidades ---------- */
+  const P = (x, y, z) => new THREE.Vector3(x - 2.5, z, 2 - y);          // plano (x,y,z) -> mundo
+  const mat = (hex, o = {}) => new THREE.MeshStandardMaterial(Object.assign({ color: C(hex), roughness: 0.6, metalness: 0 }, o));
+  const phys = (hex, o = {}) => new THREE.MeshPhysicalMaterial(Object.assign({ color: C(hex), roughness: 0.3, metalness: 0 }, o));
+  const basic = (hex, o = {}) => new THREE.MeshBasicMaterial(Object.assign({ color: C(hex), toneMapped: false }, o));
+  const canvasTex = (w, h, draw, srgb = true) => { const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h); const t = new THREE.CanvasTexture(c); if (srgb) t.encoding = THREE.sRGBEncoding; t.anisotropy = aniso; return t; };
+  const S = new THREE.Group(); scene.add(S);                              // tudo que reflete no piso
+  const AO = new THREE.Group(); scene.add(AO);                            // sombras de contato (não refletem)
+  const shade = (m, cast = true, recv = true) => { m.castShadow = cast; m.receiveShadow = recv; return m; };
+  const add = (geo, m, x, y, z, parent = S, cast = true) => { const me = shade(new THREE.Mesh(geo, m), cast); me.position.set(x, y, z); parent.add(me); return me; };
+  function bx(x0, x1, y0, y1, z0, z1, m, o = {}) {                       // caixa em coordenadas do estande
+    const me = shade(new THREE.Mesh(new THREE.BoxGeometry(x1 - x0, z1 - z0, y1 - y0), m), o.shadow !== false);
+    me.position.copy(P((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2)); (o.parent || S).add(me); return me;
+  }
+  const sideMats = (side, front, right) => [right || side, side, side, side, front, side];
+  function rbox(w, h, d, r, b) {                                          // caixa com cantos e arestas arredondados, base em y=0
+    const hw = w / 2 - b, hd = d / 2 - b, rr = Math.max(0.0005, Math.min(r - b, hw, hd)), sh = new THREE.Shape();
+    sh.moveTo(-hw + rr, -hd); sh.lineTo(hw - rr, -hd); sh.quadraticCurveTo(hw, -hd, hw, -hd + rr); sh.lineTo(hw, hd - rr); sh.quadraticCurveTo(hw, hd, hw - rr, hd);
+    sh.lineTo(-hw + rr, hd); sh.quadraticCurveTo(-hw, hd, -hw, hd - rr); sh.lineTo(-hw, -hd + rr); sh.quadraticCurveTo(-hw, -hd, -hw + rr, -hd);
+    const g = new THREE.ExtrudeGeometry(sh, { depth: h - 2 * b, bevelEnabled: b > 0, bevelThickness: b, bevelSize: b, bevelSegments: 3, curveSegments: 6 });
+    g.rotateX(-Math.PI / 2); g.translate(0, b, 0); return g;
+  }
+  const rnd = (() => { let r = 12345; return () => { r = (r * 9301 + 49297) % 233280; return r / 233280; }; })();
+
+  /* ---------- texturas ---------- */
+  const TEALH = '#12404c', YELH = '#f6b800';
+  const LG = STAND.LOGO, LGW = LG.w / LG.h;                               // ícone oficial: T + engrenagem
+  const gearPath = new Path2D(LG.gear), teePath = new Path2D(LG.tee);
+  function drawLogo(c, x, y, s) {                                          // s = altura do ícone; (x,y) = centro
+    const k = s / LG.h; c.save(); c.translate(x - (LG.w * k) / 2, y - s / 2); c.scale(k, k);
+    const g = c.createLinearGradient(1262, 0, 0, 1113.7); g.addColorStop(0, LG.g0); g.addColorStop(1, LG.g1);
+    c.fillStyle = g; c.fill(gearPath); c.fillStyle = '#fff'; c.fill(teePath); c.restore();
+  }
+  function logoWord(c, w, h, bg, size, font, mono) {
+    c.font = `900 ${font}px "Arial Black",Arial,Helvetica,sans-serif`; c.textBaseline = 'middle';
+    const tw = c.measureText('TECNOSOFT').width, iw = size * LGW, gap = size * 0.14, tot = iw + gap + tw, x0 = (w - tot) / 2;
+    drawLogo(c, x0 + iw / 2, h / 2, size); c.fillStyle = mono || '#fff'; c.fillText('TECNOSOFT', x0 + iw + gap, h / 2 + font * 0.04);
+  }
+  const noiseTex = (n, rep, a = 1) => { const t = canvasTex(n, n, (c, w, h) => { const d = c.createImageData(w, h); for (let i = 0; i < d.data.length; i += 4) { const v = 128 + (Math.random() - 0.5) * 120 * a; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; } c.putImageData(d, 0, 0); }, false); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(rep[0], rep[1]); return t; };
+  // letreiro: letras e logo separados do fundo (camadas em relevo + halo de LED)
+  const lettersTex = canvasTex(2000, 180, (c, w, h) => { c.clearRect(0, 0, w, h); logoWord(c, w, h, null, 150, 128); });
+  const haloTex = canvasTex(1000, 90, (c, w, h) => { c.clearRect(0, 0, w, h); c.save(); c.scale(0.5, 0.5); c.shadowColor = 'rgba(190,230,255,1)'; c.shadowBlur = 34; c.globalAlpha = 0.9; logoWord(c, 2000, 180, null, 150, 128, '#dff2ff'); c.restore(); });
+  const headerBase = canvasTex(256, 64, (c, w, h) => { const g = c.createLinearGradient(0, 0, 0, h); g.addColorStop(0, '#17505e'); g.addColorStop(1, '#10394a'); c.fillStyle = g; c.fillRect(0, 0, w, h); }, true);
+  const iconPaint = [
+    (c, x, y) => { c.strokeRect(x - 22, y - 16, 44, 32); c.font = '700 22px monospace'; c.textAlign = 'center'; c.fillText('</>', x, y + 8); },
+    (c, x, y) => { c.beginPath(); c.arc(x, y, 20, 0, 7); c.stroke(); c.beginPath(); c.arc(x, y, 8, 0, 7); c.stroke(); },
+    (c, x, y) => { c.beginPath(); c.arc(x, y, 21, 0, 7); c.stroke(); c.beginPath(); c.moveTo(x, y - 19); c.lineTo(x, y + 19); c.moveTo(x - 17, y - 6); c.lineTo(x + 17, y + 6); c.stroke(); },
+    (c, x, y) => { c.beginPath(); c.arc(x, y - 2, 19, Math.PI, 0); c.stroke(); c.strokeRect(x - 22, y - 4, 9, 18); c.strokeRect(x + 13, y - 4, 9, 18); }
+  ];
+  const decalL = canvasTex(600, 1000, (c, w, h) => {
+    c.clearRect(0, 0, w, h); drawLogo(c, w / 2, 130, 190, TEALH);
+    ['SOFTWARE', 'AUTOMAÇÃO', 'INTELIGÊNCIA|ARTIFICIAL', 'SUPORTE|ESPECIALIZADO'].forEach((t, i) => {
+      const y = 360 + i * 150, lines = t.split('|'); c.strokeStyle = YELH; c.fillStyle = YELH; c.lineWidth = 4; c.textAlign = 'center'; iconPaint[i](c, 120, y);
+      c.fillStyle = '#fff'; c.textAlign = 'left'; c.font = '700 36px Arial,Helvetica,sans-serif'; lines.forEach((l, k) => c.fillText(l, 175, y + 12 + (k - (lines.length - 1) / 2) * 40));
+    });
+  });
+  const decalR = canvasTex(600, 1000, (c, w, h) => {
+    c.clearRect(0, 0, w, h); drawLogo(c, w / 2, 160, 230, TEALH); c.textAlign = 'center'; c.font = '800 70px Arial,Helvetica,sans-serif'; c.fillStyle = '#fff';
+    ['INOVAÇÃO', 'TECNOLOGIA', 'PARCERIA'].forEach((t, i) => c.fillText(t, w / 2, 460 + i * 100)); c.fillStyle = YELH; c.fillText('CRESCIMENTO', w / 2, 760);
+  });
+  const taglineTex = canvasTex(750, 250, (c, w, h) => {
+    c.clearRect(0, 0, w, h); c.font = '600 54px Arial,Helvetica,sans-serif'; c.fillStyle = '#fff'; c.textAlign = 'left';
+    c.fillText('TECNOLOGIA', 10, 70); c.fillText('QUE IMPULSIONA', 10, 130); c.fillStyle = YELH; c.font = '800 56px Arial,Helvetica,sans-serif'; c.fillText('O SEU FUTURO', 10, 195); c.fillRect(10, 218, 150, 7);
+  });
+  const screenTex = (lw, lh, size, font) => canvasTex(lw, lh, (c, w, h) => {
+    const g = c.createLinearGradient(0, 0, w, h); g.addColorStop(0, '#051a4a'); g.addColorStop(0.5, '#0c49c0'); g.addColorStop(1, '#0a2f86'); c.fillStyle = g; c.fillRect(0, 0, w, h);
+    c.strokeStyle = 'rgba(130,205,255,.5)'; c.lineWidth = 2;
+    for (let k = 0; k < 9; k++) { c.beginPath(); for (let x = 0; x <= w; x += 10) { const y = h * (0.58 + k * 0.025) + Math.sin(x / (w / 7) + k * 0.6) * h * 0.08; x ? c.lineTo(x, y) : c.moveTo(x, y); } c.stroke(); }
+    c.fillStyle = 'rgba(120,200,255,.5)'; for (let k = 0; k < 90; k++) { c.beginPath(); c.arc(Math.random() * w, h * (0.5 + Math.random() * 0.45), 1.4, 0, 7); c.fill(); }
+    logoWord(c, w, h * 0.7, '#0b3aa0', size, font);
+  });
+  const phoneTex = canvasTex(160, 330, (c, w, h) => { c.fillStyle = '#0d3d52'; c.fillRect(0, 0, w, h); drawLogo(c, w / 2, 110, 70, '#0d3d52'); c.fillStyle = '#fff'; c.font = '700 18px Arial'; c.textAlign = 'center'; c.fillText('TECNOSOFT', w / 2, 175); c.fillStyle = YELH; c.fillRect(30, 230, 100, 14); c.fillStyle = 'rgba(255,255,255,.35)'; c.fillRect(30, 260, 100, 14); c.fillRect(30, 290, 100, 14); });
+  const totemTex = canvasTex(428, 762, (c, w, h) => {
+    c.fillStyle = '#0e3946'; c.fillRect(0, 0, w, h); logoWord(c, w, 150, '#0e3946', 56, 40);
+    c.fillStyle = '#fff'; c.textAlign = 'center'; c.font = '700 30px Arial,Helvetica,sans-serif'; c.fillText('AUTOATENDIMENTO', w / 2, 190);
+    ['Serviços', 'Suporte', 'Informações', 'Fale Conosco'].forEach((t, i) => { const y = 270 + i * 110; c.fillStyle = 'rgba(255,255,255,.08)'; c.fillRect(30, y - 38, w - 60, 76); c.fillStyle = '#2a7bff'; c.beginPath(); c.arc(78, y, 22, 0, 7); c.fill(); c.fillStyle = '#fff'; c.font = '700 22px Arial'; c.textAlign = 'center'; c.fillText(t[0], 78, y + 8); c.textAlign = 'left'; c.font = '600 30px Arial'; c.fillText(t, 118, y + 10); });
+  });
+  const counterTex = canvasTex(900, 480, (c, w, h) => {
+    const g0 = c.createLinearGradient(0, 0, 0, h); g0.addColorStop(0, '#17505e'); g0.addColorStop(1, '#0f3946'); c.fillStyle = g0; c.fillRect(0, 0, w, h);
+    c.save(); c.translate(-70, 0); logoWord(c, w, h, TEALH, 130, 84); c.restore();
+    c.fillStyle = '#f4f4f1'; c.beginPath(); c.moveTo(w * 0.78, h); c.lineTo(w, h); c.lineTo(w, 0); c.lineTo(w * 0.93, 0); c.closePath(); c.fill();
+  });
+  const keysTex = canvasTex(440, 140, (c, w, h) => { c.fillStyle = '#23282c'; c.fillRect(0, 0, w, h); c.fillStyle = '#3a4147'; for (let r = 0; r < 5; r++) for (let k = 0; k < 15; k++) c.fillRect(8 + k * 28, 8 + r * 25, 24, 21); });
+  const woodTex = canvasTex(128, 512, (c, w, h) => {
+    const g = c.createLinearGradient(0, 0, w, 0); g.addColorStop(0, '#e08f38'); g.addColorStop(1, '#bd6c22'); c.fillStyle = g; c.fillRect(0, 0, w, h);
+    for (let i = 0; i < 60; i++) { c.strokeStyle = `rgba(90,45,10,${0.08 + Math.random() * 0.18})`; c.lineWidth = 1 + Math.random() * 1.5; const x = Math.random() * w; c.beginPath(); c.moveTo(x, 0); c.lineTo(x + (Math.random() - 0.5) * 8, h); c.stroke(); }
+  });
+  const oakTex = canvasTex(64, 64, (c, w, h) => { c.fillStyle = '#c98f4c'; c.fillRect(0, 0, w, h); for (let i = 0; i < 8; i++) { c.strokeStyle = `rgba(110,60,20,${0.03 + Math.random() * 0.04})`; c.lineWidth = 1 + Math.random() * 2; const y = Math.random() * h; c.beginPath(); c.moveTo(0, y); c.lineTo(w, y + (Math.random() - 0.5) * 3); c.stroke(); } });
+  const rugTex = canvasTex(256, 256, (c, w, h) => { c.fillStyle = '#868d93'; c.fillRect(0, 0, w, h); for (let i = 0; i < 9000; i++) { const v = 112 + Math.random() * 40; c.fillStyle = `rgba(${v},${v + 3},${v + 6},.55)`; c.fillRect(Math.random() * w, Math.random() * h, 1.5, 1.5); } });
+  rugTex.wrapS = rugTex.wrapT = THREE.RepeatWrapping; rugTex.repeat.set(STAND.W / 0.45, STAND.D / 0.45);
+  const rugBump = rugTex;
+  const carpetTex = canvasTex(256, 256, (c, w, h) => { c.fillStyle = '#7f8c97'; c.fillRect(0, 0, w, h); for (let i = 0; i < 5000; i++) { const v = 110 + Math.random() * 40; c.fillStyle = `rgba(${v},${v + 8},${v + 16},.5)`; c.fillRect(Math.random() * w, Math.random() * h, 2, 2); } });
+  carpetTex.wrapS = carpetTex.wrapT = THREE.RepeatWrapping; carpetTex.repeat.set(10, 3);
+  const leafTex = canvasTex(64, 256, (c, w, h) => { const g = c.createLinearGradient(0, 0, w, 0); g.addColorStop(0, '#2a6d31'); g.addColorStop(0.5, '#52a44c'); g.addColorStop(1, '#2a6d31'); c.fillStyle = g; c.fillRect(0, 0, w, h); const g2 = c.createLinearGradient(0, 0, 0, h); g2.addColorStop(0, 'rgba(255,255,160,.18)'); g2.addColorStop(1, 'rgba(0,30,0,.25)'); c.fillStyle = g2; c.fillRect(0, 0, w, h); c.strokeStyle = 'rgba(200,240,170,.7)'; c.lineWidth = 3; c.beginPath(); c.moveTo(w / 2, 0); c.lineTo(w / 2, h); c.stroke(); c.strokeStyle = 'rgba(20,70,20,.35)'; c.lineWidth = 1; for (let y = 10; y < h; y += 10) { c.beginPath(); c.moveTo(w / 2, y); c.lineTo(2, y - 8); c.moveTo(w / 2, y); c.lineTo(w - 2, y - 8); c.stroke(); } });
+  const aoTex = canvasTex(128, 128, (c, w, h) => { const g = c.createRadialGradient(64, 64, 8, 64, 64, 64); g.addColorStop(0, 'rgba(0,0,0,.65)'); g.addColorStop(0.55, 'rgba(0,0,0,.28)'); g.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = g; c.fillRect(0, 0, w, h); });
+  const edgeTex = canvasTex(64, 8, (c, w, h) => { const g = c.createLinearGradient(0, 0, w, 0); g.addColorStop(0, 'rgba(0,0,0,.5)'); g.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = g; c.fillRect(0, 0, w, h); });
+  const washTex = canvasTex(8, 256, (c, w, h) => { const g = c.createLinearGradient(0, 0, 0, h); g.addColorStop(0, '#2a7183'); g.addColorStop(0.55, '#1a5666'); g.addColorStop(1, '#123e4b'); c.fillStyle = g; c.fillRect(0, 0, w, h); });
+  const glowTex = (vertical) => canvasTex(64, 64, (c, w, h) => {      // faixa luminosa com brilho suave também nas pontas
+    const a = vertical ? c.createLinearGradient(0, 0, w, 0) : c.createLinearGradient(0, 0, 0, h);
+    a.addColorStop(0, 'rgba(255,190,40,0)'); a.addColorStop(0.5, 'rgba(255,190,40,1)'); a.addColorStop(1, 'rgba(255,190,40,0)'); c.fillStyle = a; c.fillRect(0, 0, w, h);
+    c.globalCompositeOperation = 'destination-in'; const b = vertical ? c.createLinearGradient(0, 0, 0, h) : c.createLinearGradient(0, 0, w, 0);
+    b.addColorStop(0, 'rgba(0,0,0,0)'); b.addColorStop(0.12, 'rgba(0,0,0,1)'); b.addColorStop(0.88, 'rgba(0,0,0,1)'); b.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = b; c.fillRect(0, 0, w, h);
+  });
+  const glowV = glowTex(true), glowH = glowTex(false);
+  const glowM = (tx, op) => new THREE.MeshBasicMaterial({ map: tx, transparent: true, opacity: op, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false, side: THREE.DoubleSide });
+  const wallNoise = noiseTex(256, [8, 4], 0.35), plasterBump = noiseTex(256, [10, 5], 1);
+
+  /* ---------- ambiente (reflexos) e luzes ---------- */
+  (function env() {
+    const pm = new THREE.PMREMGenerator(renderer), es = new THREE.Scene();
+    es.add(new THREE.Mesh(new THREE.BoxGeometry(30, 14, 30), new THREE.MeshBasicMaterial({ color: new THREE.Color(0.30, 0.33, 0.36), side: THREE.BackSide, toneMapped: false })));
+    const panel = (w, h, pos, v) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(v, v, v * 0.96), side: THREE.DoubleSide, toneMapped: false })); m.position.set(...pos); m.lookAt(0, 0, 0); es.add(m); };
+    panel(16, 7, [0, 6.6, 0], 4.5); panel(7, 6, [12, 3, 6], 2.6); panel(7, 6, [-12, 3, 4], 2.0); panel(10, 5, [0, 3, 14], 2.0);
+    scene.environment = pm.fromScene(es, 0.03).texture; pm.dispose();
+  })();
+  scene.add(new THREE.HemisphereLight(C(0xe4ecf2), C(0x9c968e), 0.30));
+  const sun = new THREE.DirectionalLight(C(0xfff4e6), 0.9); sun.shadow.radius = 4; sun.position.set(5, 8.5, 9); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
+  Object.assign(sun.shadow.camera, { left: -6, right: 6, top: 6, bottom: -6, near: 1, far: 30 }); sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.02; scene.add(sun);
+  [1, 2, 5, 6, 8, 9].forEach((i) => { const [x, y] = STAND.spots[i]; const sl = new THREE.SpotLight(C(0xffeedd), 1.6, 6.5, 0.7, 0.85, 1.3); sl.position.copy(P(x, y, STAND.ceilZ - 0.02)); sl.target.position.copy(P(x, y, 0)); sl.castShadow = true; sl.shadow.mapSize.set(1024, 1024); sl.shadow.bias = -0.0005; sl.shadow.normalBias = 0.02; sl.shadow.radius = 5; sl.shadow.camera.near = 0.1; sl.shadow.camera.far = 6; scene.add(sl, sl.target); });
+  const poolTex = canvasTex(128, 128, (c, w, h) => { const g = c.createRadialGradient(64, 64, 4, 64, 64, 64); g.addColorStop(0, 'rgba(255,236,200,.9)'); g.addColorStop(0.5, 'rgba(255,225,180,.35)'); g.addColorStop(1, 'rgba(255,225,180,0)'); c.fillStyle = g; c.fillRect(0, 0, w, h); });
+  STAND.spots.forEach(([x, y]) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 1.1).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ map: poolTex, transparent: true, opacity: 0.07, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false })); m.position.copy(P(x, y, 0.007)); m.renderOrder = 2; scene.add(m); });
+  const trayGlow = new THREE.PointLight(C(0xffc56b), 0.45, 5, 1.5); trayGlow.position.copy(P(2.5, 1.7, STAND.trayZ - 0.1)); scene.add(trayGlow);
+  if (hasRect) {                                                         // luz das fitas de LED
+    const ra = (col, I, w, h, from, to) => { const l = new THREE.RectAreaLight(C(col), I, w, h); l.position.copy(from); l.lookAt(to); scene.add(l); };
+    ra(0xffc050, 6, 4.6, 0.05, P(2.5, 0.06, 2.53), P(2.5, 1.8, 1.0));    // LED sob a testeira
+    ra(0xffd49a, 5, 2.3, 1.5, P(2.5, 1.7, STAND.trayZ - 0.05), P(2.5, 1.7, 0));   // luz do rebaixo
+    ra(0xffc050, 4, 4.5, 0.04, P(2.5, 0.03, 0.03), P(2.5, 2.2, 0.0));     // LED do piso, frente
+  }
+
+  /* ---------- piso e entorno ---------- */
+  const hole = new THREE.Path(); hole.moveTo(-2.5, -2); hole.lineTo(2.5, -2); hole.lineTo(2.5, 2); hole.lineTo(-2.5, 2); hole.closePath();
+  const outer = new THREE.Shape(); outer.moveTo(-24, -24); outer.lineTo(24, -24); outer.lineTo(24, 24); outer.lineTo(-24, 24); outer.closePath(); outer.holes.push(hole);
+  const ground = shade(new THREE.Mesh(new THREE.ShapeGeometry(outer).rotateX(-Math.PI / 2), mat(0xc9d0d5, { roughness: 1 })), false, true); ground.position.y = -0.002; scene.add(ground);
+  const aisle = new THREE.Mesh(new THREE.PlaneGeometry(16, 3.2).rotateX(-Math.PI / 2), mat(0xffffff, { map: carpetTex, bumpMap: carpetTex, bumpScale: 0.3, roughness: 1 })); aisle.position.set(0, 0.001, 3.6); aisle.receiveShadow = true; scene.add(aisle);
+  const under = new THREE.Mesh(new THREE.PlaneGeometry(6, 5).rotateX(-Math.PI / 2), mat(0x77736d, { roughness: 1 })); under.position.y = -3.4; scene.add(under);
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(STAND.W, STAND.D).rotateX(-Math.PI / 2), mat(0xffffff, { map: rugTex, bumpMap: rugBump, bumpScale: 0.25, roughness: 1.0, envMapIntensity: 0.25 }));
+  floor.position.y = 0.003; floor.receiveShadow = true; scene.add(floor);
+  const lineL = canvasTex(1024, 96, (c, w, h) => { c.fillStyle = 'rgba(20,60,76,.5)'; c.font = '700 54px Arial'; c.textAlign = 'center'; c.fillText('CORREDOR DA FEIRA', w / 2, 66); });
+  const al = new THREE.Mesh(new THREE.PlaneGeometry(3.6, 0.34).rotateX(-Math.PI / 2), basic(0xffffff, { map: lineL, transparent: true })); al.position.set(0, 0.004, 4.0); scene.add(al);
+
+  /* ---------- estrutura ---------- */
+  const tealM = phys(0x14414d, { roughness: 0.5, metalness: 0.0, clearcoat: 0.25, clearcoatRoughness: 0.5, envMapIntensity: 0.6 });
+  const washM = mat(0xffffff, { map: washTex, roughness: 0.55, envMapIntensity: 0.6 });
+  const whiteM = mat(0xf3f2ee, { roughness: 0.75 });
+  const ledColor = 0xffc21a, ledM = basic(ledColor);
+  const glowYel = glowV;                                                 // gradiente de brilho
+  // LEDs em instâncias: núcleo + brilho
+  const ledCore = [], ledGlow = [];                                      // {pos:Vector3, sx,sy,sz, rotY}
+  const addLED = (x0, x1, y0, y1, z0, z1, glowW) => { bx(x0, x1, y0, y1, z0, z1, ledM, { shadow: false }); if (glowW) { /* brilho aplicado depois por planos */ } };
+
+  // testeira: viga com face lisa + letras em relevo + halo de LED
+  const headerFace = mat(0xffffff, { map: headerBase, roughness: 0.45, envMapIntensity: 0.7 });
+  bx(0, 5, 0, 0.30, 2.55, 3.00, sideMats(tealM, headerFace));
+  const hdrZ = 2 - 0.0, hdrMid = 2.775;
+  const halo = new THREE.Mesh(new THREE.PlaneGeometry(5, 0.45), new THREE.MeshBasicMaterial({ map: haloTex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false, opacity: 0.95 }));
+  halo.position.set(0, hdrMid, hdrZ + 0.0015); S.add(halo);
+  const layers = 7, dz = 0.0065;
+  for (let i = 0; i < layers; i++) {
+    const t = i / (layers - 1), front = i === layers - 1;
+    const m = new THREE.MeshStandardMaterial({ map: lettersTex, alphaTest: 0.5, color: C(front ? 0xffffff : new THREE.Color().setRGB(0.55 + 0.3 * t, 0.58 + 0.3 * t, 0.6 + 0.3 * t).getHex()), roughness: front ? 0.3 : 0.6, metalness: front ? 0.1 : 0.0, emissiveMap: front ? lettersTex : null, emissive: front ? C(0xbfe4ff) : C(0x000000), emissiveIntensity: front ? 0.75 : 0 });
+    const pl = new THREE.Mesh(new THREE.PlaneGeometry(5, 0.45), m); pl.position.set(0, hdrMid, hdrZ + 0.004 + i * dz); S.add(pl);
+  }
+  // fitas de LED: sob a testeira e no topo do vão
+  addLED(0.03, 4.97, -0.006, 0.018, 2.55, 2.58);
+  addLED(0.045, 0.065, -0.006, 0.010, 2.575, 2.985);                 // LED vertical na ponta esquerda da testeira (como na referência)
+  // paredes laterais até o fundo e parede de fundo
+  bx(0, 0.15, 0, 4.00, 0, 3.00, tealM); bx(4.85, 5.00, 0, 4.00, 0, 3.00, tealM);
+  bx(0.15, 4.85, 3.90, 4.00, 0, 3.00, sideMats(tealM, washM));
+  // LED nas bordas frontais das paredes e no piso (frente)
+  bx(0.15, 4.85, -0.006, 0.02, 0, 0.012, ledM, { shadow: false });
+  // brilhos (additive) dos LEDs principais
+  const gl = (w, h, tx, op, pos, ry = 0, rx = 0) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), glowM(tx, op)); m.position.copy(pos); m.rotation.set(rx, ry, 0); S.add(m); return m; };
+  gl(5.0, 0.20, glowH, 0.55, P(2.5, -0.012, 2.565));                    // sob a testeira
+  gl(4.7, 0.34, glowH, 0.5, P(2.5, 0.16, 0.003), 0, -Math.PI / 2);      // piso, frente
+  gl(0.16, 0.44, glowV, 0.4, P(0.055, -0.012, 2.78));
+  [1, 2, 3, 4].forEach((x) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(1.0, 1.0), glowM(poolTex, 0.3)); m.position.copy(P(x, 3.894, 2.38)); S.add(m); });   // luz dos spots lavando o fundo
+
+  /* ---------- ripado: painéis contínuos com LED amarelo nas bordas verticais ---------- */
+  const slatM = mat(0xffffff, { map: woodTex, roughness: 0.55, emissive: C(0x2a1203), emissiveIntensity: 0.5, envMapIntensity: 0.6 });
+  const backM = mat(0x24130a, { roughness: 0.85 });
+  const SL = STAND.items.filter((i) => i.slat);
+  const nSlat = SL.reduce((s, i) => s + i.slat.pos.length, 0), nLed = SL.reduce((s, i) => s + i.slat.led.length, 0);
+  const gSide = new THREE.BoxGeometry(0.03, 2.55, 0.04), gBack = new THREE.BoxGeometry(0.04, 2.55, 0.03);
+  const imSide = new THREE.InstancedMesh(gSide, slatM, Math.max(1, SL.filter((i) => i.slat.wall !== 'B').reduce((s, i) => s + i.slat.pos.length, 0)));
+  const imBack = new THREE.InstancedMesh(gBack, slatM, Math.max(1, SL.filter((i) => i.slat.wall === 'B').reduce((s, i) => s + i.slat.pos.length, 0)));
+  const ledSideG = new THREE.BoxGeometry(0.016, 2.54, 0.016), ledBackG = new THREE.BoxGeometry(0.016, 2.54, 0.016);
+  const lSide = new THREE.InstancedMesh(ledSideG, ledM, Math.max(1, SL.filter((i) => i.slat.wall !== 'B').reduce((s, i) => s + i.slat.led.length, 0)));
+  const lBack = new THREE.InstancedMesh(ledBackG, ledM, Math.max(1, SL.filter((i) => i.slat.wall === 'B').reduce((s, i) => s + i.slat.led.length, 0)));
+  const gGlowS = new THREE.PlaneGeometry(0.34, 2.54).rotateY(Math.PI / 2), gGlowB = new THREE.PlaneGeometry(0.34, 2.54);
+  const glS = new THREE.InstancedMesh(gGlowS, glowM(glowV, 0.7), lSide.count), glB = new THREE.InstancedMesh(gGlowB, glowM(glowV, 0.7), lBack.count);
+  [imSide, imBack].forEach((m) => { m.castShadow = true; m.receiveShadow = true; });
+  const m4 = new THREE.Matrix4(); let ia = 0, ib = 0, la = 0, lb = 0;
+  SL.forEach((it) => {
+    const w = it.slat.wall, sgn = w === 'L' ? 1 : -1;
+    it.slat.pos.forEach((a) => { const p = w === 'B' ? P(a, 3.885, 1.275) : P(w === 'L' ? 0.165 : 4.835, a, 1.275); m4.makeTranslation(p.x, p.y, p.z); if (w === 'B') imBack.setMatrixAt(ib++, m4); else imSide.setMatrixAt(ia++, m4); });
+    it.slat.led.forEach((a) => {
+      const p = w === 'B' ? P(a, 3.882, 1.275) : P(w === 'L' ? 0.178 : 4.822, a, 1.275); m4.makeTranslation(p.x, p.y, p.z);
+      if (w === 'B') { lBack.setMatrixAt(lb, m4); const q = P(a, 3.855, 1.275); m4.makeTranslation(q.x, q.y, q.z); glB.setMatrixAt(lb, m4); lb++; }
+      else { lSide.setMatrixAt(la, m4); const q = P(w === 'L' ? 0.195 : 4.805, a, 1.275); m4.makeTranslation(q.x, q.y, q.z); glS.setMatrixAt(la, m4); la++; }
+    });
+    // fundo escuro do bloco
+    if (w === 'B') bx(it.x, it.x + it.w, 3.896, 3.90, 0, 2.55, backM, { shadow: false });
+    else bx(w === 'L' ? 0.15 : 4.846, (w === 'L' ? 0.15 : 4.846) + 0.004, it.y, it.y + it.d, 0, 2.55, backM, { shadow: false });
+  });
+  imSide.count = ia; imBack.count = ib; lSide.count = glS.count = la; lBack.count = glB.count = lb;   // sem instâncias sobrando
+  [imSide, imBack, lSide, lBack, glS, glB].forEach((m) => { m.instanceMatrix.needsUpdate = true; S.add(m); });
+
+  /* ---------- adesivos nas paredes laterais (com moldura de LED) ---------- */
+  [['V1', decalL, 0.15, Math.PI / 2], ['V2', decalR, 4.85, -Math.PI / 2]].forEach(([k, tx, x, ry]) => {
+    const v = byTag[k], zc = v.z0 + v.h / 2, yc = v.y + v.d / 2, sg = ry > 0 ? 1 : -1;
+    const pl = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 2.0), new THREE.MeshStandardMaterial({ map: tx, transparent: true, roughness: 0.4, emissive: C(0xffffff), emissiveMap: tx, emissiveIntensity: 0.16, polygonOffset: true, polygonOffsetFactor: -2 }));
+    pl.position.copy(P(x + sg * 0.002, yc, zc)); pl.rotation.y = ry; pl.receiveShadow = true; S.add(pl);
+  });
+
+  /* ---------- forro com rebaixo, spots e LED ---------- */
+  const ceilG = new THREE.Group(); ceilG.name = 'ceil'; S.add(ceilG);
+  bx(0.15, 4.85, 0.30, 3.90, 2.95, 3.00, whiteM, { parent: ceilG });
+  const cm = mat(0xf4f3ee, { roughness: 0.9, side: THREE.FrontSide }), tr = STAND.tray, cz = STAND.ceilZ;
+  const flat = (x0, x1, y0, y1, z, m) => { const me = new THREE.Mesh(new THREE.PlaneGeometry(x1 - x0, y1 - y0).rotateX(Math.PI / 2), m); me.position.copy(P((x0 + x1) / 2, (y0 + y1) / 2, z)); me.receiveShadow = true; ceilG.add(me); };
+  flat(0.15, 4.85, 0.30, tr.y0, cz, cm); flat(0.15, 4.85, tr.y1, 3.90, cz, cm); flat(0.15, tr.x0, tr.y0, tr.y1, cz, cm); flat(tr.x1, 4.85, tr.y0, tr.y1, cz, cm);
+  flat(tr.x0, tr.x1, tr.y0, tr.y1, STAND.trayZ, mat(0xfbfaf6, { roughness: 0.9, emissive: C(0xcfc6b0), emissiveIntensity: 0.4 }));
+  const mz = (cz + STAND.trayZ) / 2, tw = tr.x1 - tr.x0, td = tr.y1 - tr.y0;
+  const sidePl = (w, pos, ry) => { const me = new THREE.Mesh(new THREE.PlaneGeometry(w, STAND.trayZ - cz), mat(0xf4f3ee, { side: THREE.DoubleSide, roughness: 0.9 })); me.position.copy(pos); me.rotation.y = ry; ceilG.add(me); };
+  sidePl(tw, P((tr.x0 + tr.x1) / 2, tr.y0, mz), 0); sidePl(tw, P((tr.x0 + tr.x1) / 2, tr.y1, mz), 0); sidePl(td, P(tr.x0, (tr.y0 + tr.y1) / 2, mz), Math.PI / 2); sidePl(td, P(tr.x1, (tr.y0 + tr.y1) / 2, mz), Math.PI / 2);
+  [[tr.x0, tr.x1, tr.y0, tr.y0 + 0.03], [tr.x0, tr.x1, tr.y1 - 0.03, tr.y1], [tr.x0, tr.x0 + 0.03, tr.y0, tr.y1], [tr.x1 - 0.03, tr.x1, tr.y0, tr.y1]]
+    .forEach((r) => bx(r[0], r[1], r[2], r[3], STAND.trayZ - 0.02, STAND.trayZ - 0.005, ledM, { parent: ceilG, shadow: false }));
+  [[tr.x0, tr.x1, tr.y0 - 0.002], [tr.x0, tr.x1, tr.y1 + 0.002]].forEach(([a, b, yy]) => { const g = new THREE.Mesh(new THREE.PlaneGeometry(b - a, 0.2), glowM(glowH, 0.25)); g.position.copy(P((a + b) / 2, yy, cz + 0.1)); ceilG.add(g); });
+  const ringG = new THREE.TorusGeometry(0.062, 0.009, 8, 28).rotateX(Math.PI / 2), ringM = mat(0xdadada, { metalness: 0.9, roughness: 0.3 });
+  STAND.spots.forEach(([x, y]) => {
+    const d = new THREE.Mesh(new THREE.CircleGeometry(0.055, 24).rotateX(Math.PI / 2), basic(0xfff3dc)); d.position.copy(P(x, y, cz - 0.004)); ceilG.add(d);
+    const r = new THREE.Mesh(ringG, ringM); r.position.copy(P(x, y, cz - 0.004)); ceilG.add(r);
+  });
+
+  /* ---------- balcão 1,80 m (no limite da frente) ---------- */
+  const lac = (hex) => phys(hex, { roughness: 0.22, clearcoat: 1, clearcoatRoughness: 0.12, envMapIntensity: 1.0 });
+  const M = byTag.M1, mx0 = M.x, mx1 = M.x + M.w, my0 = M.y, my1 = M.y + M.d, mcx = (mx0 + mx1) / 2, mcy = (my0 + my1) / 2;
+  const counterG = new THREE.Group(); S.add(counterG);
+  bx(mx0, mx1, my0, my1, 0.08, 0.96, sideMats(tealM, mat(0xffffff, { map: counterTex, roughness: 0.32, envMapIntensity: 0.9 }), lac(0xf2f2ee)), { parent: counterG });
+  bx(mx0 + 0.03, mx1 - 0.03, my0 + 0.03, my1 - 0.03, 0, 0.08, mat(0x0c0f11, { roughness: 0.5 }), { parent: counterG });
+  add(rbox(M.w, 0.04, M.d, 0.025, 0.012), lac(0xf6f6f2), ...P(mcx, mcy, 0.96).toArray(), counterG);
+  bx(mx0 + 0.03, mx1 - 0.03, my0 - 0.008, my0 + 0.004, 0.075, 0.09, ledM, { parent: counterG, shadow: false });        // LED do rodapé
+  { // LED diagonal do corte (amarelo)
+    const a = P(mx0 + 0.78 * M.w, my0 - 0.004, 0.085), b = P(mx0 + 0.93 * M.w, my0 - 0.004, 0.955), len = a.distanceTo(b), ang = Math.atan2(b.y - a.y, b.x - a.x);
+    const m = new THREE.Mesh(new THREE.BoxGeometry(len, 0.012, 0.006), ledM); m.position.copy(a.clone().add(b).multiplyScalar(0.5)); m.rotation.z = ang; counterG.add(m);
+    const g = new THREE.Mesh(new THREE.PlaneGeometry(len, 0.14), glowM(glowH, 0.35)); g.position.copy(m.position); g.position.z += 0.003; g.rotation.z = ang; counterG.add(g);
+  }
+  const gc = new THREE.Mesh(new THREE.PlaneGeometry(M.w, 0.22), glowM(glowH, 0.35)); gc.position.copy(P(mcx, my0 - 0.012, 0.085)); counterG.add(gc);
+  // monitor 22"
+  const dark = mat(0x16191b, { roughness: 0.4 }), metal = mat(0xb9bec2, { metalness: 0.9, roughness: 0.3 });
+  const Q3 = byTag.Q3, qx = cxOf(Q3), py0 = Q3.y + 0.065;               // plano do painel
+  bx(qx - 0.25, qx + 0.25, py0, py0 + 0.025, 1.12, 1.42, dark, { parent: counterG });
+  const monScr = new THREE.Mesh(new THREE.PlaneGeometry(0.47, 0.27), new THREE.MeshStandardMaterial({ map: screenTex(640, 360, 70, 62), emissiveMap: screenTex(640, 360, 70, 62), emissive: C(0xffffff), emissiveIntensity: 0.9, roughness: 0.15, color: C(0x222222) })); monScr.position.copy(P(qx, py0 - 0.002, 1.27)); counterG.add(monScr);
+  bx(qx - 0.015, qx + 0.015, py0 + 0.005, py0 + 0.025, 1.01, 1.12, metal, { parent: counterG }); add(new THREE.CylinderGeometry(0.1, 0.105, 0.012, 28), metal, ...P(qx, py0 + 0.035, 1.006).toArray(), counterG);
+  // teclado e mouse
+  const Q4 = byTag.Q4, Q5 = byTag.Q5;
+  const kb = new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.018, 0.14), [dark, dark, mat(0xffffff, { map: keysTex, roughness: 0.6 }), dark, dark, dark]); kb.position.copy(P(cxOf(Q4), cyOf(Q4), 1.009)); shade(kb); counterG.add(kb);
+  const ms = shade(new THREE.Mesh(new THREE.SphereGeometry(0.05, 18, 12), lac(0x23272b))); ms.scale.set(0.6, 0.45, 1.0); ms.position.copy(P(cxOf(Q5), cyOf(Q5), 1.012)); counterG.add(ms);
+  // smartphones em suportes
+  [byTag.Q6, byTag.Q7].forEach((q) => {
+    const x = cxOf(q), y = cyOf(q);
+    bx(x - 0.045, x + 0.045, y - 0.04, y + 0.04, 1.0, 1.012, metal, { parent: counterG });
+    const g = new THREE.Group(); g.position.copy(P(x, y, 1.10)); g.rotation.x = -0.27;
+    const body = shade(new THREE.Mesh(new THREE.BoxGeometry(0.075, 0.155, 0.008), dark)); g.add(body);
+    const scr = new THREE.Mesh(new THREE.PlaneGeometry(0.067, 0.145), new THREE.MeshStandardMaterial({ map: phoneTex, emissiveMap: phoneTex, emissive: C(0xffffff), emissiveIntensity: 0.9, roughness: 0.2 })); scr.position.z = 0.0045; g.add(scr); counterG.add(g);
+  });
+
+  /* ---------- totem 43" em pé, encostado na parede direita e voltado para dentro ---------- */
+  const Q1 = byTag.Q1, totem = new THREE.Group(); S.add(totem);
+  totem.position.copy(P(cxOf(Q1), cyOf(Q1), 0)); totem.rotation.y = -Math.PI / 2;   // frente (local +z) -> mundo -x (interior)
+  add(rbox(0.60, 0.05, 0.14, 0.02, 0.01), mat(0xdfe2e5, { roughness: 0.3, metalness: 0.4 }), 0, 0, 0, totem);
+  add(rbox(0.62, 1.70, 0.14, 0.04, 0.016), lac(0xf7f8f9), 0, 0.05, 0, totem);
+  add(new THREE.BoxGeometry(0.59, 1.0, 0.004), phys(0x07090a, { roughness: 0.08, clearcoat: 1 }), 0, 1.125, 0.0705, totem, false);
+  const tscr = new THREE.Mesh(new THREE.PlaneGeometry(0.535, 0.952), new THREE.MeshStandardMaterial({ map: totemTex, emissiveMap: totemTex, emissive: C(0xffffff), emissiveIntensity: 0.95, roughness: 0.12, color: C(0x1a1a1a) })); tscr.position.set(0, 1.125, 0.0731); totem.add(tscr);
+  add(new THREE.BoxGeometry(0.20, 0.025, 0.006), mat(0x15181a, { roughness: 0.3 }), 0, 0.452, 0.0715, totem, false);
+  add(new THREE.BoxGeometry(0.14, 0.003, 0.003), basic(0x4aa3ff), 0, 0.452, 0.075, totem, false);
+  add(new THREE.BoxGeometry(0.16, 0.025, 0.006), mat(0x15181a), 0, 1.677, 0.0715, totem, false);
+  [-0.296, 0.296].forEach((x) => add(new THREE.BoxGeometry(0.008, 1.55, 0.006), ledM, x, 0.9, 0.0715, totem, false));   // LED nas laterais do totem
+  { const g = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 1.8), glowM(glowV, 0.22)); g.position.set(0, 0.95, 0.045); totem.add(g); }
+  const tg = new THREE.PointLight(C(0x7fb4ff), 0.35, 2.0, 2); tg.position.copy(P(cxOf(Q1) - 0.35, cyOf(Q1), 1.1)); scene.add(tg);
+
+  /* ---------- TV de parede 55" ---------- */
+  const tvG = new THREE.Group(); S.add(tvG);
+  bx(1.39, 2.61, 3.85, 3.895, 1.45, 2.14, mat(0x0b0b0c, { roughness: 0.3, metalness: 0.4 }), { parent: tvG });
+  const tvScr = new THREE.Mesh(new THREE.PlaneGeometry(1.19, 0.665), new THREE.MeshStandardMaterial({ map: screenTex(960, 540, 120, 104), emissiveMap: screenTex(960, 540, 120, 104), emissive: C(0xffffff), emissiveIntensity: 0.95, roughness: 0.12, color: C(0x222222) })); tvScr.position.copy(P(2.0, 3.848, 1.795)); tvG.add(tvScr);
+  const tag = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 0.5), new THREE.MeshBasicMaterial({ map: taglineTex, transparent: true, toneMapped: false })); tag.position.copy(P(3.50, 3.895, 1.80)); S.add(tag);
+
+  /* ---------- mesas e cadeiras ---------- */
+  const satin = mat(0xc9ced2, { metalness: 0.9, roughness: 0.32 }), topM = lac(0xfbfbf9);
+  const pedGeo = new THREE.LatheGeometry([[0.20, 0], [0.20, 0.012], [0.17, 0.022], [0.06, 0.06], [0.035, 0.14], [0.03, 0.70]].map((p) => new THREE.Vector2(p[0], p[1])), 40);
+  ['M2', 'M3', 'M4'].forEach((k) => {
+    const t = byTag[k], g = new THREE.Group(); g.position.copy(P(cxOf(t), cyOf(t), 0)); S.add(g);
+    add(pedGeo, satin, 0, 0, 0, g); add(new THREE.CylinderGeometry(0.3, 0.3, 0.024, 56), topM, 0, 0.708, 0, g); add(new THREE.CylinderGeometry(0.296, 0.3, 0.004, 56), satin, 0, 0.694, 0, g);
+    add(new THREE.CylinderGeometry(0.10, 0.10, 0.012, 24), satin, 0, 0.688, 0, g);
+    mkAO(cxOf(t), cyOf(t), 0.95, 0.95, 0.5);
+  });
+  const fabricTex = canvasTex(64, 64, (c, w, h) => { c.fillStyle = '#e9dfcf'; c.fillRect(0, 0, w, h); c.strokeStyle = 'rgba(90,70,40,.16)'; c.lineWidth = 1; for (let i = 0; i < w; i += 2) { c.beginPath(); c.moveTo(i, 0); c.lineTo(i, h); c.stroke(); c.beginPath(); c.moveTo(0, i + 1); c.lineTo(w, i + 1); c.stroke(); } }); fabricTex.wrapS = fabricTex.wrapT = THREE.RepeatWrapping; fabricTex.repeat.set(9, 9);
+  const fabric = mat(0xffffff, { map: fabricTex, roughness: 0.95, side: THREE.DoubleSide, bumpMap: fabricTex, bumpScale: 0.04 }), oak = mat(0xffffff, { map: oakTex, roughness: 0.45, envMapIntensity: 0.6 });
+  const seatGeo = rbox(0.46, 0.075, 0.46, 0.08, 0.025), cushionGeo = rbox(0.40, 0.045, 0.40, 0.07, 0.02);
+  const legGeo = new THREE.CylinderGeometry(0.024, 0.013, 0.385, 14), railGeo = new THREE.BoxGeometry(0.40, 0.03, 0.03), railSideGeo = new THREE.BoxGeometry(0.03, 0.03, 0.40);
+  const arcGeo = new THREE.CylinderGeometry(0.262, 0.226, 0.37, 36, 1, true, -1.78, 3.56);
+  function chair() {
+    const g = new THREE.Group();
+    add(seatGeo, fabric, 0, 0.37, 0, g); add(cushionGeo, mat(0xffffff, { map: fabricTex, roughness: 1, bumpMap: fabricTex, bumpScale: 0.04 }), 0, 0.445, 0, g);
+    add(arcGeo, fabric, 0, 0.64, 0.0, g);
+    add(railGeo, oak, 0, 0.36, -0.21, g); add(railGeo, oak, 0, 0.36, 0.21, g); add(railSideGeo, oak, -0.21, 0.36, 0, g); add(railSideGeo, oak, 0.21, 0.36, 0, g);
+    [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([sx, sz]) => { const l = add(legGeo, oak, sx * 0.195, 0.19, sz * 0.195, g); l.rotation.z = 0.07 * sx; l.rotation.x = -0.07 * sz; });
+    return g;
+  }
+  ['C1', 'C2', 'C3', 'C4', 'C5', 'C6'].forEach((k) => {
+    const it = byTag[k], g = chair(); g.position.copy(P(cxOf(it), cyOf(it), 0));
+    g.rotation.y = (it.face > 0 ? 0 : Math.PI) + (it.rot * Math.PI) / 180; S.add(g); mkAO(cxOf(it), cyOf(it), 0.62, 0.62, 0.45, it.rot);
+  });
+
+  /* ---------- plantas finas ---------- */
+  function bladeGeo(L, wd, bend) {
+    const g = new THREE.PlaneGeometry(1, 1, 2, 10), pos = g.attributes.position;
+    for (let i = 0; i < pos.count; i++) { const u = pos.getX(i), v = pos.getY(i) + 0.5, prof = 0.16 + 0.84 * Math.pow(Math.sin(Math.PI * Math.pow(v, 0.85)), 0.7); pos.setXYZ(i, u * wd * prof, v * L, bend * L * v * v + Math.abs(u) * wd * 0.35); }
+    g.computeVertexNormals(); return g;
+  }
+  const leafMats = [0xffffff, 0xf0ffe8, 0xe0f5d8].map((h) => mat(h, { map: leafTex, bumpMap: leafTex, bumpScale: 0.2, side: THREE.DoubleSide, roughness: 0.45 }));
+  function foliage(parent, y0, n, len, wd, tilt, bend, seed) {
+    for (let i = 0; i < n; i++) {
+      const a = seed + i * 2.399963, k = ((i * 37) % 11) / 11, L = len * (0.62 + 0.38 * k), pv = new THREE.Group(); pv.position.y = y0; pv.rotation.y = a;
+      const tg2 = new THREE.Group(); tg2.rotation.x = tilt * (0.35 + 0.9 * (1 - k)); pv.add(tg2);
+      const leaf = shade(new THREE.Mesh(bladeGeo(L, wd * (0.8 + 0.4 * k), bend * (0.6 + 0.8 * k)), leafMats[i % 3]), true, false); leaf.rotation.y = (k - 0.5) * 0.5; tg2.add(leaf); parent.add(pv);
+    }
+  }
+  const soilTex = noiseTex(64, [2, 2], 1), soil = mat(0x2b1d12, { roughness: 1, bumpMap: soilTex, bumpScale: 0.3 }), potBlack = mat(0x141414, { roughness: 0.4 }), potWhite = lac(0xf4f4f0);
+  const pebbles = mat(0x8c8a84, { roughness: 0.9, bumpMap: soilTex, bumpScale: 0.4 });
+  function plantAt(cx, cy, z0, pot) {
+    const g = new THREE.Group(); g.position.copy(P(cx, cy, z0)); S.add(g);
+    if (pot.sq) { const gm = new THREE.CylinderGeometry(pot.r * 1.414, pot.r * 1.1, pot.h, 4, 1).rotateY(Math.PI / 4); add(gm, pot.m, 0, pot.h / 2, 0, g); add(new THREE.CylinderGeometry(pot.r * 1.2, pot.r * 1.2, 0.01, 4).rotateY(Math.PI / 4), pebbles, 0, pot.h - 0.01, 0, g, false); }
+    else { add(new THREE.CylinderGeometry(pot.r, pot.r * 0.78, pot.h, 32), pot.m, 0, pot.h / 2, 0, g); add(new THREE.CylinderGeometry(pot.r * 0.94, pot.r * 0.94, 0.01, 28), soil, 0, pot.h - 0.012, 0, g, false); }
+    foliage(g, pot.h - 0.01, pot.n, pot.len, pot.wd, pot.tilt, pot.bend, cx * 5 + cy);
+    return g;
+  }
+  const d1 = byTag.D1; plantAt(cxOf(d1), cyOf(d1), 0, { sq: true, r: 0.20, h: 0.60, m: potBlack, n: 11, len: 0.95, wd: 0.07, tilt: 0.42, bend: 0.28 });
+  ['D2', 'D3'].forEach((k) => { const d = byTag[k]; plantAt(cxOf(d), cyOf(d), 0, { r: 0.175, h: 0.40, m: potBlack, n: 10, len: 1.32, wd: 0.065, tilt: 0.34, bend: 0.3 }); });
+  ['D4', 'D5', 'D6'].forEach((k) => { const d = byTag[k]; plantAt(cxOf(d), cyOf(d), 0.72, { r: 0.08, h: 0.12, m: potWhite, n: 7, len: 0.22, wd: 0.025, tilt: 0.55, bend: 0.35 }); });
+  const d7 = byTag.D7; plantAt(cxOf(d7), cyOf(d7), 1.0, { r: 0.075, h: 0.10, m: potWhite, n: 7, len: 0.22, wd: 0.025, tilt: 0.55, bend: 0.35 });
+
+  /* ---------- pessoa de 1,70 m (referência de escala) ---------- */
+  const person = new THREE.Group(); person.name = 'person'; S.add(person);
+  const skin = mat(0xe2bb9c, { roughness: 0.8 }), shirt = mat(0x7d8d9b, { roughness: 0.9 }), pants = mat(0x2f4258, { roughness: 0.9 }), shoe = mat(0x1a1a1a, { roughness: 0.6 });
+  [-0.09, 0.09].forEach((x) => { add(new THREE.CylinderGeometry(0.075, 0.062, 0.80, 18), pants, x, 0.45, 0, person); add(new THREE.BoxGeometry(0.11, 0.06, 0.26), shoe, x, 0.03, 0.04, person); });
+  add(rbox(0.40, 0.62, 0.22, 0.09, 0.05), shirt, 0, 0.83, 0, person);
+  [-0.235, 0.235].forEach((x) => add(new THREE.CylinderGeometry(0.042, 0.036, 0.58, 14), shirt, x, 1.14, 0, person));
+  add(new THREE.CylinderGeometry(0.045, 0.05, 0.09, 14), skin, 0, 1.49, 0, person); add(new THREE.SphereGeometry(0.105, 28, 20), skin, 0, 1.60, 0, person); add(new THREE.SphereGeometry(0.108, 28, 14, 0, Math.PI * 2, 0, Math.PI * 0.45), mat(0x2a1d14, { roughness: 0.9 }), 0, 1.60, -0.005, person);
+  person.position.copy(P(3.40, 1.45, 0)); person.rotation.y = Math.PI * 0.8;
+
+  /* ---------- sombras de contato ---------- */
+  function mkAO(x, y, w, d, op = 0.5, rotDeg = 0) {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, d).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ map: aoTex, transparent: true, opacity: op, depthWrite: false, toneMapped: false }));
+    m.position.copy(P(x, y, 0.006)); m.rotation.y = (rotDeg * Math.PI) / 180; m.renderOrder = 2; AO.add(m);
+  }
+  mkAO(mcx, mcy, M.w + 0.35, 0.85, 0.7); mkAO(cxOf(Q1) - 0.1, cyOf(Q1), 0.5, 0.95, 0.6);
+  mkAO(cxOf(d1), cyOf(d1), 0.7, 0.7, 0.55); ['D2', 'D3'].forEach((k) => mkAO(cxOf(byTag[k]), cyOf(byTag[k]), 0.6, 0.6, 0.55)); mkAO(3.40, 1.45, 0.6, 0.45, 0.45);
+  const edge = (w, d, x, y, ry) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, d).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ map: edgeTex, transparent: true, opacity: 0.75, depthWrite: false, toneMapped: false })); m.position.copy(P(x, y, 0.005)); m.rotation.y = ry; m.renderOrder = 2; AO.add(m); };
+  edge(0.40, 4.0, 0.15 + 0.2, 2.0, 0); edge(0.40, 4.0, 4.85 - 0.2, 2.0, Math.PI); edge(0.40, 4.7, 2.5, 3.90 - 0.2, -Math.PI / 2);
+
+  /* ---------- reflexo no piso (cópia espelhada do estande) ---------- */
+  const mirror = new THREE.Group();                                       // piso de tapete: sem reflexo
+
+  /* ---------- cotas e quadrantes ---------- */
+  const label = (t, w = 0.9, depth = false) => { const c = document.createElement('canvas'); c.width = 256; c.height = 64; const x = c.getContext('2d'); x.fillStyle = 'rgba(255,255,255,.94)'; x.strokeStyle = '#0b5cad'; x.lineWidth = 3; x.beginPath(); x.rect(4, 6, 248, 52); x.fill(); x.stroke(); x.fillStyle = '#0b5cad'; x.font = '700 30px Arial'; x.textAlign = 'center'; x.fillText(t, 128, 44); const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), depthTest: depth, transparent: true, toneMapped: false })); sp.scale.set(w, w / 4, 1); sp.renderOrder = 10; return sp; };
+  const dimG = new THREE.Group(); scene.add(dimG);
+  const lineM = new THREE.LineBasicMaterial({ color: 0x0b5cad, depthTest: false, toneMapped: false });
+  const seg = (a, b) => { const l = new THREE.Line(new THREE.BufferGeometry().setFromPoints([a, b]), lineM); l.renderOrder = 9; dimG.add(l); };
+  const dim = (a, b, t) => { seg(a, b); const d = new THREE.Vector3().subVectors(b, a).normalize(), n = new THREE.Vector3(-d.z, 0, d.x).add(new THREE.Vector3(0, 1, 0)).normalize().multiplyScalar(0.08); seg(a.clone().sub(n), a.clone().add(n)); seg(b.clone().sub(n), b.clone().add(n)); const s = label(t); s.position.copy(a.clone().add(b).multiplyScalar(0.5)).add(new THREE.Vector3(0, 0.14, 0)); dimG.add(s); };
+  dim(P(0, -0.55, 0.02), P(5, -0.55, 0.02), '5,00 m'); dim(P(5.55, 0, 0.02), P(5.55, 4, 0.02), '4,00 m'); dim(P(-0.45, -0.05, 0), P(-0.45, -0.05, 3), '3,00 m');
+  dim(P(mx0, -0.15, 0.02), P(mx1, -0.15, 0.02), 'balcão 1,80 m'); dim(P(cxOf(Q1) - 0.55, cyOf(Q1), 0), P(cxOf(Q1) - 0.55, cyOf(Q1), 1.75), 'totem 1,75 m');
+  const gridG = new THREE.Group(); scene.add(gridG);
+  const gm = new THREE.LineBasicMaterial({ color: 0x12404c, transparent: true, opacity: 0.6 });
+  for (let i = 0; i <= 5; i++) gridG.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([P(i, 0, 0.015), P(i, 4, 0.015)]), gm));
+  for (let j = 0; j <= 4; j++) gridG.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([P(0, j, 0.015), P(5, j, 0.015)]), gm));
+  for (let i = 0; i < 5; i++) for (let j = 0; j < 4; j++) { const s = label('ABCDE'[i] + (j + 1), 0.42, true); s.position.copy(P(i + 0.5, j + 0.5, 0.02)); gridG.add(s); }
+
+  /* ---------- câmeras e interface ---------- */
+  const views = {
+    persp: { dir: [0.14, 0.30, 0.95], tgt: [0, 1.2, 0], w: 7.4, h: 4.4, off: 2.4, ceil: true, person: true },
+    front: { dir: [0, 0.04, 1], tgt: [0, 1.5, 0], w: 6.4, h: 4.0, off: 2.0, ceil: true, person: true },
+    top: { dir: [0, 1, 0.0001], tgt: [0, 0, 0], w: 7.2, h: 5.8, off: 3.0, ceil: false, person: true },
+    side: { dir: [1, 0.04, 0], tgt: [0, 1.5, 0], w: 6.2, h: 4.0, off: 2.5, ceil: true, person: true },
+    eye: { pos: P(2.5, -4.6, 1.65), tgt: P(2.5, 4, 1.45), ceil: true, person: true },
+    inside: { pos: P(1.1, 1.5, 1.6), tgt: P(3.4, 3.9, 1.3), ceil: true, person: false, dim: false },
+    totem: { pos: P(2.2, 1.9, 1.5), tgt: P(4.78, 0.66, 1.1), ceil: true, person: false, dim: false }
+  };
+  const fitDist = (w, h) => { const t = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)); return Math.max(h / (2 * t), w / (2 * t * camera.aspect)); };
+  function viewOf(name) {
+    const v = views[name]; if (!v.dir) return v;
+    const tgt = new THREE.Vector3(...v.tgt), d = new THREE.Vector3(...v.dir).normalize();
+    return { pos: tgt.clone().add(d.multiplyScalar(fitDist(v.w, v.h) + v.off)), tgt, ceil: v.ceil, person: v.person, dim: v.dim };
+  }
+  const ck = { ceil: $('#t-ceil'), dim: $('#t-dim'), grid: $('#t-grid'), person: $('#t-person') };
+  const mir = (n) => mirror.getObjectByName(n);
+  const apply = () => { ceilG.visible = ck.ceil.checked; const mc = mir('ceil'); if (mc) mc.visible = ck.ceil.checked; person.visible = ck.person.checked; const mp = mir('person'); if (mp) mp.visible = ck.person.checked; dimG.visible = ck.dim.checked; gridG.visible = ck.grid.checked; };
+  Object.values(ck).forEach((e) => e.addEventListener('change', apply));
+  let anim = 0; const REDUCED = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function go(name, instant) {
+    if (!views[name]) return; const v = viewOf(name); ck.ceil.checked = v.ceil; ck.person.checked = v.person; ck.dim.checked = v.dim !== false; apply();
+    const p0 = camera.position.clone(), t0 = controls.target.clone(), st = performance.now(), my = ++anim;
+    const step = () => { if (my !== anim) return; const k = (instant || REDUCED) ? 1 : Math.min(1, (performance.now() - st) / 800), e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2; camera.position.lerpVectors(p0, v.pos, e); controls.target.lerpVectors(t0, v.tgt, e); controls.update(); if (k < 1) requestAnimationFrame(step); };
+    step(); document.querySelectorAll('[data-view]').forEach((b) => b.classList.toggle('on', b.dataset.view === name));
+  }
+  document.querySelectorAll('[data-view]').forEach((b) => b.addEventListener('click', () => go(b.dataset.view)));
+  controls.addEventListener('start', () => { anim++; });
+  const resize = () => { const w = host.clientWidth, h = host.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); };
+  new ResizeObserver(resize).observe(host); resize();
+  go('persp', true);
+  let fr = 0; (function loop() { requestAnimationFrame(loop); controls.update(); const t0 = performance.now(); renderer.render(scene, camera); if (window.__PROF) renderer.getContext().finish(); if (window.__PROF && fr < 4) console.log('frame', fr, Math.round(performance.now() - t0), 'ms, programas:', renderer.info.programs.length, 'draws:', renderer.info.render.calls); fr++; })();
+  window.__ready3d = true; window.__go = go;
+}
+try { init3D(); } catch (e) { console.error(e); const m = $('#viewmsg'); m.style.display = 'flex'; m.textContent = 'O modelo 3D encontrou um erro ao carregar. A planta, a tabela e as elevações abaixo continuam disponíveis.'; }
+
+</script>
+</body>
+</html>
