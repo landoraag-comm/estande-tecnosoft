@@ -160,7 +160,7 @@ const STAND = {
   trayZ: 2.74,            // altura do rebaixo central do forro
   open: { x0: 0.70, x1: 4.30, y0: 0.75, y1: 3.30 },   // vão aberto do forro
   tray: { x0: 1.35, x1: 3.65, y0: 1.15, y1: 2.90 },   // aro suspenso
-  trayBand: 0.18, bridgeX0: 2.35, bridgeX1: 2.65,
+  trayBand: 0.18, bridgeX0: 2.30, bridgeX1: 2.70,
   spots: [[1.0, 0.52], [2.0, 0.52], [3.0, 0.52], [4.0, 0.52],
           [1.0, 3.60], [2.0, 3.60], [3.0, 3.60], [4.0, 3.60],
           [0.43, 1.70], [4.57, 1.70]],
@@ -522,10 +522,10 @@ function buildElevations() {
   const t = STAND.tray, op = STAND.open, bw = STAND.trayBand, zt = STAND.trayZ, th = 0.10;
   const pl = (pts) => `<polygon points="${pts.map(([y, z]) => Y(y) + ',' + Z(z)).join(' ')}" fill="#f4f1ea" stroke="#1b2a30" stroke-width="1.2"/>`;
   p.push(pl([[0.30, 2.55], [op.y0, 2.55], [op.y0, 2.51], [0.30, 2.51]]) + pl([[op.y1, 2.55], [3.90, 2.55], [3.90, 2.51], [op.y1, 2.51]]));
-  p.push(pl([[op.y0, 2.55], [t.y0, zt], [t.y0, zt - 0.04], [op.y0, 2.51]]) + pl([[t.y1, zt], [op.y1, 2.55], [op.y1, 2.51], [t.y1, zt - 0.04]]));
+  p.push(pl([[op.y0, 2.55 + th], [t.y0, zt], [t.y0, zt - th], [op.y0, 2.55]]) + pl([[t.y1, zt], [op.y1, 2.55 + th], [op.y1, 2.55], [t.y1, zt - th]]));
   p.push(pl([[t.y0, zt], [t.y0 + bw, zt], [t.y0 + bw, zt - th], [t.y0, zt - th]]) + pl([[t.y1 - bw, zt], [t.y1, zt], [t.y1, zt - th], [t.y1 - bw, zt - th]]));
   p.push(pl([[op.y0, 2.55], [op.y0, 2.95], [op.y0 + 0.03, 2.95], [op.y0 + 0.03, 2.55]]) + pl([[op.y1 - 0.03, 2.55], [op.y1 - 0.03, 2.95], [op.y1, 2.95], [op.y1, 2.55]]));
-  p.push(`<line x1="${Y(t.y0)}" y1="${Z(zt - th)}" x2="${Y(t.y0 + bw)}" y2="${Z(zt - th)}" stroke="${YEL}" stroke-width="3"/><line x1="${Y(t.y1 - bw)}" y1="${Z(zt - th)}" x2="${Y(t.y1)}" y2="${Z(zt - th)}" stroke="${YEL}" stroke-width="3"/>`);
+  p.push(`<line x1="${Y(t.y0 + bw / 2 - 0.015)}" y1="${Z(zt - th)}" x2="${Y(t.y0 + bw / 2 + 0.015)}" y2="${Z(zt - th)}" stroke="${YEL}" stroke-width="4"/><line x1="${Y(t.y1 - bw / 2 - 0.015)}" y1="${Z(zt - th)}" x2="${Y(t.y1 - bw / 2 + 0.015)}" y2="${Z(zt - th)}" stroke="${YEL}" stroke-width="4"/>`);
   p.push(Rr(3.85, 3.90, 1.45, 2.14, '#0a2a66', '#000'));
   p.push(Rr(0.05, 0.55, 0, 0.96, TEAL, '#0b2630') + Rr(0.05, 0.55, 0.96, 1.00, '#fff', '#0b2630') + Rr(0.195, 0.22, 1.12, 1.42, '#0a2a66', '#000') + Rr(0.13, 0.27, 1.00, 1.012, '#222', '#000') + Rr(0.199, 0.215, 1.01, 1.12, '#222', '#000') + Rr(0.40, 0.54, 1.00, 1.02, '#444', '#000'));
   p.push(Rr(2.30, 2.90, 0.69, 0.72, '#fff', '#8a6a3a') + Rr(2.57, 2.63, 0.02, 0.69, '#c7ccd0', '#7d8a90') + Rr(2.40, 2.80, 0, 0.02, '#c7ccd0', '#7d8a90'));
@@ -832,7 +832,7 @@ function init3D() {
   const ceilG = new THREE.Group(); ceilG.name = 'ceil'; S.add(ceilG);
   // vigas do topo (perímetro) — o forro NÃO é fechado: há um vão aberto com um aro suspenso, preso por duas pontes (frente e fundo)
   [[0.15, 4.85, 0.30, 0.45], [0.15, 4.85, 3.75, 3.90], [0.15, 0.30, 0.45, 3.75], [4.70, 4.85, 0.45, 3.75]].forEach((r) => bx(r[0], r[1], r[2], r[3], 2.95, 3.00, whiteM, { parent: ceilG }));
-  const cm = mat(0xf4f3ee, { roughness: 0.9, side: THREE.FrontSide }), tr = STAND.tray, op = STAND.open, cz = STAND.ceilZ;
+  const cm = mat(0xf4f3ee, { roughness: 0.9, side: THREE.DoubleSide }), tr = STAND.tray, op = STAND.open, cz = STAND.ceilZ;
   const flat = (x0, x1, y0, y1, z, m) => { const me = new THREE.Mesh(new THREE.PlaneGeometry(x1 - x0, y1 - y0).rotateX(Math.PI / 2), m); me.position.copy(P((x0 + x1) / 2, (y0 + y1) / 2, z)); me.receiveShadow = true; ceilG.add(me); };
   flat(0.15, 4.85, 0.30, op.y0, cz, cm); flat(0.15, 4.85, op.y1, 3.90, cz, cm); flat(0.15, op.x0, op.y0, op.y1, cz, cm); flat(op.x1, 4.85, op.y0, op.y1, cz, cm);
   const zT = STAND.trayZ, quad = (pts, m) => { const g = new THREE.BufferGeometry(), v = []; [0, 1, 2, 0, 2, 3].forEach((k) => v.push(pts[k].x, pts[k].y, pts[k].z)); g.setAttribute('position', new THREE.Float32BufferAttribute(v, 3)); g.computeVertexNormals(); const me = new THREE.Mesh(g, m); me.receiveShadow = true; ceilG.add(me); };
@@ -842,20 +842,26 @@ function init3D() {
   [[tr.x0, tr.x1, tr.y0, tr.y0 + bw], [tr.x0, tr.x1, tr.y1 - bw, tr.y1], [tr.x0, tr.x0 + bw, tr.y0 + bw, tr.y1 - bw], [tr.x1 - bw, tr.x1, tr.y0 + bw, tr.y1 - bw]].forEach((r) => bx(r[0], r[1], r[2], r[3], zT - 0.10, zT, whiteM, { parent: ceilG }));
   // pontes inclinadas (frente e fundo) ligando o aro ao forro
   const b0 = STAND.bridgeX0, b1 = STAND.bridgeX1;
-  quad([P(b0, op.y0, cz), P(b1, op.y0, cz), P(b1, tr.y0, zT), P(b0, tr.y0, zT)], wlM);
-  quad([P(b0, tr.y1, zT), P(b1, tr.y1, zT), P(b1, op.y1, cz), P(b0, op.y1, cz)], wlM);
+  // pontes inclinadas grossas (prisma): topo, base e laterais
+  const bth = 0.10, prism = (ya, za, yb, zb) => {
+    const q = (x, y, z) => P(x, y, z);
+    const ta = za + bth, tb = zb + bth;   // za/zb = face inferior; topo = + espessura
+    quad([q(b0, ya, ta), q(b1, ya, ta), q(b1, yb, tb), q(b0, yb, tb)], wlM);
+    quad([q(b0, ya, za), q(b1, ya, za), q(b1, yb, zb), q(b0, yb, zb)], wlM);
+    quad([q(b0, ya, ta), q(b0, yb, tb), q(b0, yb, zb), q(b0, ya, za)], wlM);
+    quad([q(b1, ya, ta), q(b1, yb, tb), q(b1, yb, zb), q(b1, ya, za)], wlM);
+  };
+  prism(op.y0, cz, tr.y0, zT - bth); prism(op.y1, cz, tr.y1, zT - bth);
   // fitas de LED na borda externa e interna do aro (somente onde não há ponte)
   const L = (x0, x1, y0, y1, z) => bx(x0, x1, y0, y1, z - 0.012, z, ledM, { parent: ceilG, shadow: false });
-  L(tr.x0, b0, tr.y0, tr.y0 + 0.03, zT - 0.10); L(b1, tr.x1, tr.y0, tr.y0 + 0.03, zT - 0.10); L(tr.x0, b0, tr.y1 - 0.03, tr.y1, zT - 0.10); L(b1, tr.x1, tr.y1 - 0.03, tr.y1, zT - 0.10);
-  L(tr.x0, tr.x0 + 0.03, tr.y0, tr.y1, zT - 0.10); L(tr.x1 - 0.03, tr.x1, tr.y0, tr.y1, zT - 0.10);
-  L(tr.x0 + bw - 0.03, tr.x1 - bw + 0.03, tr.y0 + bw - 0.03, tr.y0 + bw, zT - 0.10); L(tr.x0 + bw - 0.03, tr.x1 - bw + 0.03, tr.y1 - bw, tr.y1 - bw + 0.03, zT - 0.10);
-  L(tr.x0 + bw - 0.03, tr.x0 + bw, tr.y0 + bw, tr.y1 - bw, zT - 0.10); L(tr.x1 - bw, tr.x1 - bw + 0.03, tr.y0 + bw, tr.y1 - bw, zT - 0.10);
+  { const m = bw / 2, zl = zT - 0.10, h = 0.015;   // um único LED no meio da faixa do aro
+    L(tr.x0 + m - h, tr.x1 - m + h, tr.y0 + m - h, tr.y0 + m + h, zl); L(tr.x0 + m - h, tr.x1 - m + h, tr.y1 - m - h, tr.y1 - m + h, zl);
+    L(tr.x0 + m - h, tr.x0 + m + h, tr.y0 + m, tr.y1 - m, zl); L(tr.x1 - m - h, tr.x1 - m + h, tr.y0 + m, tr.y1 - m, zl); }
   // paredes do vão: sobem do forro até o topo (2,95 m), fechando o poço para não se ver o interior da estrutura
   const rz = 2.95, rim = (x0, y0, x1, y1) => quad([P(x0, y0, cz), P(x1, y1, cz), P(x1, y1, rz), P(x0, y0, rz)], wlM);
   rim(op.x0, op.y0, op.x0, op.y1); rim(op.x1, op.y0, op.x1, op.y1);
   rim(op.x0, op.y0, op.x1, op.y0); rim(op.x0, op.y1, op.x1, op.y1);
   // fita de LED na borda do vão (no forro)
-  L(op.x0, op.x1, op.y0, op.y0 + 0.03, cz); L(op.x0, op.x1, op.y1 - 0.03, op.y1, cz);
   // teto do pavilhão visto pelo vão (estrutura escura)
   const hallTex = canvasTex(512, 512, (c, w, h) => { c.fillStyle = '#1d242b'; c.fillRect(0, 0, w, h); c.strokeStyle = '#3b4650'; c.lineWidth = 5; for (let k = 0; k <= 8; k++) { c.beginPath(); c.moveTo(k * 64, 0); c.lineTo(k * 64, h); c.moveTo(0, k * 64); c.lineTo(w, k * 64); c.stroke(); } c.strokeStyle = '#2b343c'; c.lineWidth = 3; for (let k = -8; k < 8; k++) { c.beginPath(); c.moveTo(k * 64, 0); c.lineTo(k * 64 + 512, 512); c.stroke(); } });
   { const bl = new THREE.Mesh(new THREE.PlaneGeometry(4.7, 3.6).rotateX(Math.PI / 2), new THREE.MeshBasicMaterial({ colorWrite: false, depthWrite: false, side: THREE.DoubleSide })); bl.position.copy(P(2.5, 2.1, 3.01)); bl.castShadow = true; ceilG.add(bl); }   // bloqueia só o sol (sombra), invisível
