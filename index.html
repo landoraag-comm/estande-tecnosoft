@@ -158,12 +158,12 @@ const STAND = {
   W: 5.0, D: 4.0, H: 3.0,
   ceilZ: 2.55,            // altura do forro
   trayZ: 2.74,            // altura do rebaixo central do forro
-  open: { x0: 1.25, x1: 3.75, y0: 0.90, y1: 2.75 },   // vão aberto do forro
-  tray: { x0: 1.60, x1: 3.40, y0: 1.20, y1: 2.45 },   // aro suspenso
-  trayBand: 0.30, bridgeX0: 2.35, bridgeX1: 2.65,
-  spots: [[1.0, 0.55], [2.0, 0.55], [3.0, 0.55], [4.0, 0.55],
-          [1.0, 3.00], [2.0, 3.00], [3.0, 3.00], [4.0, 3.00],
-          [0.95, 1.70], [4.05, 1.70]],
+  open: { x0: 0.70, x1: 4.30, y0: 0.75, y1: 3.30 },   // vão aberto do forro
+  tray: { x0: 1.35, x1: 3.65, y0: 1.15, y1: 2.90 },   // aro suspenso
+  trayBand: 0.18, bridgeX0: 2.35, bridgeX1: 2.65,
+  spots: [[1.0, 0.52], [2.0, 0.52], [3.0, 0.52], [4.0, 0.52],
+          [1.0, 3.60], [2.0, 3.60], [3.0, 3.60], [4.0, 3.60],
+          [0.43, 1.70], [4.57, 1.70]],
   items: []
 };
 
@@ -374,7 +374,7 @@ function buildPlan() {
   // projeções aéreas (tracejadas)
   const t = STAND.tray, op = STAND.open;
   o.push(`<rect class="dash" x="${X(op.x0)}" y="${Y(op.y1)}" width="${(op.x1 - op.x0) * s}" height="${(op.y1 - op.y0) * s}"/><rect class="dash" x="${X(t.x0)}" y="${Y(t.y1)}" width="${(t.x1 - t.x0) * s}" height="${(t.y1 - t.y0) * s}"/><rect class="dash" x="${X(t.x0 + STAND.trayBand)}" y="${Y(t.y1 - STAND.trayBand)}" width="${(t.x1 - t.x0 - 2 * STAND.trayBand) * s}" height="${(t.y1 - t.y0 - 2 * STAND.trayBand) * s}"/>`);
-  o.push(`<text class="mut" x="${X(op.x0) + 6}" y="${Y(op.y1) + 15}">vão aberto 2,50 × 1,85 com aro suspenso (h 2,74) e 2 pontes pequenas</text>`);
+  o.push(`<text class="mut" x="${X(op.x0) + 6}" y="${Y(op.y0) - 5}">vão aberto 3,60 × 2,55 + aro (h 2,74)</text>`);
   o.push(`<rect class="dash" x="${X(0)}" y="${Y(0.30)}" width="${W * s}" height="${0.30 * s}"/>`);
   STAND.spots.forEach(([x, y]) => o.push(`<g stroke="#9aa9b0" fill="none" stroke-width="1"><circle cx="${X(x)}" cy="${Y(y)}" r="6"/><line x1="${X(x) - 4}" y1="${Y(y)}" x2="${X(x) + 4}" y2="${Y(y)}"/><line x1="${X(x)}" y1="${Y(y) - 4}" x2="${X(x)}" y2="${Y(y) + 4}"/></g>`));
 
@@ -738,7 +738,7 @@ function init3D() {
   if (hasRect) {                                                         // luz das fitas de LED
     const ra = (col, I, w, h, from, to) => { const l = new THREE.RectAreaLight(C(col), I, w, h); l.position.copy(from); l.lookAt(to); scene.add(l); };
     ra(0xffc050, 6, 4.6, 0.05, P(2.5, 0.06, 2.53), P(2.5, 1.8, 1.0));    // LED sob a testeira
-    ra(0xffd49a, 5, 2.3, 1.5, P(2.5, 1.7, STAND.trayZ - 0.05), P(2.5, 1.7, 0));   // luz do rebaixo
+    ra(0xffd49a, 5, 1.9, 1.4, P(2.5, 1.7, STAND.trayZ - 0.05), P(2.5, 1.7, 0));   // luz do rebaixo
     ra(0xffc050, 4, 4.5, 0.04, P(2.5, 0.03, 0.03), P(2.5, 2.2, 0.0));     // LED do piso, frente
   }
 
