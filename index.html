@@ -111,7 +111,7 @@
 
   <section id="elevacoes">
     <h2><span class="n">4</span>Elevações, paredes laterais e corte</h2>
-    <p class="lead">Alturas conferidas contra o limite de 3,00 m: paredes laterais e de fundo a 3,00 m, fachada da frente a 4,00 m (faixa do letreiro de 3,55 a 4,00 m, vão vazio abaixo dela (de 3,00 a 3,55 m) e fecho branco do forro de 2,55 a 3,00 m e empenas triangulares cheias nas laterais), forro a 2,55 m, aro suspenso a 2,74 m, com vão aberto.</p>
+    <p class="lead">Alturas conferidas contra o limite de 3,00 m: paredes laterais e de fundo a 3,00 m, fachada da frente a 4,00 m (faixa do letreiro de 3,55 a 4,00 m, vão vazio abaixo dela (de 3,00 a 3,55 m) e fecho branco do forro de 2,55 a 3,00 m e empenas triangulares cheias nas laterais), forro a 2,55 m, aro suspenso a 2,74 m sob um teto recuado a 2,95 m, com furo central aberto.</p>
     <div class="two">
       <div class="panel svgwrap" id="elev"></div>
       <div class="panel svgwrap" id="sect"></div>
@@ -193,7 +193,7 @@ const STAND = {
   R('E12', 'Empena triangular direita (azul, cheia)', 'Estrutura', 4.85, 0.30, 0.15, 1.60, 1.00,
     { z0: 3.0, floor: false, note: 'painel cheio em triângulo: 1,00 m de altura na fachada, descendo até 3,00 m a 1,90 m da frente' });
   R('E5', 'Forro com rebaixo central e LED', 'Estrutura', 0.15, 0.30, 4.70, 3.60, 0.15,
-    { z0: 2.55, floor: false, note: 'forro a 2,55 m; vão aberto de 3,60 × 2,55 m com aro suspenso a 2,74 m e duas pontes' });
+    { z0: 2.55, floor: false, note: 'forro a 2,55 m; vão de 3,60 × 2,55 m com teto recuado a 2,95 m, aro suspenso a 2,74 m, duas pontes e furo central aberto' });
   R('E6', 'Cobertura (face superior do forro e vigas do topo)', 'Estrutura', 0.15, 0.30, 4.70, 3.60, 0.05,
     { z0: 2.95, floor: false, note: 'vigas de 2,95 a 3,00 m' });
   // Ripado: blocos de ripas espalhados (pitch irregular, determinístico). Cada ripa: 0,04 m de largura × 0,03 m de espessura × 2,55 m de altura.
@@ -386,7 +386,7 @@ function buildPlan() {
   // projeções aéreas (tracejadas)
   const t = STAND.tray, op = STAND.open;
   o.push(`<rect class="dash" x="${X(op.x0)}" y="${Y(op.y1)}" width="${(op.x1 - op.x0) * s}" height="${(op.y1 - op.y0) * s}"/><rect class="dash" x="${X(t.x0)}" y="${Y(t.y1)}" width="${(t.x1 - t.x0) * s}" height="${(t.y1 - t.y0) * s}"/><rect class="dash" x="${X(t.x0 + STAND.trayBand)}" y="${Y(t.y1 - STAND.trayBand)}" width="${(t.x1 - t.x0 - 2 * STAND.trayBand) * s}" height="${(t.y1 - t.y0 - 2 * STAND.trayBand) * s}"/>`);
-  o.push(`<text class="mut" x="${X(op.x0) + 6}" y="${Y(op.y0) - 5}">vão aberto 3,60 × 2,55 + aro (h 2,74)</text>`);
+  o.push(`<text class="mut" x="${X(op.x0) + 6}" y="${Y(op.y0) - 5}">vão 3,60 × 2,55 com teto recuado (2,95) e furo central</text>`);
   o.push(`<rect class="dash" x="${X(0)}" y="${Y(0.30)}" width="${W * s}" height="${0.30 * s}"/>`);
   STAND.spots.forEach(([x, y]) => o.push(`<g stroke="#9aa9b0" fill="none" stroke-width="1"><circle cx="${X(x)}" cy="${Y(y)}" r="6"/><line x1="${X(x) - 4}" y1="${Y(y)}" x2="${X(x) + 4}" y2="${Y(y)}"/><line x1="${X(x)}" y1="${Y(y) - 4}" x2="${X(x)}" y2="${Y(y) + 4}"/></g>`));
 
@@ -539,6 +539,7 @@ function buildElevations() {
   const t = STAND.tray, op = STAND.open, bw = STAND.trayBand, zt = STAND.trayZ, th = 0.10;
   const pl = (pts) => `<polygon points="${pts.map(([y, z]) => Y(y) + ',' + Z(z)).join(' ')}" fill="#f4f1ea" stroke="#1b2a30" stroke-width="1.2"/>`;
   p.push(pl([[0.30, 2.55], [op.y0, 2.55], [op.y0, 2.51], [0.30, 2.51]]) + pl([[op.y1, 2.55], [3.90, 2.55], [3.90, 2.51], [op.y1, 2.51]]));
+  p.push(pl([[op.y0, 2.95], [t.y0 + bw, 2.95], [t.y0 + bw, 2.91], [op.y0, 2.91]]) + pl([[t.y1 - bw, 2.95], [op.y1, 2.95], [op.y1, 2.91], [t.y1 - bw, 2.91]]));
   p.push(pl([[op.y0, 2.55 + th], [t.y0, zt], [t.y0, zt - th], [op.y0, 2.55]]) + pl([[t.y1, zt], [op.y1, 2.55 + th], [op.y1, 2.55], [t.y1, zt - th]]));
   p.push(pl([[t.y0, zt], [t.y0 + bw, zt], [t.y0 + bw, zt - th], [t.y0, zt - th]]) + pl([[t.y1 - bw, zt], [t.y1, zt], [t.y1, zt - th], [t.y1 - bw, zt - th]]));
   p.push(pl([[op.y0, 2.55], [op.y0, 2.95], [op.y0 + 0.03, 2.95], [op.y0 + 0.03, 2.55]]) + pl([[op.y1 - 0.03, 2.55], [op.y1 - 0.03, 2.95], [op.y1, 2.95], [op.y1, 2.55]]));
@@ -859,7 +860,8 @@ function init3D() {
   // vigas do topo (perímetro) — o forro NÃO é fechado: há um vão aberto com um aro suspenso, preso por duas pontes (frente e fundo)
   [[0.15, 4.85, 0.30, 0.45], [0.15, 4.85, 3.75, 3.90], [0.15, 0.30, 0.45, 3.75], [4.70, 4.85, 0.45, 3.75]].forEach((r) => bx(r[0], r[1], r[2], r[3], 2.95, 3.00, whiteM, { parent: ceilG }));
   const cm = mat(0xf4f3ee, { roughness: 0.9, side: THREE.DoubleSide }), tr = STAND.tray, op = STAND.open, cz = STAND.ceilZ;
-  const flat = (x0, x1, y0, y1, z, m) => { const me = new THREE.Mesh(new THREE.PlaneGeometry(x1 - x0, y1 - y0).rotateX(Math.PI / 2), m); me.position.copy(P((x0 + x1) / 2, (y0 + y1) / 2, z)); me.receiveShadow = true; ceilG.add(me); };
+  const flat = (x0, x1, y0, y1, z, m) => { const me = new THREE.Mesh(new THREE.PlaneGeometry(x1 - x0, y1 - y0).rotateX(Math.PI / 2), m); me.position.copy(P((x0 + x1) / 2, (y0 + y1) / 2, z)); me.receiveShadow = true; ceilG.add(me);
+    if (m === cm) { const tp = new THREE.Mesh(new THREE.PlaneGeometry(x1 - x0, y1 - y0).rotateX(-Math.PI / 2), basic(0xe9e7e0)); tp.position.copy(P((x0 + x1) / 2, (y0 + y1) / 2, z + 0.003)); ceilG.add(tp); } };   // face de cima do forro, clara (fora da sombra)
   flat(0.15, 4.85, 0.30, op.y0, cz, cm); flat(0.15, 4.85, op.y1, 3.90, cz, cm); flat(0.15, op.x0, op.y0, op.y1, cz, cm); flat(op.x1, 4.85, op.y0, op.y1, cz, cm);
   const zT = STAND.trayZ, quad = (pts, m) => { const g = new THREE.BufferGeometry(), v = []; [0, 1, 2, 0, 2, 3].forEach((k) => v.push(pts[k].x, pts[k].y, pts[k].z)); g.setAttribute('position', new THREE.Float32BufferAttribute(v, 3)); g.computeVertexNormals(); const me = new THREE.Mesh(g, m); me.receiveShadow = true; ceilG.add(me); };
   const wlM = mat(0xf7f6f1, { side: THREE.DoubleSide, roughness: 0.85, emissive: C(0xcfc6b0), emissiveIntensity: 0.3 });
@@ -887,6 +889,9 @@ function init3D() {
   const rz = 2.95, rim = (x0, y0, x1, y1) => quad([P(x0, y0, cz), P(x1, y1, cz), P(x1, y1, rz), P(x0, y0, rz)], wlM);
   rim(op.x0, op.y0, op.x0, op.y1); rim(op.x1, op.y0, op.x1, op.y1);
   rim(op.x0, op.y0, op.x1, op.y0); rim(op.x0, op.y1, op.x1, op.y1);
+  // teto recuado (2,95 m) que preenche o espaço entre as paredes do vão e o aro; só o furo central (dentro do aro) fica aberto
+  { const hx0 = tr.x0 + bw, hx1 = tr.x1 - bw, hy0 = tr.y0 + bw, hy1 = tr.y1 - bw, zr = 2.95;
+    flat(op.x0, op.x1, op.y0, hy0, zr, cm); flat(op.x0, op.x1, hy1, op.y1, zr, cm); flat(op.x0, hx0, hy0, hy1, zr, cm); flat(hx1, op.x1, hy0, hy1, zr, cm); }
   // fita de LED na borda do vão (no forro)
   // teto do pavilhão visto pelo vão (estrutura escura)
   const hallTex = canvasTex(512, 512, (c, w, h) => { c.fillStyle = '#1d242b'; c.fillRect(0, 0, w, h); c.strokeStyle = '#3b4650'; c.lineWidth = 5; for (let k = 0; k <= 8; k++) { c.beginPath(); c.moveTo(k * 64, 0); c.lineTo(k * 64, h); c.moveTo(0, k * 64); c.lineTo(w, k * 64); c.stroke(); } c.strokeStyle = '#2b343c'; c.lineWidth = 3; for (let k = -8; k < 8; k++) { c.beginPath(); c.moveTo(k * 64, 0); c.lineTo(k * 64 + 512, 512); c.stroke(); } });
