@@ -116,7 +116,7 @@
       <div class="panel svgwrap" id="elev"></div>
       <div class="panel svgwrap" id="sect"></div>
     </div>
-    <p class="lead" style="margin-top:18px">Paredes laterais vistas por dentro, com os adesivos (logo e tópicos à esquerda; textos à direita; totem na esquerda e vaso grande na direita) e o ripado.</p>
+    <p class="lead" style="margin-top:18px">Paredes laterais vistas por dentro, com os adesivos (logo e tópicos em azul sobre parede branca à esquerda; textos à direita; totem na esquerda e vaso grande na direita) e o ripado.</p>
     <div class="two">
       <div class="panel svgwrap" id="wallL"></div>
       <div class="panel svgwrap" id="wallR"></div>
@@ -215,7 +215,7 @@ const STAND = {
   // ---------------- COMUNICAÇÃO VISUAL (adesivos nas paredes) ----------------
   R('V1', 'Adesivo da parede esquerda (logo + 4 tópicos)', 'Comunicação visual', 0.15, 1.10, 0.005, 1.20, 2.00,
     { z0: 0.45, floor: false, note: 'adesivo de 1,20 × 2,00 m na face interna', decal: 'L' });
-  R('V2', 'Adesivo da parede direita (logo + texto)', 'Comunicação visual', 4.845, 1.15, 0.005, 1.20, 2.00,
+  R('V2', 'Adesivo da parede direita (texto)', 'Comunicação visual', 4.845, 1.15, 0.005, 1.20, 2.00,
     { z0: 0.45, floor: false, note: 'adesivo de 1,20 × 2,00 m na face interna', decal: 'R' });
 
   // ---------------- MOBILIÁRIO ----------------
@@ -456,9 +456,9 @@ function buildPlan() {
 function plantBlob(cx, base, w, top, col = GRN) {
   return `<ellipse cx="${cx}" cy="${(base + top) / 2}" rx="${w / 2}" ry="${(base - top) / 2}" fill="${col}" fill-opacity=".85" stroke="#2f6b2c"/>`;
 }
-function logoSvg(cx, cy, r) { // ícone oficial (T + engrenagem); r = meia altura
+function logoSvg(cx, cy, r, tee) { // ícone oficial (T + engrenagem); r = meia altura
   const L = STAND.LOGO, k = (2 * r) / L.h;
-  return `<g transform="translate(${cx - (L.w * k) / 2},${cy - r}) scale(${k})"><path d="${L.gear}" fill="url(#lgG)"/><path d="${L.tee}" fill="#fff"/></g>`;
+  return `<g transform="translate(${cx - (L.w * k) / 2},${cy - r}) scale(${k})"><path d="${L.gear}" fill="url(#lgG)"/><path d="${L.tee}" fill="${tee || '#fff'}"/></g>`;
 }
 function buildElevations() {
   const s = 150, ox = 120, top = 70, W = STAND.W, H = STAND.H;
@@ -552,14 +552,14 @@ function buildElevations() {
     const q = [];
     q.push(`<svg viewBox="0 0 ${vbW3} ${vbH}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Parede ${mirror ? 'direita' : 'esquerda'} vista de dentro"><style>${SVG_CSS}</style>${SVG_DEFS}<rect class="bg" width="${vbW3}" height="${vbH}"/>`);
     const rw = (y0, y1, z0, z1, fill, stroke = '#1b2a30', extra = '') => { const a = Yw(y0), b = Yw(y1); return `<rect x="${Math.min(a, b)}" y="${Z(z1)}" width="${Math.abs(b - a)}" height="${(z1 - z0) * s}" fill="${fill}" stroke="${stroke}" stroke-width="1.2" ${extra}/>`; };
-    q.push(rw(0, 4, 0, 3, TEAL2, TEAL) + rw(0, 4, 2.55, 3, '#0e3039', '#0b2630'));
+    q.push(rw(0, 4, 0, 3, mirror ? TEAL2 : '#f6f6f3', TEAL) + rw(0, 4, 2.55, 3, '#0e3039', '#0b2630'));
     SLATS.filter((i) => i.slat.wall === side).forEach((i) => { q.push(rw(i.y, i.y + i.d, 0, 2.55, 'url(#pw)', '#6e3d12')); i.slat.led.forEach((y) => q.push(rw(y - 0.004, y + 0.004, 0, 2.55, YEL, YEL))); });
     const v = byTag[mirror ? 'V2' : 'V1'];
-    q.push(rw(v.y, v.y + v.d, v.z0, v.z0 + v.h, 'rgba(255,255,255,.07)', YEL, 'stroke-dasharray="5 3"'));
+    q.push(rw(v.y, v.y + v.d, v.z0, v.z0 + v.h, mirror ? 'rgba(255,255,255,.07)' : 'rgba(9,56,84,.05)', YEL, 'stroke-dasharray="5 3"'));
     const cxp = (Yw(v.y) + Yw(v.y + v.d)) / 2;
-    q.push(logoSvg(cxp, Z(2.2), 32));
+    if (!mirror) q.push(logoSvg(cxp, Z(2.2), 32, '#093854'));
     if (!mirror) {
-      ['SOFTWARE', 'AUTOMAÇÃO', 'INTELIGÊNCIA ARTIFICIAL', 'SUPORTE ESPECIALIZADO'].forEach((tx, i) => { const zz = 1.80 - i * 0.40; q.push(`<circle cx="${cxp - 70}" cy="${Z(zz)}" r="9" fill="none" stroke="${YEL}" stroke-width="2"/><text x="${cxp - 52}" y="${Z(zz) + 4}" fill="#fff" style="font:700 9.5px sans-serif">${tx}</text>`); });
+      ['SOFTWARE', 'AUTOMAÇÃO', 'INTELIGÊNCIA ARTIFICIAL', 'SUPORTE ESPECIALIZADO'].forEach((tx, i) => { const zz = 1.80 - i * 0.40; q.push(`<circle cx="${cxp - 70}" cy="${Z(zz)}" r="9" fill="none" stroke="${YEL}" stroke-width="2"/><text x="${cxp - 52}" y="${Z(zz) + 4}" fill="#093854" style="font:700 9.5px sans-serif">${tx}</text>`); });
     } else {
       ['INOVAÇÃO', 'TECNOLOGIA', 'PARCERIA'].forEach((tx, i) => q.push(`<text x="${cxp}" y="${Z(1.78 - i * 0.22)}" text-anchor="middle" fill="#fff" style="font:800 14px sans-serif">${tx}</text>`));
       q.push(`<text x="${cxp}" y="${Z(1.78 - 3 * 0.22)}" text-anchor="middle" fill="${YEL}" style="font:800 14px sans-serif">CRESCIMENTO</text>`);
@@ -641,10 +641,10 @@ function init3D() {
   const TEALH = '#12404c', YELH = '#f6b800';
   const LG = STAND.LOGO, LGW = LG.w / LG.h;                               // ícone oficial: T + engrenagem
   const gearPath = new Path2D(LG.gear), teePath = new Path2D(LG.tee);
-  function drawLogo(c, x, y, s) {                                          // s = altura do ícone; (x,y) = centro
+  function drawLogo(c, x, y, s, tee) {                                          // s = altura do ícone; (x,y) = centro
     const k = s / LG.h; c.save(); c.translate(x - (LG.w * k) / 2, y - s / 2); c.scale(k, k);
     const g = c.createLinearGradient(1262, 0, 0, 1113.7); g.addColorStop(0, LG.g0); g.addColorStop(1, LG.g1);
-    c.fillStyle = g; c.fill(gearPath); c.fillStyle = '#fff'; c.fill(teePath); c.restore();
+    c.fillStyle = g; c.fill(gearPath); c.fillStyle = tee || '#fff'; c.fill(teePath); c.restore();
   }
   function logoWord(c, w, h, bg, size, font, mono) {
     c.font = `900 ${font}px "Arial Black",Arial,Helvetica,sans-serif`; c.textBaseline = 'middle';
@@ -663,15 +663,15 @@ function init3D() {
     (c, x, y) => { c.beginPath(); c.arc(x, y - 2, 19, Math.PI, 0); c.stroke(); c.strokeRect(x - 22, y - 4, 9, 18); c.strokeRect(x + 13, y - 4, 9, 18); }
   ];
   const decalL = canvasTex(600, 1000, (c, w, h) => {
-    c.clearRect(0, 0, w, h); drawLogo(c, w / 2, 130, 190, TEALH);
+    c.clearRect(0, 0, w, h); drawLogo(c, w / 2, 130, 190, '#093854');
     ['SOFTWARE', 'AUTOMAÇÃO', 'INTELIGÊNCIA|ARTIFICIAL', 'SUPORTE|ESPECIALIZADO'].forEach((t, i) => {
       const y = 360 + i * 150, lines = t.split('|'); c.strokeStyle = YELH; c.fillStyle = YELH; c.lineWidth = 4; c.textAlign = 'center'; iconPaint[i](c, 120, y);
-      c.fillStyle = '#fff'; c.textAlign = 'left'; c.font = '700 36px Arial,Helvetica,sans-serif'; lines.forEach((l, k) => c.fillText(l, 175, y + 12 + (k - (lines.length - 1) / 2) * 40));
+      c.fillStyle = '#093854'; c.textAlign = 'left'; c.font = '700 36px Arial,Helvetica,sans-serif'; lines.forEach((l, k) => c.fillText(l, 175, y + 12 + (k - (lines.length - 1) / 2) * 40));
     });
   });
   const decalR = canvasTex(600, 1000, (c, w, h) => {
-    c.clearRect(0, 0, w, h); drawLogo(c, w / 2, 160, 230, TEALH); c.textAlign = 'center'; c.font = '800 70px Arial,Helvetica,sans-serif'; c.fillStyle = '#fff';
-    ['INOVAÇÃO', 'TECNOLOGIA', 'PARCERIA'].forEach((t, i) => c.fillText(t, w / 2, 460 + i * 100)); c.fillStyle = YELH; c.fillText('CRESCIMENTO', w / 2, 760);
+    c.clearRect(0, 0, w, h); c.textAlign = 'center'; c.font = '800 70px Arial,Helvetica,sans-serif'; c.fillStyle = '#fff';
+    ['INOVAÇÃO', 'TECNOLOGIA', 'PARCERIA'].forEach((t, i) => c.fillText(t, w / 2, 400 + i * 100)); c.fillStyle = YELH; c.fillText('CRESCIMENTO', w / 2, 700);
   });
   const taglineTex = canvasTex(750, 250, (c, w, h) => {
     c.clearRect(0, 0, w, h); c.font = '800 64px Arial,Helvetica,sans-serif'; c.fillStyle = '#fff'; c.textAlign = 'left';
@@ -779,7 +779,7 @@ function init3D() {
   addLED(0.03, 4.97, -0.006, 0.018, 2.55, 2.58);
   addLED(0.045, 0.065, -0.006, 0.010, 2.575, 2.985);                 // LED vertical na ponta esquerda da testeira (como na referência)
   // paredes laterais até o fundo e parede de fundo
-  bx(0, 0.15, 0, 4.00, 0, 3.00, tealM); bx(4.85, 5.00, 0, 4.00, 0, 3.00, tealM);
+  bx(0, 0.15, 0, 4.00, 0, 3.00, sideMats(tealM, tealM, mat(0xf6f6f3, { roughness: 0.6, envMapIntensity: 0.6 }))); bx(4.85, 5.00, 0, 4.00, 0, 3.00, tealM);
   bx(0.15, 4.85, 3.90, 4.00, 0, 3.00, sideMats(tealM, washM));
   // LED nas bordas frontais das paredes e no piso (frente)
   bx(0.15, 4.85, -0.006, 0.02, 0, 0.012, ledM, { shadow: false });
