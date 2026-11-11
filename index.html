@@ -160,7 +160,7 @@ const STAND = {
   trayZ: 2.74,            // altura do rebaixo central do forro
   open: { x0: 0.70, x1: 4.30, y0: 0.75, y1: 3.30 },   // vão aberto do forro
   tray: { x0: 1.35, x1: 3.65, y0: 1.15, y1: 2.90 },   // aro suspenso
-  trayBand: 0.18, bridgeX0: 2.30, bridgeX1: 2.70,
+  trayBand: 0.18, cutX0: 2.45, cutK: 0.1765, bridgeX0: 2.30, bridgeX1: 2.70,
   spots: [[1.0, 0.52], [2.0, 0.52], [3.0, 0.52], [4.0, 0.52],
           [1.0, 3.60], [2.0, 3.60], [3.0, 3.60], [4.0, 3.60],
           [0.43, 1.70], [4.57, 1.70]],
@@ -485,8 +485,10 @@ function buildElevations() {
   const R = (x0, x1, z0, z1, fill, stroke = '#1b2a30', extra = '') => `<rect x="${X(x0)}" y="${Z(z1)}" width="${(x1 - x0) * s}" height="${(z1 - z0) * s}" fill="${fill}" stroke="${stroke}" stroke-width="1.2" ${extra}/>`;
   // fundo, paredes laterais (topo das paredes) e ripado do fundo
   o.push(R(0.15, 4.85, 0, 3, TEAL2, TEAL) + R(0, 0.15, 0, 3, '#f6f6f3', '#0b2630') + R(4.85, 5, 0, 3, '#0e3039', '#0b2630'));
+  { const xc = (z) => STAND.cutX0 + STAND.cutK * z;   // corte diagonal com LED: esquerda branca, direita azul
+    o.push(`<polygon points="${X(0.15)},${Z(0)} ${X(xc(0))},${Z(0)} ${X(xc(3))},${Z(3)} ${X(0.15)},${Z(3)}" fill="#f6f6f3" stroke="${TEAL}" stroke-width="1.2"/><line x1="${X(xc(0))}" y1="${Z(0)}" x2="${X(xc(3))}" y2="${Z(3)}" stroke="#ffc928" stroke-width="3"/>`); }
   SLATS.filter((i) => i.slat.wall === 'B').forEach((i) => o.push(R(i.x, i.x + i.w, 0, 2.55, 'url(#pw)', '#6e3d12')));
-  o.push(`<text x="${X(3.5)}" y="${Z(1.86)}" text-anchor="middle" fill="#fff" style="font:700 11px sans-serif">TECNOLOGIA QUE IMPULSIONA</text><text x="${X(3.5)}" y="${Z(1.70)}" text-anchor="middle" fill="${YEL}" style="font:700 11px sans-serif">O SEU FUTURO</text>`);
+  o.push(`<text x="${X(3.8)}" y="${Z(1.86)}" text-anchor="middle" fill="#fff" style="font:700 11px sans-serif">TECNOLOGIA QUE IMPULSIONA</text><text x="${X(3.8)}" y="${Z(1.70)}" text-anchor="middle" fill="${YEL}" style="font:700 11px sans-serif">O SEU FUTURO</text>`);
   o.push(`<line x1="${X(0.15)}" y1="${Z(2.55)}" x2="${X(4.85)}" y2="${Z(2.55)}" stroke="#fff" stroke-width="2" stroke-dasharray="5 4"/>`);
   o.push(R(1.39, 2.61, 1.45, 2.14, '#0a2a66', '#000') + `<text x="${X(2)}" y="${Z(1.795) + 4}" text-anchor="middle" fill="#fff" style="font:700 12px sans-serif">TECNOSOFT</text>`);
   ['D2'].forEach((k) => { const d = byTag[k]; o.push(plantBlob(X(cxOf(d)), Z(0.40), 0.40 * s, Z(1.70)) + R(d.x, d.x + d.w, 0, 0.40, '#1b1b1b', '#000')); });
@@ -815,6 +817,14 @@ function init3D() {
   gl(4.7, 0.20, glowH, 0.55, P(2.5, -0.012, 3.535));                    // sob a testeira
   gl(4.7, 0.34, glowH, 0.5, P(2.5, 0.16, 0.003), 0, -Math.PI / 2);      // piso, frente
   gl(0.16, 0.44, glowV, 0.4, P(0.16, -0.012, 3.775));
+  // parede de fundo cortada na diagonal com LED amarelo: lado esquerdo (TV) branco, lado direito (texto) azul
+  { const xc = (z) => STAND.cutX0 + STAND.cutK * z, x0w = 0.15, yw = 3.899;
+    const A = P(x0w, yw, 0), B = P(xc(0), yw, 0), Cc = P(xc(3), yw, 3), D = P(x0w, yw, 3);
+    const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute([A, B, Cc, A, Cc, D].flatMap((v) => [v.x, v.y, v.z]), 3)); g.computeVertexNormals();
+    const wm = mat(0xf6f6f3, { roughness: 0.6, envMapIntensity: 0.6 }); const wp = new THREE.Mesh(g, wm); wp.receiveShadow = true; S.add(wp);
+    const a = P(xc(0), 3.894, 0.012), b = P(xc(3), 3.894, 3), len = a.distanceTo(b), ang = Math.atan2(b.y - a.y, b.x - a.x);
+    const led = new THREE.Mesh(new THREE.BoxGeometry(len, 0.014, 0.010), ledM); led.position.copy(a.clone().add(b).multiplyScalar(0.5)); led.rotation.z = ang; S.add(led);
+    const gw = new THREE.Mesh(new THREE.PlaneGeometry(len, 0.16), glowM(glowH, 0.4)); gw.position.copy(led.position); gw.position.z -= 0.004; gw.rotation.z = ang; S.add(gw); }
   [1, 2, 3, 4].forEach((x) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(1.0, 1.0), glowM(poolTex, 0.3)); m.position.copy(P(x, 3.894, 2.38)); S.add(m); });   // luz dos spots lavando o fundo
 
   /* ---------- ripado: painéis contínuos com LED amarelo nas bordas verticais ---------- */
@@ -955,7 +965,7 @@ function init3D() {
   const tvG = new THREE.Group(); S.add(tvG);
   bx(1.39, 2.61, 3.85, 3.895, 1.45, 2.14, mat(0x0b0b0c, { roughness: 0.3, metalness: 0.4 }), { parent: tvG });
   const tvScr = new THREE.Mesh(new THREE.PlaneGeometry(1.19, 0.665), new THREE.MeshStandardMaterial({ map: screenTex(960, 540, 120, 104), emissiveMap: screenTex(960, 540, 120, 104), emissive: C(0xffffff), emissiveIntensity: 0.95, roughness: 0.12, color: C(0x222222) })); tvScr.position.copy(P(2.0, 3.848, 1.795)); tvG.add(tvScr);
-  const tag = new THREE.Mesh(new THREE.PlaneGeometry(1.7, 0.567), new THREE.MeshBasicMaterial({ map: taglineTex, transparent: true, toneMapped: false })); tag.position.copy(P(3.56, 3.895, 1.80)); S.add(tag);
+  const tag = new THREE.Mesh(new THREE.PlaneGeometry(1.7, 0.567), new THREE.MeshBasicMaterial({ map: taglineTex, transparent: true, toneMapped: false })); tag.position.copy(P(3.78, 3.895, 1.80)); S.add(tag);
 
   /* ---------- mesas e cadeiras ---------- */
   const satin = mat(0xc9ced2, { metalness: 0.9, roughness: 0.32 }), topM = lac(0xfbfbf9);
