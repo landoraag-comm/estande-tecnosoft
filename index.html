@@ -111,7 +111,7 @@
 
   <section id="elevacoes">
     <h2><span class="n">4</span>Elevações, paredes laterais e corte</h2>
-    <p class="lead">Alturas conferidas contra o limite de 3,00 m: testeira de 2,55 a 3,00 m, forro a 2,55 m, rebaixo de 2,64 m (frente) a 2,92 m (fundo).</p>
+    <p class="lead">Alturas conferidas contra o limite de 3,00 m: testeira de 2,55 a 3,00 m, forro a 2,55 m, aro suspenso a 2,66 m, com vão aberto.</p>
     <div class="two">
       <div class="panel svgwrap" id="elev"></div>
       <div class="panel svgwrap" id="sect"></div>
@@ -157,8 +157,10 @@
 const STAND = {
   W: 5.0, D: 4.0, H: 3.0,
   ceilZ: 2.55,            // altura do forro
-  trayZ: 2.78,            // altura do rebaixo central do forro
-  tray: { x0: 1.30, x1: 3.70, y0: 0.90, y1: 2.50 },
+  trayZ: 2.66,            // altura do rebaixo central do forro
+  open: { x0: 1.25, x1: 3.75, y0: 0.90, y1: 2.75 },   // vão aberto do forro
+  tray: { x0: 1.55, x1: 3.45, y0: 1.15, y1: 2.50 },   // aro suspenso
+  trayBand: 0.30, bridgeX0: 2.25, bridgeX1: 2.75,
   spots: [[1.0, 0.55], [2.0, 0.55], [3.0, 0.55], [4.0, 0.55],
           [1.0, 3.00], [2.0, 3.00], [3.0, 3.00], [4.0, 3.00],
           [0.95, 1.70], [4.05, 1.70]],
@@ -370,9 +372,9 @@ function buildPlan() {
   for (let j = 0; j < 4; j++) o.push(`<text class="lblb" x="${ox - 14}" y="${Y(j + 0.5) + 4}" text-anchor="end">${j + 1}</text>`);
 
   // projeções aéreas (tracejadas)
-  const t = STAND.tray;
-  o.push(`<rect class="dash" x="${X(t.x0)}" y="${Y(t.y1)}" width="${(t.x1 - t.x0) * s}" height="${(t.y1 - t.y0) * s}"/>`);
-  o.push(`<text class="mut" x="${X(t.x0) + 6}" y="${Y(t.y1) + 15}">rebaixo do forro 2,40 × 1,60 (h 2,64 frente → 2,92 fundo)</text>`);
+  const t = STAND.tray, op = STAND.open;
+  o.push(`<rect class="dash" x="${X(op.x0)}" y="${Y(op.y1)}" width="${(op.x1 - op.x0) * s}" height="${(op.y1 - op.y0) * s}"/><rect class="dash" x="${X(t.x0)}" y="${Y(t.y1)}" width="${(t.x1 - t.x0) * s}" height="${(t.y1 - t.y0) * s}"/><rect class="dash" x="${X(t.x0 + STAND.trayBand)}" y="${Y(t.y1 - STAND.trayBand)}" width="${(t.x1 - t.x0 - 2 * STAND.trayBand) * s}" height="${(t.y1 - t.y0 - 2 * STAND.trayBand) * s}"/>`);
+  o.push(`<text class="mut" x="${X(op.x0) + 6}" y="${Y(op.y1) + 15}">vão aberto 2,50 × 1,85 com aro suspenso (h 2,66) e 2 pontes</text>`);
   o.push(`<rect class="dash" x="${X(0)}" y="${Y(0.30)}" width="${W * s}" height="${0.30 * s}"/>`);
   STAND.spots.forEach(([x, y]) => o.push(`<g stroke="#9aa9b0" fill="none" stroke-width="1"><circle cx="${X(x)}" cy="${Y(y)}" r="6"/><line x1="${X(x) - 4}" y1="${Y(y)}" x2="${X(x) + 4}" y2="${Y(y)}"/><line x1="${X(x)}" y1="${Y(y) - 4}" x2="${X(x)}" y2="${Y(y) + 4}"/></g>`));
 
@@ -516,10 +518,13 @@ function buildElevations() {
   p.push(Rr(0.05, 0.45, 0, 0.60, GR, GS) + plantBlob(Y(0.25), Z(0.60), 0.35 * s, Z(1.50), '#b9c9bd'));
   p.push(Rr(3.375, 3.725, 0, 0.40, GR, GS) + plantBlob(Y(3.55), Z(0.40), 0.4 * s, Z(1.70), '#b9c9bd'));
   // cortados (x = 2,50)
-  p.push(Rr(3.90, 4.0, 0, 3.0, TEAL, '#0b2630') + Rr(0, 0.30, 2.55, 3.0, TEAL, '#0b2630') + Rr(0, 4, 2.95, 3.0, '#f4f1ea', '#1b2a30'));
-  const t = STAND.tray;
-  p.push(`<path d="M${Y(0.30)},${Z(2.55)} L${Y(t.y0)},${Z(2.55)} L${Y(t.y0)},${Z(2.64)} L${Y(t.y1)},${Z(2.92)} L${Y(t.y1)},${Z(2.55)} L${Y(3.90)},${Z(2.55)} L${Y(3.90)},${Z(2.58)} L${Y(t.y1)},${Z(2.58)} L${Y(t.y1)},${Z(2.95)} L${Y(t.y0)},${Z(2.67)} L${Y(t.y0)},${Z(2.58)} L${Y(0.30)},${Z(2.58)} Z" fill="#f4f1ea" stroke="#1b2a30" stroke-width="1.2"/>`);
-  p.push(`<line x1="${Y(t.y0)}" y1="${Z(2.64)}" x2="${Y(t.y1)}" y2="${Z(2.92)}" stroke="${YEL}" stroke-width="3"/>`);
+  p.push(Rr(3.90, 4.0, 0, 3.0, TEAL, '#0b2630') + Rr(0, 0.30, 2.55, 3.0, TEAL, '#0b2630'));
+  const t = STAND.tray, op = STAND.open, bw = STAND.trayBand, zt = STAND.trayZ, th = 0.04;
+  const pl = (pts) => `<polygon points="${pts.map(([y, z]) => Y(y) + ',' + Z(z)).join(' ')}" fill="#f4f1ea" stroke="#1b2a30" stroke-width="1.2"/>`;
+  p.push(pl([[0.30, 2.55], [op.y0, 2.55], [op.y0, 2.51], [0.30, 2.51]]) + pl([[op.y1, 2.55], [3.90, 2.55], [3.90, 2.51], [op.y1, 2.51]]));
+  p.push(pl([[op.y0, 2.55], [t.y0, zt], [t.y0, zt - th], [op.y0, 2.51]]) + pl([[t.y1, zt], [op.y1, 2.55], [op.y1, 2.51], [t.y1, zt - th]]));
+  p.push(pl([[t.y0, zt], [t.y0 + bw, zt], [t.y0 + bw, zt - th], [t.y0, zt - th]]) + pl([[t.y1 - bw, zt], [t.y1, zt], [t.y1, zt - th], [t.y1 - bw, zt - th]]));
+  p.push(`<line x1="${Y(t.y0)}" y1="${Z(zt - th)}" x2="${Y(t.y0 + bw)}" y2="${Z(zt - th)}" stroke="${YEL}" stroke-width="3"/><line x1="${Y(t.y1 - bw)}" y1="${Z(zt - th)}" x2="${Y(t.y1)}" y2="${Z(zt - th)}" stroke="${YEL}" stroke-width="3"/>`);
   p.push(Rr(3.85, 3.90, 1.45, 2.14, '#0a2a66', '#000'));
   p.push(Rr(0.05, 0.55, 0, 0.96, TEAL, '#0b2630') + Rr(0.05, 0.55, 0.96, 1.00, '#fff', '#0b2630') + Rr(0.195, 0.22, 1.12, 1.42, '#0a2a66', '#000') + Rr(0.13, 0.27, 1.00, 1.012, '#222', '#000') + Rr(0.199, 0.215, 1.01, 1.12, '#222', '#000') + Rr(0.40, 0.54, 1.00, 1.02, '#444', '#000'));
   p.push(Rr(2.30, 2.90, 0.69, 0.72, '#fff', '#8a6a3a') + Rr(2.57, 2.63, 0.02, 0.69, '#c7ccd0', '#7d8a90') + Rr(2.40, 2.80, 0, 0.02, '#c7ccd0', '#7d8a90'));
@@ -534,7 +539,7 @@ function buildElevations() {
   p.push(dimV(xr3, Z(2.55), Z(3), '0,45') + dimV(xr3, Z(0), Z(2.55), '2,55'));
   const xr4 = xr3 + 34; [3, 0].forEach((z) => p.push(ext(xr3, Z(z), xr4 + 4, Z(z)))); p.push(dimV(xr4, Z(0), Z(3), '3,00 m', 13));
   p.push(dimV(Y(0.04), Z(0), Z(1.0), '1,00', 11) + dimV(Y(1.6), Z(0), Z(0.80), '0,80', 11));
-  p.push(`<text class="mut" x="${Y(2.2)}" y="${Z(2.92) - 10}" text-anchor="middle">rebaixo 2,64 (frente) a 2,92 (fundo)</text>`);
+  p.push(`<text class="mut" x="${Y(2.2)}" y="${Z(zt) - 14}" text-anchor="middle">vão aberto + aro suspenso (h 2,66) preso por pontes</text>`);
   p.push(`<text class="mut" x="${Y(1.35)}" y="${Z(2.0)}" text-anchor="middle" style="font-size:10px">adesivo (parede esq.)</text>`);
   p.push(`<text class="lblb" x="${ox2}" y="38">CORTE A–A em x = 2,50 m (frente à esquerda)</text>`);
   p.push('</svg>');
@@ -729,7 +734,7 @@ function init3D() {
   [1, 2, 5, 6, 8, 9].forEach((i) => { const [x, y] = STAND.spots[i]; const sl = new THREE.SpotLight(C(0xffeedd), 1.6, 6.5, 0.7, 0.85, 1.3); sl.position.copy(P(x, y, STAND.ceilZ - 0.02)); sl.target.position.copy(P(x, y, 0)); sl.castShadow = true; sl.shadow.mapSize.set(512, 512); sl.shadow.bias = -0.0005; sl.shadow.normalBias = 0.02; sl.shadow.radius = 5; sl.shadow.camera.near = 0.1; sl.shadow.camera.far = 6; scene.add(sl, sl.target); });
   const poolTex = canvasTex(128, 128, (c, w, h) => { const g = c.createRadialGradient(64, 64, 4, 64, 64, 64); g.addColorStop(0, 'rgba(255,236,200,.9)'); g.addColorStop(0.5, 'rgba(255,225,180,.35)'); g.addColorStop(1, 'rgba(255,225,180,0)'); c.fillStyle = g; c.fillRect(0, 0, w, h); });
   STAND.spots.forEach(([x, y]) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 1.1).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ map: poolTex, transparent: true, opacity: 0.07, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false })); m.position.copy(P(x, y, 0.007)); m.renderOrder = 2; scene.add(m); });
-  const trayGlow = new THREE.PointLight(C(0xffc56b), 0.45, 5, 1.5); trayGlow.position.copy(P(2.5, 1.7, STAND.trayZ - 0.1)); scene.add(trayGlow);
+  const trayGlow = new THREE.PointLight(C(0xffc56b), 0.45, 5, 1.5); trayGlow.position.copy(P(2.5, 1.8, STAND.trayZ - 0.1)); scene.add(trayGlow);
   if (hasRect) {                                                         // luz das fitas de LED
     const ra = (col, I, w, h, from, to) => { const l = new THREE.RectAreaLight(C(col), I, w, h); l.position.copy(from); l.lookAt(to); scene.add(l); };
     ra(0xffc050, 6, 4.6, 0.05, P(2.5, 0.06, 2.53), P(2.5, 1.8, 1.0));    // LED sob a testeira
@@ -824,23 +829,33 @@ function init3D() {
 
   /* ---------- forro com rebaixo, spots e LED ---------- */
   const ceilG = new THREE.Group(); ceilG.name = 'ceil'; S.add(ceilG);
-  bx(0.15, 4.85, 0.30, 3.90, 2.95, 3.00, whiteM, { parent: ceilG });
-  const cm = mat(0xf4f3ee, { roughness: 0.9, side: THREE.FrontSide }), tr = STAND.tray, cz = STAND.ceilZ;
+  // vigas do topo (perímetro) — o forro NÃO é fechado: há um vão aberto com um aro suspenso, preso por duas pontes (frente e fundo)
+  [[0.15, 4.85, 0.30, 0.45], [0.15, 4.85, 3.75, 3.90], [0.15, 0.30, 0.45, 3.75], [4.70, 4.85, 0.45, 3.75]].forEach((r) => bx(r[0], r[1], r[2], r[3], 2.95, 3.00, whiteM, { parent: ceilG }));
+  const cm = mat(0xf4f3ee, { roughness: 0.9, side: THREE.FrontSide }), tr = STAND.tray, op = STAND.open, cz = STAND.ceilZ;
   const flat = (x0, x1, y0, y1, z, m) => { const me = new THREE.Mesh(new THREE.PlaneGeometry(x1 - x0, y1 - y0).rotateX(Math.PI / 2), m); me.position.copy(P((x0 + x1) / 2, (y0 + y1) / 2, z)); me.receiveShadow = true; ceilG.add(me); };
-  flat(0.15, 4.85, 0.30, tr.y0, cz, cm); flat(0.15, 4.85, tr.y1, 3.90, cz, cm); flat(0.15, tr.x0, tr.y0, tr.y1, cz, cm); flat(tr.x1, 4.85, tr.y0, tr.y1, cz, cm);
-  // rebaixo (relevo para cima): borda da frente e laterais baixas, parte de trás (fundo) bem mais alta -> piso inclinado
-  const zF = 2.64, zB = 2.92, zAt = (y) => zF + (zB - zF) * (y - tr.y0) / (tr.y1 - tr.y0);
-  const quad = (pts, m) => { const g = new THREE.BufferGeometry(), v = []; [0, 1, 2, 0, 2, 3].forEach((k) => v.push(pts[k].x, pts[k].y, pts[k].z)); g.setAttribute('position', new THREE.Float32BufferAttribute(v, 3)); g.computeVertexNormals(); const me = new THREE.Mesh(g, m); me.receiveShadow = true; ceilG.add(me); };
-  const trM = mat(0xfbfaf6, { roughness: 0.9, side: THREE.DoubleSide, emissive: C(0xcfc6b0), emissiveIntensity: 0.4 }), wlM = mat(0xf4f3ee, { side: THREE.DoubleSide, roughness: 0.9 });
-  quad([P(tr.x0, tr.y0, zF), P(tr.x1, tr.y0, zF), P(tr.x1, tr.y1, zB), P(tr.x0, tr.y1, zB)], trM);
-  quad([P(tr.x0, tr.y0, cz), P(tr.x1, tr.y0, cz), P(tr.x1, tr.y0, zF), P(tr.x0, tr.y0, zF)], wlM);   // frente
-  quad([P(tr.x0, tr.y1, cz), P(tr.x1, tr.y1, cz), P(tr.x1, tr.y1, zB), P(tr.x0, tr.y1, zB)], wlM);   // fundo (alta)
-  quad([P(tr.x0, tr.y0, cz), P(tr.x0, tr.y1, cz), P(tr.x0, tr.y1, zB), P(tr.x0, tr.y0, zF)], wlM);   // lateral esq.
-  quad([P(tr.x1, tr.y0, cz), P(tr.x1, tr.y1, cz), P(tr.x1, tr.y1, zB), P(tr.x1, tr.y0, zF)], wlM);   // lateral dir.
-  bx(tr.x0, tr.x1, tr.y0, tr.y0 + 0.03, zF - 0.02, zF - 0.005, ledM, { parent: ceilG, shadow: false });
-  bx(tr.x0, tr.x1, tr.y1 - 0.03, tr.y1, zB - 0.02, zB - 0.005, ledM, { parent: ceilG, shadow: false });
-  for (let k = 0; k < 8; k++) { const ya = tr.y0 + (tr.y1 - tr.y0) * k / 8, yb = tr.y0 + (tr.y1 - tr.y0) * (k + 1) / 8, zz = zAt((ya + yb) / 2);
-    bx(tr.x0, tr.x0 + 0.03, ya, yb, zz - 0.02, zz - 0.005, ledM, { parent: ceilG, shadow: false }); bx(tr.x1 - 0.03, tr.x1, ya, yb, zz - 0.02, zz - 0.005, ledM, { parent: ceilG, shadow: false }); }
+  flat(0.15, 4.85, 0.30, op.y0, cz, cm); flat(0.15, 4.85, op.y1, 3.90, cz, cm); flat(0.15, op.x0, op.y0, op.y1, cz, cm); flat(op.x1, 4.85, op.y0, op.y1, cz, cm);
+  const zT = STAND.trayZ, quad = (pts, m) => { const g = new THREE.BufferGeometry(), v = []; [0, 1, 2, 0, 2, 3].forEach((k) => v.push(pts[k].x, pts[k].y, pts[k].z)); g.setAttribute('position', new THREE.Float32BufferAttribute(v, 3)); g.computeVertexNormals(); const me = new THREE.Mesh(g, m); me.receiveShadow = true; ceilG.add(me); };
+  const wlM = mat(0xf7f6f1, { side: THREE.DoubleSide, roughness: 0.85, emissive: C(0xcfc6b0), emissiveIntensity: 0.3 });
+  // aro suspenso (faixa de 0,30 m) um degrau acima do forro
+  const bw = STAND.trayBand;
+  [[tr.x0, tr.x1, tr.y0, tr.y0 + bw], [tr.x0, tr.x1, tr.y1 - bw, tr.y1], [tr.x0, tr.x0 + bw, tr.y0 + bw, tr.y1 - bw], [tr.x1 - bw, tr.x1, tr.y0 + bw, tr.y1 - bw]].forEach((r) => bx(r[0], r[1], r[2], r[3], zT - 0.04, zT, whiteM, { parent: ceilG }));
+  // pontes inclinadas (frente e fundo) ligando o aro ao forro
+  const b0 = STAND.bridgeX0, b1 = STAND.bridgeX1;
+  quad([P(b0, op.y0, cz), P(b1, op.y0, cz), P(b1, tr.y0, zT), P(b0, tr.y0, zT)], wlM);
+  quad([P(b0, tr.y1, zT), P(b1, tr.y1, zT), P(b1, op.y1, cz), P(b0, op.y1, cz)], wlM);
+  // fitas de LED na borda externa e interna do aro (somente onde não há ponte)
+  const L = (x0, x1, y0, y1, z) => bx(x0, x1, y0, y1, z - 0.012, z, ledM, { parent: ceilG, shadow: false });
+  L(tr.x0, b0, tr.y0, tr.y0 + 0.03, zT - 0.04); L(b1, tr.x1, tr.y0, tr.y0 + 0.03, zT - 0.04); L(tr.x0, b0, tr.y1 - 0.03, tr.y1, zT - 0.04); L(b1, tr.x1, tr.y1 - 0.03, tr.y1, zT - 0.04);
+  L(tr.x0, tr.x0 + 0.03, tr.y0, tr.y1, zT - 0.04); L(tr.x1 - 0.03, tr.x1, tr.y0, tr.y1, zT - 0.04);
+  L(tr.x0 + bw - 0.03, tr.x1 - bw + 0.03, tr.y0 + bw - 0.03, tr.y0 + bw, zT - 0.04); L(tr.x0 + bw - 0.03, tr.x1 - bw + 0.03, tr.y1 - bw, tr.y1 - bw + 0.03, zT - 0.04);
+  L(tr.x0 + bw - 0.03, tr.x0 + bw, tr.y0 + bw, tr.y1 - bw, zT - 0.04); L(tr.x1 - bw, tr.x1 - bw + 0.03, tr.y0 + bw, tr.y1 - bw, zT - 0.04);
+  // fita de LED na borda do vão (no forro)
+  L(op.x0, op.x1, op.y0, op.y0 + 0.03, cz); L(op.x0, op.x1, op.y1 - 0.03, op.y1, cz);
+  // teto do pavilhão visto pelo vão (estrutura escura)
+  const hallTex = canvasTex(512, 512, (c, w, h) => { c.fillStyle = '#1d242b'; c.fillRect(0, 0, w, h); c.strokeStyle = '#3b4650'; c.lineWidth = 5; for (let k = 0; k <= 8; k++) { c.beginPath(); c.moveTo(k * 64, 0); c.lineTo(k * 64, h); c.moveTo(0, k * 64); c.lineTo(w, k * 64); c.stroke(); } c.strokeStyle = '#2b343c'; c.lineWidth = 3; for (let k = -8; k < 8; k++) { c.beginPath(); c.moveTo(k * 64, 0); c.lineTo(k * 64 + 512, 512); c.stroke(); } });
+  { const bl = new THREE.Mesh(new THREE.PlaneGeometry(4.7, 3.6).rotateX(Math.PI / 2), new THREE.MeshBasicMaterial({ colorWrite: false, depthWrite: false, side: THREE.DoubleSide })); bl.position.copy(P(2.5, 2.1, 3.01)); bl.castShadow = true; ceilG.add(bl); }   // bloqueia só o sol (sombra), invisível
+  hallTex.wrapS = hallTex.wrapT = THREE.RepeatWrapping; hallTex.repeat.set(5, 5);
+  const hall = new THREE.Mesh(new THREE.PlaneGeometry(24, 24).rotateX(Math.PI / 2), new THREE.MeshBasicMaterial({ map: hallTex, side: THREE.FrontSide })); hall.position.copy(P(2.5, 2, 5.2)); ceilG.add(hall);
   [[tr.x0, tr.x1, tr.y0 - 0.002], [tr.x0, tr.x1, tr.y1 + 0.002]].forEach(([a, b, yy]) => { const g = new THREE.Mesh(new THREE.PlaneGeometry(b - a, 0.2), glowM(glowH, 0.25)); g.position.copy(P((a + b) / 2, yy, cz + 0.1)); ceilG.add(g); });
   const ringG = new THREE.TorusGeometry(0.062, 0.009, 8, 28).rotateX(Math.PI / 2), ringM = mat(0xdadada, { metalness: 0.9, roughness: 0.3 });
   STAND.spots.forEach(([x, y]) => {
@@ -1000,6 +1015,7 @@ function init3D() {
     side: { dir: [1, 0.04, 0], tgt: [0, 1.5, 0], w: 6.2, h: 4.0, off: 2.5, ceil: true, person: true },
     eye: { pos: P(2.5, -4.6, 1.65), tgt: P(2.5, 4, 1.45), ceil: true, person: true },
     inside: { pos: P(1.1, 1.5, 1.6), tgt: P(3.4, 3.9, 1.3), ceil: true, person: false, dim: false },
+    up: { pos: P(2.5, 3.2, 1.3), tgt: P(2.5, 0.8, 2.3), ceil: true, person: false, dim: false },
     totem: { pos: P(2.9, 2.2, 1.5), tgt: P(0.58, 0.62, 1.1), ceil: true, person: false, dim: false }
   };
   const fitDist = (w, h) => { const t = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)); return Math.max(h / (2 * t), w / (2 * t * camera.aspect)); };
@@ -1013,7 +1029,7 @@ function init3D() {
   const apply = () => { ceilG.visible = ck.ceil.checked; const mc = mir('ceil'); if (mc) mc.visible = ck.ceil.checked; person.visible = ck.person.checked; const mp = mir('person'); if (mp) mp.visible = ck.person.checked; dimG.visible = ck.dim.checked; gridG.visible = ck.grid.checked; };
   Object.values(ck).forEach((e) => e.addEventListener('change', apply));
   let anim = 0; const REDUCED = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function go(name, instant) {
+  function go(name, instant) { if (window.__wake) window.__wake(2500);
     if (!views[name]) return; const v = viewOf(name); ck.ceil.checked = v.ceil; ck.person.checked = v.person; ck.dim.checked = v.dim !== false; apply();
     const p0 = camera.position.clone(), t0 = controls.target.clone(), st = performance.now(), my = ++anim;
     const step = () => { if (my !== anim) return; const k = (instant || REDUCED) ? 1 : Math.min(1, (performance.now() - st) / 800), e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2; camera.position.lerpVectors(p0, v.pos, e); controls.target.lerpVectors(t0, v.tgt, e); controls.update(); if (k < 1) requestAnimationFrame(step); };
