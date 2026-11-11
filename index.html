@@ -111,7 +111,7 @@
 
   <section id="elevacoes">
     <h2><span class="n">4</span>Elevações, paredes laterais e corte</h2>
-    <p class="lead">Alturas conferidas contra o limite de 3,00 m: testeira de 2,55 a 3,00 m, forro a 2,55 m, aro suspenso a 2,66 m, com vão aberto.</p>
+    <p class="lead">Alturas conferidas contra o limite de 3,00 m: testeira de 2,55 a 3,00 m, forro a 2,55 m, aro suspenso a 2,74 m, com vão aberto.</p>
     <div class="two">
       <div class="panel svgwrap" id="elev"></div>
       <div class="panel svgwrap" id="sect"></div>
@@ -157,10 +157,10 @@
 const STAND = {
   W: 5.0, D: 4.0, H: 3.0,
   ceilZ: 2.55,            // altura do forro
-  trayZ: 2.66,            // altura do rebaixo central do forro
+  trayZ: 2.74,            // altura do rebaixo central do forro
   open: { x0: 1.25, x1: 3.75, y0: 0.90, y1: 2.75 },   // vão aberto do forro
-  tray: { x0: 1.55, x1: 3.45, y0: 1.15, y1: 2.50 },   // aro suspenso
-  trayBand: 0.30, bridgeX0: 2.25, bridgeX1: 2.75,
+  tray: { x0: 1.60, x1: 3.40, y0: 1.20, y1: 2.45 },   // aro suspenso
+  trayBand: 0.30, bridgeX0: 2.35, bridgeX1: 2.65,
   spots: [[1.0, 0.55], [2.0, 0.55], [3.0, 0.55], [4.0, 0.55],
           [1.0, 3.00], [2.0, 3.00], [3.0, 3.00], [4.0, 3.00],
           [0.95, 1.70], [4.05, 1.70]],
@@ -374,7 +374,7 @@ function buildPlan() {
   // projeções aéreas (tracejadas)
   const t = STAND.tray, op = STAND.open;
   o.push(`<rect class="dash" x="${X(op.x0)}" y="${Y(op.y1)}" width="${(op.x1 - op.x0) * s}" height="${(op.y1 - op.y0) * s}"/><rect class="dash" x="${X(t.x0)}" y="${Y(t.y1)}" width="${(t.x1 - t.x0) * s}" height="${(t.y1 - t.y0) * s}"/><rect class="dash" x="${X(t.x0 + STAND.trayBand)}" y="${Y(t.y1 - STAND.trayBand)}" width="${(t.x1 - t.x0 - 2 * STAND.trayBand) * s}" height="${(t.y1 - t.y0 - 2 * STAND.trayBand) * s}"/>`);
-  o.push(`<text class="mut" x="${X(op.x0) + 6}" y="${Y(op.y1) + 15}">vão aberto 2,50 × 1,85 com aro suspenso (h 2,66) e 2 pontes</text>`);
+  o.push(`<text class="mut" x="${X(op.x0) + 6}" y="${Y(op.y1) + 15}">vão aberto 2,50 × 1,85 com aro suspenso (h 2,74) e 2 pontes pequenas</text>`);
   o.push(`<rect class="dash" x="${X(0)}" y="${Y(0.30)}" width="${W * s}" height="${0.30 * s}"/>`);
   STAND.spots.forEach(([x, y]) => o.push(`<g stroke="#9aa9b0" fill="none" stroke-width="1"><circle cx="${X(x)}" cy="${Y(y)}" r="6"/><line x1="${X(x) - 4}" y1="${Y(y)}" x2="${X(x) + 4}" y2="${Y(y)}"/><line x1="${X(x)}" y1="${Y(y) - 4}" x2="${X(x)}" y2="${Y(y) + 4}"/></g>`));
 
@@ -519,10 +519,10 @@ function buildElevations() {
   p.push(Rr(3.375, 3.725, 0, 0.40, GR, GS) + plantBlob(Y(3.55), Z(0.40), 0.4 * s, Z(1.70), '#b9c9bd'));
   // cortados (x = 2,50)
   p.push(Rr(3.90, 4.0, 0, 3.0, TEAL, '#0b2630') + Rr(0, 0.30, 2.55, 3.0, TEAL, '#0b2630'));
-  const t = STAND.tray, op = STAND.open, bw = STAND.trayBand, zt = STAND.trayZ, th = 0.04;
+  const t = STAND.tray, op = STAND.open, bw = STAND.trayBand, zt = STAND.trayZ, th = 0.10;
   const pl = (pts) => `<polygon points="${pts.map(([y, z]) => Y(y) + ',' + Z(z)).join(' ')}" fill="#f4f1ea" stroke="#1b2a30" stroke-width="1.2"/>`;
   p.push(pl([[0.30, 2.55], [op.y0, 2.55], [op.y0, 2.51], [0.30, 2.51]]) + pl([[op.y1, 2.55], [3.90, 2.55], [3.90, 2.51], [op.y1, 2.51]]));
-  p.push(pl([[op.y0, 2.55], [t.y0, zt], [t.y0, zt - th], [op.y0, 2.51]]) + pl([[t.y1, zt], [op.y1, 2.55], [op.y1, 2.51], [t.y1, zt - th]]));
+  p.push(pl([[op.y0, 2.55], [t.y0, zt], [t.y0, zt - 0.04], [op.y0, 2.51]]) + pl([[t.y1, zt], [op.y1, 2.55], [op.y1, 2.51], [t.y1, zt - 0.04]]));
   p.push(pl([[t.y0, zt], [t.y0 + bw, zt], [t.y0 + bw, zt - th], [t.y0, zt - th]]) + pl([[t.y1 - bw, zt], [t.y1, zt], [t.y1, zt - th], [t.y1 - bw, zt - th]]));
   p.push(`<line x1="${Y(t.y0)}" y1="${Z(zt - th)}" x2="${Y(t.y0 + bw)}" y2="${Z(zt - th)}" stroke="${YEL}" stroke-width="3"/><line x1="${Y(t.y1 - bw)}" y1="${Z(zt - th)}" x2="${Y(t.y1)}" y2="${Z(zt - th)}" stroke="${YEL}" stroke-width="3"/>`);
   p.push(Rr(3.85, 3.90, 1.45, 2.14, '#0a2a66', '#000'));
@@ -539,7 +539,7 @@ function buildElevations() {
   p.push(dimV(xr3, Z(2.55), Z(3), '0,45') + dimV(xr3, Z(0), Z(2.55), '2,55'));
   const xr4 = xr3 + 34; [3, 0].forEach((z) => p.push(ext(xr3, Z(z), xr4 + 4, Z(z)))); p.push(dimV(xr4, Z(0), Z(3), '3,00 m', 13));
   p.push(dimV(Y(0.04), Z(0), Z(1.0), '1,00', 11) + dimV(Y(1.6), Z(0), Z(0.80), '0,80', 11));
-  p.push(`<text class="mut" x="${Y(2.2)}" y="${Z(zt) - 14}" text-anchor="middle">vão aberto + aro suspenso (h 2,66) preso por pontes</text>`);
+  p.push(`<text class="mut" x="${Y(2.2)}" y="${Z(zt) - 14}" text-anchor="middle">vão aberto + aro suspenso preso por pontes</text>`);
   p.push(`<text class="mut" x="${Y(1.35)}" y="${Z(2.0)}" text-anchor="middle" style="font-size:10px">adesivo (parede esq.)</text>`);
   p.push(`<text class="lblb" x="${ox2}" y="38">CORTE A–A em x = 2,50 m (frente à esquerda)</text>`);
   p.push('</svg>');
@@ -838,17 +838,21 @@ function init3D() {
   const wlM = mat(0xf7f6f1, { side: THREE.DoubleSide, roughness: 0.85, emissive: C(0xcfc6b0), emissiveIntensity: 0.3 });
   // aro suspenso (faixa de 0,30 m) um degrau acima do forro
   const bw = STAND.trayBand;
-  [[tr.x0, tr.x1, tr.y0, tr.y0 + bw], [tr.x0, tr.x1, tr.y1 - bw, tr.y1], [tr.x0, tr.x0 + bw, tr.y0 + bw, tr.y1 - bw], [tr.x1 - bw, tr.x1, tr.y0 + bw, tr.y1 - bw]].forEach((r) => bx(r[0], r[1], r[2], r[3], zT - 0.04, zT, whiteM, { parent: ceilG }));
+  [[tr.x0, tr.x1, tr.y0, tr.y0 + bw], [tr.x0, tr.x1, tr.y1 - bw, tr.y1], [tr.x0, tr.x0 + bw, tr.y0 + bw, tr.y1 - bw], [tr.x1 - bw, tr.x1, tr.y0 + bw, tr.y1 - bw]].forEach((r) => bx(r[0], r[1], r[2], r[3], zT - 0.10, zT, whiteM, { parent: ceilG }));
   // pontes inclinadas (frente e fundo) ligando o aro ao forro
   const b0 = STAND.bridgeX0, b1 = STAND.bridgeX1;
   quad([P(b0, op.y0, cz), P(b1, op.y0, cz), P(b1, tr.y0, zT), P(b0, tr.y0, zT)], wlM);
   quad([P(b0, tr.y1, zT), P(b1, tr.y1, zT), P(b1, op.y1, cz), P(b0, op.y1, cz)], wlM);
   // fitas de LED na borda externa e interna do aro (somente onde não há ponte)
   const L = (x0, x1, y0, y1, z) => bx(x0, x1, y0, y1, z - 0.012, z, ledM, { parent: ceilG, shadow: false });
-  L(tr.x0, b0, tr.y0, tr.y0 + 0.03, zT - 0.04); L(b1, tr.x1, tr.y0, tr.y0 + 0.03, zT - 0.04); L(tr.x0, b0, tr.y1 - 0.03, tr.y1, zT - 0.04); L(b1, tr.x1, tr.y1 - 0.03, tr.y1, zT - 0.04);
-  L(tr.x0, tr.x0 + 0.03, tr.y0, tr.y1, zT - 0.04); L(tr.x1 - 0.03, tr.x1, tr.y0, tr.y1, zT - 0.04);
-  L(tr.x0 + bw - 0.03, tr.x1 - bw + 0.03, tr.y0 + bw - 0.03, tr.y0 + bw, zT - 0.04); L(tr.x0 + bw - 0.03, tr.x1 - bw + 0.03, tr.y1 - bw, tr.y1 - bw + 0.03, zT - 0.04);
-  L(tr.x0 + bw - 0.03, tr.x0 + bw, tr.y0 + bw, tr.y1 - bw, zT - 0.04); L(tr.x1 - bw, tr.x1 - bw + 0.03, tr.y0 + bw, tr.y1 - bw, zT - 0.04);
+  L(tr.x0, b0, tr.y0, tr.y0 + 0.03, zT - 0.10); L(b1, tr.x1, tr.y0, tr.y0 + 0.03, zT - 0.10); L(tr.x0, b0, tr.y1 - 0.03, tr.y1, zT - 0.10); L(b1, tr.x1, tr.y1 - 0.03, tr.y1, zT - 0.10);
+  L(tr.x0, tr.x0 + 0.03, tr.y0, tr.y1, zT - 0.10); L(tr.x1 - 0.03, tr.x1, tr.y0, tr.y1, zT - 0.10);
+  L(tr.x0 + bw - 0.03, tr.x1 - bw + 0.03, tr.y0 + bw - 0.03, tr.y0 + bw, zT - 0.10); L(tr.x0 + bw - 0.03, tr.x1 - bw + 0.03, tr.y1 - bw, tr.y1 - bw + 0.03, zT - 0.10);
+  L(tr.x0 + bw - 0.03, tr.x0 + bw, tr.y0 + bw, tr.y1 - bw, zT - 0.10); L(tr.x1 - bw, tr.x1 - bw + 0.03, tr.y0 + bw, tr.y1 - bw, zT - 0.10);
+  // paredes do rebaixo (sobem do forro ao redor do vão); nas pontes ficam abertas
+  const rz = 2.72, rim = (x0, y0, x1, y1) => quad([P(x0, y0, cz), P(x1, y1, cz), P(x1, y1, rz), P(x0, y0, rz)], wlM);
+  rim(op.x0, op.y0, op.x0, op.y1); rim(op.x1, op.y0, op.x1, op.y1);
+  rim(op.x0, op.y0, b0, op.y0); rim(b1, op.y0, op.x1, op.y0); rim(op.x0, op.y1, b0, op.y1); rim(b1, op.y1, op.x1, op.y1);
   // fita de LED na borda do vão (no forro)
   L(op.x0, op.x1, op.y0, op.y0 + 0.03, cz); L(op.x0, op.x1, op.y1 - 0.03, op.y1, cz);
   // teto do pavilhão visto pelo vão (estrutura escura)
