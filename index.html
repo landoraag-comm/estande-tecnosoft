@@ -111,7 +111,7 @@
 
   <section id="elevacoes">
     <h2><span class="n">4</span>Elevações, paredes laterais e corte</h2>
-    <p class="lead">Alturas conferidas contra o limite de 3,00 m: testeira de 2,55 a 3,00 m, forro a 2,55 m, rebaixo a 2,70 m.</p>
+    <p class="lead">Alturas conferidas contra o limite de 3,00 m: testeira de 2,55 a 3,00 m, forro a 2,55 m, rebaixo de 2,64 m (frente) a 2,92 m (fundo).</p>
     <div class="two">
       <div class="panel svgwrap" id="elev"></div>
       <div class="panel svgwrap" id="sect"></div>
@@ -157,7 +157,7 @@
 const STAND = {
   W: 5.0, D: 4.0, H: 3.0,
   ceilZ: 2.55,            // altura do forro
-  trayZ: 2.70,            // altura do rebaixo central do forro
+  trayZ: 2.78,            // altura do rebaixo central do forro
   tray: { x0: 1.30, x1: 3.70, y0: 0.90, y1: 2.50 },
   spots: [[1.0, 0.55], [2.0, 0.55], [3.0, 0.55], [4.0, 0.55],
           [1.0, 3.00], [2.0, 3.00], [3.0, 3.00], [4.0, 3.00],
@@ -372,7 +372,7 @@ function buildPlan() {
   // projeções aéreas (tracejadas)
   const t = STAND.tray;
   o.push(`<rect class="dash" x="${X(t.x0)}" y="${Y(t.y1)}" width="${(t.x1 - t.x0) * s}" height="${(t.y1 - t.y0) * s}"/>`);
-  o.push(`<text class="mut" x="${X(t.x0) + 6}" y="${Y(t.y1) + 15}">rebaixo do forro 2,40 × 1,60 (h 2,70)</text>`);
+  o.push(`<text class="mut" x="${X(t.x0) + 6}" y="${Y(t.y1) + 15}">rebaixo do forro 2,40 × 1,60 (h 2,64 frente → 2,92 fundo)</text>`);
   o.push(`<rect class="dash" x="${X(0)}" y="${Y(0.30)}" width="${W * s}" height="${0.30 * s}"/>`);
   STAND.spots.forEach(([x, y]) => o.push(`<g stroke="#9aa9b0" fill="none" stroke-width="1"><circle cx="${X(x)}" cy="${Y(y)}" r="6"/><line x1="${X(x) - 4}" y1="${Y(y)}" x2="${X(x) + 4}" y2="${Y(y)}"/><line x1="${X(x)}" y1="${Y(y) - 4}" x2="${X(x)}" y2="${Y(y) + 4}"/></g>`));
 
@@ -518,8 +518,8 @@ function buildElevations() {
   // cortados (x = 2,50)
   p.push(Rr(3.90, 4.0, 0, 3.0, TEAL, '#0b2630') + Rr(0, 0.30, 2.55, 3.0, TEAL, '#0b2630') + Rr(0, 4, 2.95, 3.0, '#f4f1ea', '#1b2a30'));
   const t = STAND.tray;
-  p.push(`<path d="M${Y(0.30)},${Z(2.55)} L${Y(t.y0)},${Z(2.55)} L${Y(t.y0)},${Z(2.70)} L${Y(t.y1)},${Z(2.70)} L${Y(t.y1)},${Z(2.55)} L${Y(3.90)},${Z(2.55)} L${Y(3.90)},${Z(2.58)} L${Y(t.y1)},${Z(2.58)} L${Y(t.y1)},${Z(2.73)} L${Y(t.y0)},${Z(2.73)} L${Y(t.y0)},${Z(2.58)} L${Y(0.30)},${Z(2.58)} Z" fill="#f4f1ea" stroke="#1b2a30" stroke-width="1.2"/>`);
-  p.push(`<line x1="${Y(t.y0)}" y1="${Z(2.70)}" x2="${Y(t.y1)}" y2="${Z(2.70)}" stroke="${YEL}" stroke-width="3"/>`);
+  p.push(`<path d="M${Y(0.30)},${Z(2.55)} L${Y(t.y0)},${Z(2.55)} L${Y(t.y0)},${Z(2.64)} L${Y(t.y1)},${Z(2.92)} L${Y(t.y1)},${Z(2.55)} L${Y(3.90)},${Z(2.55)} L${Y(3.90)},${Z(2.58)} L${Y(t.y1)},${Z(2.58)} L${Y(t.y1)},${Z(2.95)} L${Y(t.y0)},${Z(2.67)} L${Y(t.y0)},${Z(2.58)} L${Y(0.30)},${Z(2.58)} Z" fill="#f4f1ea" stroke="#1b2a30" stroke-width="1.2"/>`);
+  p.push(`<line x1="${Y(t.y0)}" y1="${Z(2.64)}" x2="${Y(t.y1)}" y2="${Z(2.92)}" stroke="${YEL}" stroke-width="3"/>`);
   p.push(Rr(3.85, 3.90, 1.45, 2.14, '#0a2a66', '#000'));
   p.push(Rr(0.05, 0.55, 0, 0.96, TEAL, '#0b2630') + Rr(0.05, 0.55, 0.96, 1.00, '#fff', '#0b2630') + Rr(0.195, 0.22, 1.12, 1.42, '#0a2a66', '#000') + Rr(0.13, 0.27, 1.00, 1.012, '#222', '#000') + Rr(0.199, 0.215, 1.01, 1.12, '#222', '#000') + Rr(0.40, 0.54, 1.00, 1.02, '#444', '#000'));
   p.push(Rr(2.30, 2.90, 0.69, 0.72, '#fff', '#8a6a3a') + Rr(2.57, 2.63, 0.02, 0.69, '#c7ccd0', '#7d8a90') + Rr(2.40, 2.80, 0, 0.02, '#c7ccd0', '#7d8a90'));
@@ -534,7 +534,7 @@ function buildElevations() {
   p.push(dimV(xr3, Z(2.55), Z(3), '0,45') + dimV(xr3, Z(0), Z(2.55), '2,55'));
   const xr4 = xr3 + 34; [3, 0].forEach((z) => p.push(ext(xr3, Z(z), xr4 + 4, Z(z)))); p.push(dimV(xr4, Z(0), Z(3), '3,00 m', 13));
   p.push(dimV(Y(0.04), Z(0), Z(1.0), '1,00', 11) + dimV(Y(1.6), Z(0), Z(0.80), '0,80', 11));
-  p.push(`<text class="mut" x="${Y(2.2)}" y="${Z(2.70) - 10}" text-anchor="middle">rebaixo a 2,70</text>`);
+  p.push(`<text class="mut" x="${Y(2.2)}" y="${Z(2.92) - 10}" text-anchor="middle">rebaixo 2,64 (frente) a 2,92 (fundo)</text>`);
   p.push(`<text class="mut" x="${Y(1.35)}" y="${Z(2.0)}" text-anchor="middle" style="font-size:10px">adesivo (parede esq.)</text>`);
   p.push(`<text class="lblb" x="${ox2}" y="38">CORTE A–A em x = 2,50 m (frente à esquerda)</text>`);
   p.push('</svg>');
@@ -669,8 +669,8 @@ function init3D() {
     ['INOVAÇÃO', 'TECNOLOGIA', 'PARCERIA'].forEach((t, i) => c.fillText(t, w / 2, 460 + i * 100)); c.fillStyle = YELH; c.fillText('CRESCIMENTO', w / 2, 760);
   });
   const taglineTex = canvasTex(750, 250, (c, w, h) => {
-    c.clearRect(0, 0, w, h); c.font = '600 54px Arial,Helvetica,sans-serif'; c.fillStyle = '#fff'; c.textAlign = 'left';
-    c.fillText('TECNOLOGIA', 10, 70); c.fillText('QUE IMPULSIONA', 10, 130); c.fillStyle = YELH; c.font = '800 56px Arial,Helvetica,sans-serif'; c.fillText('O SEU FUTURO', 10, 195); c.fillRect(10, 218, 150, 7);
+    c.clearRect(0, 0, w, h); c.font = '800 64px Arial,Helvetica,sans-serif'; c.fillStyle = '#fff'; c.textAlign = 'left';
+    c.fillText('TECNOLOGIA', 10, 66); c.fillText('QUE IMPULSIONA', 10, 134); c.fillStyle = YELH; c.font = '800 66px Arial,Helvetica,sans-serif'; c.fillText('O SEU FUTURO', 10, 204); c.fillRect(10, 224, 170, 8);
   });
   const screenTex = (lw, lh, size, font) => canvasTex(lw, lh, (c, w, h) => {
     const g = c.createLinearGradient(0, 0, w, h); g.addColorStop(0, '#051a4a'); g.addColorStop(0.5, '#0c49c0'); g.addColorStop(1, '#0a2f86'); c.fillStyle = g; c.fillRect(0, 0, w, h);
@@ -763,12 +763,12 @@ function init3D() {
   bx(0, 5, 0, 0.30, 2.55, 3.00, sideMats(tealM, headerFace));
   const hdrZ = 2 - 0.0, hdrMid = 2.775;
   const halo = new THREE.Mesh(new THREE.PlaneGeometry(5, 0.45), new THREE.MeshBasicMaterial({ map: haloTex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false, opacity: 0.95 }));
-  halo.position.set(0, hdrMid, hdrZ + 0.0015); S.add(halo);
+  halo.position.set(0, hdrMid, hdrZ + 0.0015); halo.scale.set(0.84, 0.84, 1); S.add(halo);
   const layers = 7, dz = 0.0065;
   for (let i = 0; i < layers; i++) {
     const t = i / (layers - 1), front = i === layers - 1;
     const m = new THREE.MeshStandardMaterial({ map: lettersTex, alphaTest: 0.5, color: C(front ? 0xffffff : new THREE.Color().setRGB(0.55 + 0.3 * t, 0.58 + 0.3 * t, 0.6 + 0.3 * t).getHex()), roughness: front ? 0.3 : 0.6, metalness: front ? 0.1 : 0.0, emissiveMap: front ? lettersTex : null, emissive: front ? C(0xbfe4ff) : C(0x000000), emissiveIntensity: front ? 0.75 : 0 });
-    const pl = new THREE.Mesh(new THREE.PlaneGeometry(5, 0.45), m); pl.position.set(0, hdrMid, hdrZ + 0.004 + i * dz); S.add(pl);
+    const pl = new THREE.Mesh(new THREE.PlaneGeometry(5, 0.45), m); pl.position.set(0, hdrMid, hdrZ + 0.004 + i * dz); pl.scale.set(0.84, 0.84, 1); S.add(pl);
   }
   // fitas de LED: sob a testeira e no topo do vão
   addLED(0.03, 4.97, -0.006, 0.018, 2.55, 2.58);
@@ -828,12 +828,19 @@ function init3D() {
   const cm = mat(0xf4f3ee, { roughness: 0.9, side: THREE.FrontSide }), tr = STAND.tray, cz = STAND.ceilZ;
   const flat = (x0, x1, y0, y1, z, m) => { const me = new THREE.Mesh(new THREE.PlaneGeometry(x1 - x0, y1 - y0).rotateX(Math.PI / 2), m); me.position.copy(P((x0 + x1) / 2, (y0 + y1) / 2, z)); me.receiveShadow = true; ceilG.add(me); };
   flat(0.15, 4.85, 0.30, tr.y0, cz, cm); flat(0.15, 4.85, tr.y1, 3.90, cz, cm); flat(0.15, tr.x0, tr.y0, tr.y1, cz, cm); flat(tr.x1, 4.85, tr.y0, tr.y1, cz, cm);
-  flat(tr.x0, tr.x1, tr.y0, tr.y1, STAND.trayZ, mat(0xfbfaf6, { roughness: 0.9, emissive: C(0xcfc6b0), emissiveIntensity: 0.4 }));
-  const mz = (cz + STAND.trayZ) / 2, tw = tr.x1 - tr.x0, td = tr.y1 - tr.y0;
-  const sidePl = (w, pos, ry) => { const me = new THREE.Mesh(new THREE.PlaneGeometry(w, STAND.trayZ - cz), mat(0xf4f3ee, { side: THREE.DoubleSide, roughness: 0.9 })); me.position.copy(pos); me.rotation.y = ry; ceilG.add(me); };
-  sidePl(tw, P((tr.x0 + tr.x1) / 2, tr.y0, mz), 0); sidePl(tw, P((tr.x0 + tr.x1) / 2, tr.y1, mz), 0); sidePl(td, P(tr.x0, (tr.y0 + tr.y1) / 2, mz), Math.PI / 2); sidePl(td, P(tr.x1, (tr.y0 + tr.y1) / 2, mz), Math.PI / 2);
-  [[tr.x0, tr.x1, tr.y0, tr.y0 + 0.03], [tr.x0, tr.x1, tr.y1 - 0.03, tr.y1], [tr.x0, tr.x0 + 0.03, tr.y0, tr.y1], [tr.x1 - 0.03, tr.x1, tr.y0, tr.y1]]
-    .forEach((r) => bx(r[0], r[1], r[2], r[3], STAND.trayZ - 0.02, STAND.trayZ - 0.005, ledM, { parent: ceilG, shadow: false }));
+  // rebaixo (relevo para cima): borda da frente e laterais baixas, parte de trás (fundo) bem mais alta -> piso inclinado
+  const zF = 2.64, zB = 2.92, zAt = (y) => zF + (zB - zF) * (y - tr.y0) / (tr.y1 - tr.y0);
+  const quad = (pts, m) => { const g = new THREE.BufferGeometry(), v = []; [0, 1, 2, 0, 2, 3].forEach((k) => v.push(pts[k].x, pts[k].y, pts[k].z)); g.setAttribute('position', new THREE.Float32BufferAttribute(v, 3)); g.computeVertexNormals(); const me = new THREE.Mesh(g, m); me.receiveShadow = true; ceilG.add(me); };
+  const trM = mat(0xfbfaf6, { roughness: 0.9, side: THREE.DoubleSide, emissive: C(0xcfc6b0), emissiveIntensity: 0.4 }), wlM = mat(0xf4f3ee, { side: THREE.DoubleSide, roughness: 0.9 });
+  quad([P(tr.x0, tr.y0, zF), P(tr.x1, tr.y0, zF), P(tr.x1, tr.y1, zB), P(tr.x0, tr.y1, zB)], trM);
+  quad([P(tr.x0, tr.y0, cz), P(tr.x1, tr.y0, cz), P(tr.x1, tr.y0, zF), P(tr.x0, tr.y0, zF)], wlM);   // frente
+  quad([P(tr.x0, tr.y1, cz), P(tr.x1, tr.y1, cz), P(tr.x1, tr.y1, zB), P(tr.x0, tr.y1, zB)], wlM);   // fundo (alta)
+  quad([P(tr.x0, tr.y0, cz), P(tr.x0, tr.y1, cz), P(tr.x0, tr.y1, zB), P(tr.x0, tr.y0, zF)], wlM);   // lateral esq.
+  quad([P(tr.x1, tr.y0, cz), P(tr.x1, tr.y1, cz), P(tr.x1, tr.y1, zB), P(tr.x1, tr.y0, zF)], wlM);   // lateral dir.
+  bx(tr.x0, tr.x1, tr.y0, tr.y0 + 0.03, zF - 0.02, zF - 0.005, ledM, { parent: ceilG, shadow: false });
+  bx(tr.x0, tr.x1, tr.y1 - 0.03, tr.y1, zB - 0.02, zB - 0.005, ledM, { parent: ceilG, shadow: false });
+  for (let k = 0; k < 8; k++) { const ya = tr.y0 + (tr.y1 - tr.y0) * k / 8, yb = tr.y0 + (tr.y1 - tr.y0) * (k + 1) / 8, zz = zAt((ya + yb) / 2);
+    bx(tr.x0, tr.x0 + 0.03, ya, yb, zz - 0.02, zz - 0.005, ledM, { parent: ceilG, shadow: false }); bx(tr.x1 - 0.03, tr.x1, ya, yb, zz - 0.02, zz - 0.005, ledM, { parent: ceilG, shadow: false }); }
   [[tr.x0, tr.x1, tr.y0 - 0.002], [tr.x0, tr.x1, tr.y1 + 0.002]].forEach(([a, b, yy]) => { const g = new THREE.Mesh(new THREE.PlaneGeometry(b - a, 0.2), glowM(glowH, 0.25)); g.position.copy(P((a + b) / 2, yy, cz + 0.1)); ceilG.add(g); });
   const ringG = new THREE.TorusGeometry(0.062, 0.009, 8, 28).rotateX(Math.PI / 2), ringM = mat(0xdadada, { metalness: 0.9, roughness: 0.3 });
   STAND.spots.forEach(([x, y]) => {
@@ -892,7 +899,7 @@ function init3D() {
   const tvG = new THREE.Group(); S.add(tvG);
   bx(1.39, 2.61, 3.85, 3.895, 1.45, 2.14, mat(0x0b0b0c, { roughness: 0.3, metalness: 0.4 }), { parent: tvG });
   const tvScr = new THREE.Mesh(new THREE.PlaneGeometry(1.19, 0.665), new THREE.MeshStandardMaterial({ map: screenTex(960, 540, 120, 104), emissiveMap: screenTex(960, 540, 120, 104), emissive: C(0xffffff), emissiveIntensity: 0.95, roughness: 0.12, color: C(0x222222) })); tvScr.position.copy(P(2.0, 3.848, 1.795)); tvG.add(tvScr);
-  const tag = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 0.5), new THREE.MeshBasicMaterial({ map: taglineTex, transparent: true, toneMapped: false })); tag.position.copy(P(3.50, 3.895, 1.80)); S.add(tag);
+  const tag = new THREE.Mesh(new THREE.PlaneGeometry(1.7, 0.567), new THREE.MeshBasicMaterial({ map: taglineTex, transparent: true, toneMapped: false })); tag.position.copy(P(3.56, 3.895, 1.80)); S.add(tag);
 
   /* ---------- mesas e cadeiras ---------- */
   const satin = mat(0xc9ced2, { metalness: 0.9, roughness: 0.32 }), topM = lac(0xfbfbf9);
