@@ -111,7 +111,7 @@
 
   <section id="elevacoes">
     <h2><span class="n">4</span>Elevações, paredes laterais e corte</h2>
-    <p class="lead">Alturas conferidas contra o limite de 3,00 m: paredes laterais e de fundo a 3,00 m, fachada da frente a 4,00 m (faixa do letreiro de 3,55 a 4,00 m, vão vazio abaixo dela (de 3,00 a 3,55 m) e fecho branco do forro de 2,55 a 3,00 m e empenas triangulares cheias nas laterais), forro a 2,55 m, aro suspenso a 2,74 m sob um teto recuado a 2,95 m, com furo central aberto.</p>
+    <p class="lead">Alturas conferidas contra o limite de 3,00 m: paredes laterais e de fundo a 3,00 m, fachada da frente a 4,00 m (faixa do letreiro de 3,55 a 4,00 m, vão vazio abaixo dela (de 3,00 a 3,55 m) e fecho branco do forro de 2,55 a 3,00 m e empenas triangulares cheias nas laterais), forro a 2,55 m, aro suspenso a 2,74 m, com vão aberto e teto fechado ao redor a 2,95 m.</p>
     <div class="two">
       <div class="panel svgwrap" id="elev"></div>
       <div class="panel svgwrap" id="sect"></div>
@@ -188,12 +188,12 @@ const STAND = {
     { z0: 3.0, floor: false, note: 'continuação da parede branca esquerda, de 3,00 a 4,00 m' });
   R('E10', 'Coluna da fachada, lado direito', 'Estrutura', 4.85, 0, 0.15, 0.30, 1.00,
     { z0: 3.0, floor: false, note: 'continuação da parede direita, de 3,00 a 4,00 m' });
-  R('E11', 'Empena triangular esquerda (azul, cheia)', 'Estrutura', 0, 0.30, 0.15, 1.60, 1.00,
+  R('E11', 'Empena triangular esquerda (branca, cheia)', 'Estrutura', 0, 0.30, 0.15, 1.60, 1.00,
     { z0: 3.0, floor: false, note: 'painel cheio em triângulo: 1,00 m de altura na fachada, descendo até 3,00 m a 1,90 m da frente' });
   R('E12', 'Empena triangular direita (azul, cheia)', 'Estrutura', 4.85, 0.30, 0.15, 1.60, 1.00,
     { z0: 3.0, floor: false, note: 'painel cheio em triângulo: 1,00 m de altura na fachada, descendo até 3,00 m a 1,90 m da frente' });
   R('E5', 'Forro com rebaixo central e LED', 'Estrutura', 0.15, 0.30, 4.70, 3.60, 0.15,
-    { z0: 2.55, floor: false, note: 'forro a 2,55 m; vão de 3,60 × 2,55 m com teto recuado a 2,95 m, aro suspenso a 2,74 m, duas pontes e furo central aberto' });
+    { z0: 2.55, floor: false, note: 'forro a 2,55 m; vão aberto de 3,60 × 2,55 m com aro suspenso a 2,74 m, duas pontes e teto fechado ao redor a 2,95 m' });
   R('E6', 'Cobertura (face superior do forro e vigas do topo)', 'Estrutura', 0.15, 0.30, 4.70, 3.60, 0.05,
     { z0: 2.95, floor: false, note: 'vigas de 2,95 a 3,00 m' });
   // Ripado: blocos de ripas espalhados (pitch irregular, determinístico). Cada ripa: 0,04 m de largura × 0,03 m de espessura × 2,55 m de altura.
@@ -386,7 +386,7 @@ function buildPlan() {
   // projeções aéreas (tracejadas)
   const t = STAND.tray, op = STAND.open;
   o.push(`<rect class="dash" x="${X(op.x0)}" y="${Y(op.y1)}" width="${(op.x1 - op.x0) * s}" height="${(op.y1 - op.y0) * s}"/><rect class="dash" x="${X(t.x0)}" y="${Y(t.y1)}" width="${(t.x1 - t.x0) * s}" height="${(t.y1 - t.y0) * s}"/><rect class="dash" x="${X(t.x0 + STAND.trayBand)}" y="${Y(t.y1 - STAND.trayBand)}" width="${(t.x1 - t.x0 - 2 * STAND.trayBand) * s}" height="${(t.y1 - t.y0 - 2 * STAND.trayBand) * s}"/>`);
-  o.push(`<text class="mut" x="${X(op.x0) + 6}" y="${Y(op.y0) - 5}">vão 3,60 × 2,55 com teto recuado (2,95) e furo central</text>`);
+  o.push(`<text class="mut" x="${X(op.x0) + 6}" y="${Y(op.y0) - 5}">vão aberto 3,60 × 2,55; teto fechado ao redor (2,95 m)</text>`);
   o.push(`<rect class="dash" x="${X(0)}" y="${Y(0.30)}" width="${W * s}" height="${0.30 * s}"/>`);
   STAND.spots.forEach(([x, y]) => o.push(`<g stroke="#9aa9b0" fill="none" stroke-width="1"><circle cx="${X(x)}" cy="${Y(y)}" r="6"/><line x1="${X(x) - 4}" y1="${Y(y)}" x2="${X(x) + 4}" y2="${Y(y)}"/><line x1="${X(x)}" y1="${Y(y) - 4}" x2="${X(x)}" y2="${Y(y) + 4}"/></g>`));
 
@@ -539,7 +539,6 @@ function buildElevations() {
   const t = STAND.tray, op = STAND.open, bw = STAND.trayBand, zt = STAND.trayZ, th = 0.10;
   const pl = (pts) => `<polygon points="${pts.map(([y, z]) => Y(y) + ',' + Z(z)).join(' ')}" fill="#f4f1ea" stroke="#1b2a30" stroke-width="1.2"/>`;
   p.push(pl([[0.30, 2.55], [op.y0, 2.55], [op.y0, 2.51], [0.30, 2.51]]) + pl([[op.y1, 2.55], [3.90, 2.55], [3.90, 2.51], [op.y1, 2.51]]));
-  p.push(pl([[op.y0, 2.95], [t.y0 + bw, 2.95], [t.y0 + bw, 2.91], [op.y0, 2.91]]) + pl([[t.y1 - bw, 2.95], [op.y1, 2.95], [op.y1, 2.91], [t.y1 - bw, 2.91]]));
   p.push(pl([[op.y0, 2.55 + th], [t.y0, zt], [t.y0, zt - th], [op.y0, 2.55]]) + pl([[t.y1, zt], [op.y1, 2.55 + th], [op.y1, 2.55], [t.y1, zt - th]]));
   p.push(pl([[t.y0, zt], [t.y0 + bw, zt], [t.y0 + bw, zt - th], [t.y0, zt - th]]) + pl([[t.y1 - bw, zt], [t.y1, zt], [t.y1, zt - th], [t.y1 - bw, zt - th]]));
   p.push(pl([[op.y0, 2.55], [op.y0, 2.95], [op.y0 + 0.03, 2.95], [op.y0 + 0.03, 2.55]]) + pl([[op.y1 - 0.03, 2.55], [op.y1 - 0.03, 2.95], [op.y1, 2.95], [op.y1, 2.55]]));
@@ -580,7 +579,7 @@ function buildElevations() {
       ['INOVAÇÃO', 'TECNOLOGIA', 'PARCERIA'].forEach((tx, i) => q.push(`<text x="${cxp}" y="${Z(1.78 - i * 0.22)}" text-anchor="middle" fill="#fff" style="font:800 14px sans-serif">${tx}</text>`));
       q.push(`<text x="${cxp}" y="${Z(1.78 - 3 * 0.22)}" text-anchor="middle" fill="${YEL}" style="font:800 14px sans-serif">CRESCIMENTO</text>`);
     }
-    q.push(`<polygon points="${Yw(0.30)},${Z(3)} ${Yw(1.90)},${Z(3)} ${Yw(0.30)},${Z(4)}" fill="${TEAL}" stroke="#0b2630" stroke-width="1.2"/>` + rw(0, 0.30, 3, 4, mirror ? '#0e3039' : '#f6f6f3', '#0b2630'));
+    q.push(`<polygon points="${Yw(0.30)},${Z(3)} ${Yw(1.90)},${Z(3)} ${Yw(0.30)},${Z(4)}" fill="${mirror ? TEAL : '#f6f6f3'}" stroke="#0b2630" stroke-width="1.2"/>` + rw(0, 0.30, 3, 4, mirror ? '#0e3039' : '#f6f6f3', '#0b2630'));
     // itens à frente da parede
     if (!mirror) { const a = byTag.Q1; q.push(rw(0.35, 0.89, 0, 1.75, '#fff', '#0b2630') + rw(0.40, 0.84, 0.65, 1.60, '#0e3946', '#000'));
       const b = byTag.D2; q.push(rw(b.y, b.y + b.d, 0, 0.40, '#1b1b1b', '#000') + plantBlob(Yw(cyOf(b)), Z(0.40), 0.30 * s, Z(1.70))); }
@@ -787,12 +786,12 @@ function init3D() {
   bx(0.15, 4.85, 0.30, 0.36, 2.55, 3.00, mat(0xf6f6f3, { roughness: 0.6, envMapIntensity: 0.6 }));   // fecho branco do forro, rente à borda frontal do forro (y 0,30); acima (3,00–3,55) fica vazio
   bx(0, 0.15, 0, 0.30, 3.00, STAND.facadeH, mat(0xf6f6f3, { roughness: 0.6, envMapIntensity: 0.6 }));   // coluna branca (continua a parede esquerda)
   bx(4.85, 5.0, 0, 0.30, 3.00, STAND.facadeH, tealM);
-  // empenas triangulares cheias (azul) nas laterais: do alto da fachada descem até o topo das paredes (3,00 m) a 1,90 m da frente
+  // empenas triangulares cheias nas laterais (esquerda branca, direita azul): do alto da fachada descem até o topo das paredes (3,00 m) a 1,90 m da frente
   [0, 4.85].forEach((x0) => {
     const sh = new THREE.Shape(); sh.moveTo(0.30, 3.0); sh.lineTo(1.90, 3.0); sh.lineTo(0.30, STAND.facadeH); sh.closePath();
     const g = new THREE.ExtrudeGeometry(sh, { depth: 0.15, bevelEnabled: false });
     g.applyMatrix4(new THREE.Matrix4().set(0, 0, 1, x0 - 2.5, 0, 1, 0, 0, -1, 0, 0, 2, 0, 0, 0, 1));
-    const tm = tealM.clone(); tm.side = THREE.DoubleSide; const me = new THREE.Mesh(g, tm); me.castShadow = true; me.receiveShadow = true; S.add(me);
+    const tm = (x0 === 0 ? mat(0xf6f6f3, { roughness: 0.6, envMapIntensity: 0.6 }) : tealM.clone()); tm.side = THREE.DoubleSide; const me = new THREE.Mesh(g, tm); me.castShadow = true; me.receiveShadow = true; S.add(me);
   });
   const hdrZ = 2 - 0.0, hdrMid = 3.775;
   const halo = new THREE.Mesh(new THREE.PlaneGeometry(5, 0.45), new THREE.MeshBasicMaterial({ map: haloTex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false, opacity: 0.95 }));
@@ -889,9 +888,9 @@ function init3D() {
   const rz = 2.95, rim = (x0, y0, x1, y1) => quad([P(x0, y0, cz), P(x1, y1, cz), P(x1, y1, rz), P(x0, y0, rz)], wlM);
   rim(op.x0, op.y0, op.x0, op.y1); rim(op.x1, op.y0, op.x1, op.y1);
   rim(op.x0, op.y0, op.x1, op.y0); rim(op.x0, op.y1, op.x1, op.y1);
-  // teto recuado (2,95 m) que preenche o espaço entre as paredes do vão e o aro; só o furo central (dentro do aro) fica aberto
-  { const hx0 = tr.x0 + bw, hx1 = tr.x1 - bw, hy0 = tr.y0 + bw, hy1 = tr.y1 - bw, zr = 2.95;
-    flat(op.x0, op.x1, op.y0, hy0, zr, cm); flat(op.x0, op.x1, hy1, op.y1, zr, cm); flat(op.x0, hx0, hy0, hy1, zr, cm); flat(hx1, op.x1, hy0, hy1, zr, cm); }
+  // teto fechado ao redor do vão: faixa plana a 2,95 m (rente ao topo das paredes do vão) entre as vigas do perímetro e o vão; o vão (e o aro suspenso) continua aberto
+  { const zr = 2.95;
+    flat(0.15, 4.85, 0.30, op.y0, zr, cm); flat(0.15, 4.85, op.y1, 3.90, zr, cm); flat(0.15, op.x0, op.y0, op.y1, zr, cm); flat(op.x1, 4.85, op.y0, op.y1, zr, cm); }
   // fita de LED na borda do vão (no forro)
   // teto do pavilhão visto pelo vão (estrutura escura)
   const hallTex = canvasTex(512, 512, (c, w, h) => { c.fillStyle = '#1d242b'; c.fillRect(0, 0, w, h); c.strokeStyle = '#3b4650'; c.lineWidth = 5; for (let k = 0; k <= 8; k++) { c.beginPath(); c.moveTo(k * 64, 0); c.lineTo(k * 64, h); c.moveTo(0, k * 64); c.lineTo(w, k * 64); c.stroke(); } c.strokeStyle = '#2b343c'; c.lineWidth = 3; for (let k = -8; k < 8; k++) { c.beginPath(); c.moveTo(k * 64, 0); c.lineTo(k * 64 + 512, 512); c.stroke(); } });
