@@ -241,7 +241,7 @@ const STAND = {
   const ch = [
     ['C1', 'M2', 0.67, 2.135, 14], ['C2', 'M2', 0.79, 3.055, -9],
     ['C3', 'M3', 1.80, 3.50, 6], ['C4', 'M3', 1.73, 2.57, -5],
-    ['C5', 'M4', 2.82, 2.62, 7], ['C6', 'M4', 2.68, 1.68, -6],
+    ['C5', 'M4', 3.25, 2.33, 7], ['C6', 'M4', 2.27, 1.88, -6],
     ['C7', 'M5', 3.25, 3.60, -8], ['C8', 'M5', 2.72, 3.15, 5]
   ];
   ch.forEach(([tag, mesa, cx, cy, tilt]) => {
@@ -987,11 +987,10 @@ function init3D() {
   /* ---------- sofá em L (canto direito do fundo) + mesa de centro ---------- */
   { const sofaM = mat(0xffffff, { map: fabricTex, roughness: 0.95, bumpMap: fabricTex, bumpScale: 0.04, color: C(0xd8d4cc) }), sofaD = mat(0xffffff, { map: fabricTex, roughness: 0.95, color: C(0xc9c4ba) });
     const s1 = byTag.S1, X0 = s1.x, X1 = s1.x + s1.w, Y0 = s1.y, Y1 = s1.y + s1.d, XS = 4.20, YM = 3.20, tk = 0.16, P2 = { parent: S };
-    // peça única em L: base, assento (duas almofadas contínuas), encosto nas duas paredes e braços nas pontas
+    // peça única em L: base, assento (duas almofadas contínuas), encosto nas duas paredes, sem braços nas pontas
     bx(X0, X1, YM, Y1, 0.08, 0.30, sofaD, P2); bx(XS, X1, Y0, YM, 0.08, 0.30, sofaD, P2);
     bx(X0 + 0.01, X1 - tk, YM + 0.01, Y1 - tk, 0.30, 0.42, sofaM, P2); bx(XS + 0.01, X1 - tk, Y0 + 0.01, YM + 0.01, 0.30, 0.42, sofaM, P2);
     bx(X0, X1, Y1 - tk, Y1, 0.30, 0.85, sofaM, P2); bx(X1 - tk, X1, Y0, Y1, 0.30, 0.85, sofaM, P2);
-    bx(X0, X0 + 0.14, YM, Y1 - tk, 0.30, 0.62, sofaM, P2); bx(XS, X1 - tk, Y0, Y0 + 0.14, 0.30, 0.62, sofaM, P2);
     mkAO((X0 + X1) / 2 + 0.1, (Y0 + Y1) / 2, 1.6, 2.0, 0.5); }
 
   /* ---------- plantas finas ---------- */
