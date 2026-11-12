@@ -662,15 +662,16 @@ function init3D() {
     const g = c.createLinearGradient(1262, 0, 0, 1113.7); g.addColorStop(0, LG.g0); g.addColorStop(1, LG.g1);
     c.fillStyle = g; c.fill(gearPath); c.fillStyle = tee || '#fff'; c.fill(teePath); c.restore();
   }
-  function logoWord(c, w, h, bg, size, font, mono) {
+  function logoWord(c, w, h, bg, size, font, mono, stroke) {
     c.font = `900 ${font}px "Arial Black",Arial,Helvetica,sans-serif`; c.textBaseline = 'middle';
     const tw = c.measureText('TECNOSOFT').width, iw = size * LGW, gap = size * 0.14, tot = iw + gap + tw, x0 = (w - tot) / 2;
     drawLogo(c, x0 + iw / 2, h / 2, size); c.fillStyle = mono || '#fff'; c.fillText('TECNOSOFT', x0 + iw + gap, h / 2 + font * 0.04);
+    if (stroke) { c.lineWidth = stroke; c.lineJoin = 'round'; c.strokeStyle = mono || '#fff'; c.strokeText('TECNOSOFT', x0 + iw + gap, h / 2 + font * 0.04); }
   }
   const noiseTex = (n, rep, a = 1) => { const t = canvasTex(n, n, (c, w, h) => { const d = c.createImageData(w, h); for (let i = 0; i < d.data.length; i += 4) { const v = 128 + (Math.random() - 0.5) * 120 * a; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; } c.putImageData(d, 0, 0); }, false); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(rep[0], rep[1]); return t; };
   // letreiro: letras e logo separados do fundo (camadas em relevo + halo de LED)
-  const lettersTex = canvasTex(2000, 180, (c, w, h) => { c.clearRect(0, 0, w, h); logoWord(c, w, h, null, 150, 128); });
-  const haloTex = canvasTex(1000, 90, (c, w, h) => { c.clearRect(0, 0, w, h); c.save(); c.scale(0.5, 0.5); c.shadowColor = 'rgba(190,230,255,1)'; c.shadowBlur = 34; c.globalAlpha = 0.9; logoWord(c, 2000, 180, null, 150, 128, '#dff2ff'); c.restore(); });
+  const lettersTex = canvasTex(2000, 180, (c, w, h) => { c.clearRect(0, 0, w, h); logoWord(c, w, h, null, 150, 128, null, 9); });
+  const haloTex = canvasTex(1200, 360, (c, w, h) => { c.clearRect(0, 0, w, h); c.save(); c.translate(100, 135); c.scale(0.5, 0.5); c.shadowColor = 'rgba(190,230,255,1)'; c.shadowBlur = 110; c.globalAlpha = 0.95; logoWord(c, 2000, 180, null, 150, 128, '#dff2ff', 9); c.shadowBlur = 45; logoWord(c, 2000, 180, null, 150, 128, '#dff2ff', 9); c.restore(); });
   const headerBase = canvasTex(256, 64, (c, w, h) => { const g = c.createLinearGradient(0, 0, 0, h); g.addColorStop(0, '#17505e'); g.addColorStop(1, '#10394a'); c.fillStyle = g; c.fillRect(0, 0, w, h); }, true);
   const iconPaint = [
     (c, x, y) => { c.strokeRect(x - 22, y - 16, 44, 32); c.font = '700 22px monospace'; c.textAlign = 'center'; c.fillText('</>', x, y + 8); },
@@ -794,7 +795,7 @@ function init3D() {
     const tm = (x0 === 0 ? mat(0xf6f6f3, { roughness: 0.6, envMapIntensity: 0.6 }) : tealM.clone()); tm.side = THREE.DoubleSide; const me = new THREE.Mesh(g, tm); me.castShadow = true; me.receiveShadow = true; S.add(me);
   });
   const hdrZ = 2 - 0.0, hdrMid = (STAND.bandZ + STAND.facadeH) / 2;
-  const halo = new THREE.Mesh(new THREE.PlaneGeometry(5, 0.45), new THREE.MeshBasicMaterial({ map: haloTex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false, opacity: 0.95 }));
+  const halo = new THREE.Mesh(new THREE.PlaneGeometry(6, 1.8), new THREE.MeshBasicMaterial({ map: haloTex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false, opacity: 0.95 }));
   halo.position.set(0, hdrMid, hdrZ + 0.0015); halo.scale.set(1.15, 1.15, 1); S.add(halo);
   const layers = 7, dz = 0.0065;
   for (let i = 0; i < layers; i++) {
