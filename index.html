@@ -884,7 +884,11 @@ function init3D() {
   const L = (x0, x1, y0, y1, z) => bx(x0, x1, y0, y1, z - 0.012, z, ledM, { parent: ceilG, shadow: false });
   { const m = bw / 2, zl = zT - 0.10, h = 0.015;   // um único LED no meio da faixa do aro
     L(tr.x0 + m - h, tr.x1 - m + h, tr.y0 + m - h, tr.y0 + m + h, zl); L(tr.x0 + m - h, tr.x1 - m + h, tr.y1 - m - h, tr.y1 - m + h, zl);
-    L(tr.x0 + m - h, tr.x0 + m + h, tr.y0 + m, tr.y1 - m, zl); L(tr.x1 - m - h, tr.x1 - m + h, tr.y0 + m, tr.y1 - m, zl); }
+    L(tr.x0 + m - h, tr.x0 + m + h, tr.y0 + m, tr.y1 - m, zl); L(tr.x1 - m - h, tr.x1 - m + h, tr.y0 + m, tr.y1 - m, zl);
+    // brilho suave junto à fita (plano voltado para baixo, aditivo)
+    const G = (cx, cy, w, d, tx) => { const g = new THREE.Mesh(new THREE.PlaneGeometry(w, d).rotateX(Math.PI / 2), glowM(tx, 0.75)); g.position.copy(P(cx, cy, zl - 0.014)); ceilG.add(g); };
+    const lx = tr.x1 - tr.x0 - 2 * m + 0.16, ly = tr.y1 - tr.y0 - 2 * m + 0.16, cx = (tr.x0 + tr.x1) / 2, cy = (tr.y0 + tr.y1) / 2;
+    G(cx, tr.y0 + m, lx, 0.20, glowH); G(cx, tr.y1 - m, lx, 0.20, glowH); G(tr.x0 + m, cy, 0.20, ly, glowV); G(tr.x1 - m, cy, 0.20, ly, glowV); }
   // paredes do vão: sobem do forro até o topo (2,95 m), fechando o poço para não se ver o interior da estrutura
   const rz = 2.95, rim = (x0, y0, x1, y1) => quad([P(x0, y0, cz), P(x1, y1, cz), P(x1, y1, rz), P(x0, y0, rz)], wlM);
   rim(op.x0, op.y0, op.x0, op.y1); rim(op.x1, op.y0, op.x1, op.y1);
