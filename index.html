@@ -99,7 +99,7 @@
 
   <section id="itens">
     <h2><span class="n">3</span>Itens, posições e áreas em m²</h2>
-    <p class="lead">Posição medida a partir do canto frontal esquerdo. A área é a ocupada no piso; itens sobre o balcão, sobre as mesas, na parede ou suspensos não ocupam piso.</p>
+    <p class="lead">Posição medida a partir do canto frontal esquerdo. A área é a ocupada no piso; itens sobre o balcão, sobre as mesas, na parede ou suspensos não ocupam piso. A soma das paredes considera uma face de cada: laterais 4,00 × 3,00 m, fundo 4,70 × 3,00 m e fachada (testeira 4,70 × 1,45 m + colunas e empenas acima de 3,00 m).</p>
     <div class="cards" id="cards"></div>
     <div class="panel tbl">
       <table>
@@ -314,6 +314,10 @@ function quadrants(it) {
 }
 
 /* ===================== tabela e resumo de áreas ===================== */
+// área de parede (face voltada para o estande / corredor), em m²
+const WALLS = (() => { const H = STAND.H, fH = STAND.facadeH - STAND.bandZ;
+  return [['esquerda', STAND.D * H], ['direita', STAND.D * H], ['fundo', (STAND.W - 0.30) * H],
+    ['fachada', (STAND.W - 0.30) * fH + 2 * 0.15 * (STAND.facadeH - H) + 2 * (1.60 * (STAND.facadeH - H) / 2)]]; })();
 function buildTable() {
   const floor = STAND.items.filter((i) => i.floor);
   const g = (n) => unionArea(floor.filter((i) => i.group === n));
@@ -322,7 +326,8 @@ function buildTable() {
     ['Área total do estande', f2(total) + ' m²', '5,00 × 4,00 m'],
     ['Estrutura (paredes e ripado)', f2(g('Estrutura')) + ' m²', 'ocupa o piso'],
     ['Mobiliário, totem e vasos', f2(g('Mobiliário') + g('Equipamentos') + g('Decoração')) + ' m²', 'balcão, mesas, cadeiras, totem, plantas'],
-    ['Livre para circulação', f2(total - occ) + ' m²', f2(((total - occ) / total) * 100) + '% do estande']
+    ['Livre para circulação', f2(total - occ) + ' m²', f2(((total - occ) / total) * 100) + '% do estande'],
+    ['Paredes (soma das faces)', f2(WALLS.reduce((s, w) => s + w[1], 0)) + ' m²', WALLS.map((w) => w[0] + ' ' + f2(w[1])).join(' · ') + ' m²']
   ];
   $('#cards').innerHTML = cards.map((c) => `<div class="card"><div class="k">${c[0]}</div><div class="v">${c[1]}</div><div class="s">${c[2]}</div></div>`).join('');
   let rows = '';
