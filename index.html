@@ -111,7 +111,7 @@
 
   <section id="elevacoes">
     <h2><span class="n">4</span>Elevações, paredes laterais e corte</h2>
-    <p class="lead">Alturas conferidas contra o limite de 3,00 m: paredes laterais e de fundo a 3,00 m, fachada da frente a 4,00 m (faixa do letreiro de 3,55 a 4,00 m, vão vazio abaixo dela (de 3,00 a 3,55 m) e fecho branco do forro de 2,55 a 3,00 m e empenas triangulares cheias nas laterais), forro a 2,55 m, aro suspenso a 2,74 m, com vão aberto e teto fechado ao redor a 2,95 m.</p>
+    <p class="lead">Alturas conferidas contra o limite de 3,00 m: paredes laterais e de fundo a 3,00 m, fachada da frente a 4,00 m (faixa do letreiro de 2,95 a 4,00 m (1,05 m) e fecho branco do forro de 2,55 a 3,00 m logo abaixo, mais as empenas triangulares cheias nas laterais), forro a 2,55 m, aro suspenso a 2,74 m, com vão aberto e teto fechado ao redor a 2,95 m.</p>
     <div class="two">
       <div class="panel svgwrap" id="elev"></div>
       <div class="panel svgwrap" id="sect"></div>
@@ -129,13 +129,13 @@
     <p class="lead">O que veio de você, o que eu assumi e o que mudou em relação à imagem gerada por IA.</p>
     <div class="cols">
       <div class="panel"><h3>Medidas informadas</h3><ul>
-        <li>Estande de 5,00 × 4,00 × 3,00 m (largura × profundidade × altura); só a fachada da frente sobe a 4,00 m: faixa do letreiro de 0,45 m no alto, colunas nas pontas e empenas triangulares cheias (azuis) nas laterais.</li>
+        <li>Estande de 5,00 × 4,00 × 3,00 m (largura × profundidade × altura); só a fachada da frente sobe a 4,00 m: faixa do letreiro de 1,05 m no alto, colunas nas pontas e empenas triangulares cheias (azuis) nas laterais.</li>
         <li>Balcão de 1,80 × 0,50 × 1,00 m.</li>
         <li>Totem = TV de 43" em pé: tela 16:9 de 0,535 × 0,952 m; gabinete de 0,62 × 0,14 × 1,75 m.</li>
       </ul></div>
       <div class="panel"><h3>Medidas assumidas (ajustáveis)</h3><ul>
         <li>Balcão e vaso grande no limite da frente: 5 cm para dentro da linha do corredor (podem ir a 0 cm, se preferir). Balcão centralizado.</li>
-        <li>Paredes laterais e de fundo de 0,15 e 0,10 m; testeira de 0,45 m de altura.</li>
+        <li>Paredes laterais e de fundo de 0,15 e 0,10 m; testeira de 1,05 m de altura.</li>
         <li>TV de parede de 55" (1,22 × 0,69 m), centro a 1,80 m do piso, centrada em x = 2,00 m.</li><li>Totem encostado na parede esquerda, girado 45° (tela na diagonal, voltada para a frente/centro do estande); vaso grande à direita, junto ao corredor.</li><li>Corte branco/azul do balcão: diagonal de 78% (base) a 93% (topo) da largura, com faixa branca à direita e lateral direita branca.</li><li>Teto fechado por cima (laje de 0,05 m a 2,95 m); o forro e o rebaixo ficam por baixo.</li>
         <li>Mesas bistrô Ø 0,60 × 0,72 m; cadeiras 0,45 × 0,45 × 0,80 m.</li>
         <li>Monitor de 22", dois smartphones em suporte e cinco vasinhos.</li>
@@ -160,7 +160,7 @@ const STAND = {
   trayZ: 2.74,            // altura do rebaixo central do forro
   open: { x0: 0.70, x1: 4.30, y0: 0.75, y1: 3.30 },   // vão aberto do forro
   tray: { x0: 1.35, x1: 3.65, y0: 1.15, y1: 2.90 },   // aro suspenso
-  trayBand: 0.18, bridgeX0: 2.30, bridgeX1: 2.70,
+  trayBand: 0.18, bandZ: 2.95, bridgeX0: 2.30, bridgeX1: 2.70,
   spots: [[1.0, 0.52], [2.0, 0.52], [3.0, 0.52], [4.0, 0.52],
           [1.0, 3.60], [2.0, 3.60], [3.0, 3.60], [4.0, 3.60],
           [0.43, 1.70], [4.57, 1.70]],
@@ -180,10 +180,10 @@ const STAND = {
   R('E1', 'Parede lateral esquerda (até o fundo)', 'Estrutura', 0, 0, 0.15, 4.00, 3.00);
   R('E2', 'Parede lateral direita (até o fundo)', 'Estrutura', 4.85, 0, 0.15, 4.00, 3.00);
   R('E3', 'Parede de fundo', 'Estrutura', 0.15, 3.90, 4.70, 0.10, 3.00);
-  R('E4', 'Testeira (faixa frontal com letreiro)', 'Estrutura', 0.15, 0, 4.70, 0.30, 0.45,
-    { z0: 3.55, floor: false, note: 'faixa de 0,45 m no alto da fachada, de 3,55 a 4,00 m; abaixo dela a fachada fica vazia (sem painel)' });
+  R('E4', 'Testeira (faixa frontal com letreiro)', 'Estrutura', 0.15, 0, 4.70, 0.30, 1.05,
+    { z0: 2.95, floor: false, note: 'faixa de 1,05 m no alto da fachada, de 2,95 a 4,00 m, com o letreiro centralizado; LED amarelo sob ela e na divisão com a parede esquerda' });
   R('E13', 'Fecho branco do forro (frente)', 'Estrutura', 0.15, 0.30, 4.70, 0.06, 0.45,
-    { z0: 2.55, floor: false, note: 'de 2,55 a 3,00 m, rente à borda frontal do forro; entre 3,00 e 3,55 m a fachada fica vazia' });
+    { z0: 2.55, floor: false, note: 'de 2,55 a 3,00 m, rente à borda frontal do forro, logo abaixo da testeira' });
   R('E9', 'Coluna da fachada, lado esquerdo (branca)', 'Estrutura', 0, 0, 0.15, 0.30, 1.00,
     { z0: 3.0, floor: false, note: 'continuação da parede branca esquerda, de 3,00 a 4,00 m' });
   R('E10', 'Coluna da fachada, lado direito', 'Estrutura', 4.85, 0, 0.15, 0.30, 1.00,
@@ -432,7 +432,7 @@ function buildPlan() {
   o.push(tagSvg(X(cxOf(d1)) + 34, Y(cyOf(d1)) - 34, 'D1', 10), tagSvg(X(cxOf(byTag.D2)) + 28, Y(cyOf(byTag.D2)) - 30, 'D2', 10), tagSvg(X(4.50), Y(3.50), 'S1', 10));
   o.push(tagSvg(X(0.15) + 22, Y(cyOf(byTag.V1)), 'V1', 10), tagSvg(X(4.85) - 22, Y(cyOf(byTag.V2)), 'V2', 10));
   o.push(`<text class="mut" x="${X(1.39)}" y="${Y(3.85) + 14}" style="font-size:10px">TV 55" na parede (h 1,45–2,14)</text>`);
-  o.push(`<text class="mut" x="${X(3.50)}" y="${Y(0.15) + 4}" style="font-size:10px">faixa do letreiro h 3,55–4,00 (projeção)</text>`);
+  o.push(`<text class="mut" x="${X(3.50)}" y="${Y(0.15) + 4}" style="font-size:10px">faixa do letreiro h 2,95–4,00 (projeção)</text>`);
 
   // contorno e abertura frontal
   o.push(`<rect x="${X(0)}" y="${Y(D)}" width="${W * s}" height="${D * s}" fill="none" stroke="#12404c" stroke-width="2.4"/>`);
@@ -510,14 +510,14 @@ function buildElevations() {
   [1.95, 3.05].forEach((x) => o.push(R(x - 0.04, x + 0.04, 1.01, 1.17, '#8fb8e8', '#2c5a8c')));
   o.push(plantBlob(X(1.80), Z(1.10), 0.16 * s, Z(1.30)));
   // testeira
-  o.push(R(0.15, 4.85, 2.55, 3.00, '#f6f6f3', '#0b2630') + R(0.15, 4.85, 3.55, 4.00, TEAL, '#0b2630') + R(0, 0.15, 3.00, 4.00, '#f6f6f3', '#0b2630') + R(4.85, 5, 3.00, 4.00, '#0e3039', '#0b2630') + R(0.15, 0.17, 3.55, 4.0, YEL, YEL));
-  o.push(logoSvg(X(2.5) - 112, Z(3.775), 30) + `<text x="${X(2.5) - 78}" y="${Z(3.775) + 9}" text-anchor="start" fill="#fff" style="font:900 30px sans-serif;letter-spacing:.04em">TECNOSOFT</text><line x1="${X(0.15)}" y1="${Z(3.55)}" x2="${X(4.85)}" y2="${Z(3.55)}" stroke="${YEL}" stroke-width="3"/>`);
+  o.push(R(0.15, 4.85, 2.55, 3.00, '#f6f6f3', '#0b2630') + R(0.15, 4.85, 2.95, 4.00, TEAL, '#0b2630') + R(0, 0.15, 3.00, 4.00, '#f6f6f3', '#0b2630') + R(4.85, 5, 3.00, 4.00, '#0e3039', '#0b2630') + R(0.15, 0.17, 2.95, 4.0, YEL, YEL));
+  o.push(logoSvg(X(2.5) - 112, Z(3.475), 30) + `<text x="${X(2.5) - 78}" y="${Z(3.475) + 9}" text-anchor="start" fill="#fff" style="font:900 30px sans-serif;letter-spacing:.04em">TECNOSOFT</text><line x1="${X(0.15)}" y1="${Z(2.95)}" x2="${X(4.85)}" y2="${Z(2.95)}" stroke="${YEL}" stroke-width="3"/>`);
   o.push(`<line x1="${X(-0.2)}" y1="${Z(0)}" x2="${X(5.2)}" y2="${Z(0)}" stroke="#12404c" stroke-width="2"/>`);
   const yb = Z(0) + 38;
   o.push(ext(X(0), Z(0) + 4, X(0), yb + 4) + ext(X(5), Z(0) + 4, X(5), yb + 4) + dimH(X(0), X(5), yb, '5,00 m', 14));
   const xr = X(5) + 38;
-  [4, 3.55, 3, 2.55, 0].forEach((z) => o.push(ext(X(5) + 4, Z(z), xr + 4, Z(z))));
-  o.push(dimV(xr, Z(3.55), Z(4), '0,45') + dimV(xr, Z(3), Z(3.55), '0,55 (vazio)') + dimV(xr, Z(2.55), Z(3), '0,45') + dimV(xr, Z(0), Z(2.55), '2,55'));
+  [4, 2.95, 2.55, 0].forEach((z) => o.push(ext(X(5) + 4, Z(z), xr + 4, Z(z))));
+  o.push(dimV(xr, Z(2.95), Z(4), '1,05') + dimV(xr, Z(2.55), Z(2.95), '0,40') + dimV(xr, Z(0), Z(2.55), '2,55'));
   const xr2 = xr + 34; [4, 3, 0].forEach((z) => o.push(ext(xr, Z(z), xr2 + 40, Z(z)))); o.push(dimV(xr2, Z(0), Z(3), '3,00 m (paredes)', 13)); o.push(dimV(xr2 + 34, Z(0), Z(4), '4,00 m (fachada)', 13));
   o.push(`<text class="lblb" x="${ox}" y="38">ELEVAÇÃO FRONTAL (vista do corredor)</text>`);
   o.push('</svg>');
@@ -535,7 +535,7 @@ function buildElevations() {
   p.push(Rr(0.05, 0.45, 0, 0.60, GR, GS) + plantBlob(Y(0.25), Z(0.60), 0.35 * s, Z(1.50), '#b9c9bd'));
   p.push(Rr(3.375, 3.725, 0, 0.40, GR, GS) + plantBlob(Y(3.55), Z(0.40), 0.4 * s, Z(1.70), '#b9c9bd'));
   // cortados (x = 2,50)
-  p.push(Rr(3.90, 4.0, 0, 3.0, TEAL, '#0b2630') + Rr(0, 0.30, 3.55, 4.0, TEAL, '#0b2630') + Rr(0.30, 0.36, 2.55, 3.0, '#f6f6f3', '#0b2630'));
+  p.push(Rr(3.90, 4.0, 0, 3.0, TEAL, '#0b2630') + Rr(0, 0.30, 2.95, 4.0, TEAL, '#0b2630') + Rr(0.30, 0.36, 2.55, 3.0, '#f6f6f3', '#0b2630'));
   const t = STAND.tray, op = STAND.open, bw = STAND.trayBand, zt = STAND.trayZ, th = 0.10;
   const pl = (pts) => `<polygon points="${pts.map(([y, z]) => Y(y) + ',' + Z(z)).join(' ')}" fill="#f4f1ea" stroke="#1b2a30" stroke-width="1.2"/>`;
   p.push(pl([[0.30, 2.55], [op.y0, 2.55], [op.y0, 2.51], [0.30, 2.51]]) + pl([[op.y1, 2.55], [3.90, 2.55], [3.90, 2.51], [op.y1, 2.51]]));
@@ -550,8 +550,8 @@ function buildElevations() {
   p.push(ext(Y(0), Z(0) + 4, Y(0), yb2 + 4) + ext(Y(4), Z(0) + 4, Y(4), yb2 + 4) + dimH(Y(0), Y(4), yb2, '4,00 m', 14));
   const yb3 = Z(0) + 74; [0, 0.05, 0.55, 2.6, 4].forEach((y) => p.push(ext(Y(y), Z(0) + 40, Y(y), yb3 + 4)));
   p.push(dimH(Y(0), Y(0.05), yb3, '0,05', 8) + dimH(Y(0.05), Y(0.55), yb3, '0,50', 11) + dimH(Y(0.55), Y(2.6), yb3, '2,05') + dimH(Y(2.6), Y(4), yb3, '1,40'));
-  const xr3 = Y(4) + 38; [3.55, 3, 2.55, 0].forEach((z) => p.push(ext(Y(4) + 4, Z(z), xr3 + 4, Z(z))));
-  p.push(dimV(xr3, Z(3), Z(3.55), '0,55 (vazio)') + dimV(xr3, Z(2.55), Z(3), '0,45') + dimV(xr3, Z(0), Z(2.55), '2,55'));
+  const xr3 = Y(4) + 38; [2.95, 2.55, 0].forEach((z) => p.push(ext(Y(4) + 4, Z(z), xr3 + 4, Z(z))));
+  p.push(dimV(xr3, Z(2.55), Z(2.95), '0,40') + dimV(xr3, Z(0), Z(2.55), '2,55'));
   const xr4 = xr3 + 34; [4, 3, 0].forEach((z) => p.push(ext(xr3, Z(z), xr4 + 38, Z(z)))); p.push(dimV(xr4, Z(0), Z(3), '3,00 m', 13)); p.push(dimV(xr4 + 34, Z(0), Z(4), '4,00 m (fachada)', 13));
   p.push(dimV(Y(0.04), Z(0), Z(1.0), '1,00', 11) + dimV(Y(1.6), Z(0), Z(0.80), '0,80', 11));
   p.push(`<text class="mut" x="${Y(2.2)}" y="${Z(zt) - 14}" text-anchor="middle">vão aberto + aro suspenso preso por pontes</text>`);
@@ -782,7 +782,7 @@ function init3D() {
   // testeira: viga com face lisa + letras em relevo + halo de LED
   const headerFace = mat(0xffffff, { map: headerBase, roughness: 0.45, envMapIntensity: 0.7 });
   // fachada: faixa de 0,45 m no alto (3,55–4,00 m) com o letreiro; abaixo dela o vão fica livre; colunas laterais seguem até 4,00 m
-  bx(0.15, 4.85, 0, 0.30, 3.55, STAND.facadeH, sideMats(tealM, headerFace));
+  bx(0.15, 4.85, 0, 0.30, STAND.bandZ, STAND.facadeH, sideMats(tealM, headerFace));
   bx(0.15, 4.85, 0.30, 0.36, 2.55, 3.00, mat(0xf6f6f3, { roughness: 0.6, envMapIntensity: 0.6 }));   // fecho branco do forro, rente à borda frontal do forro (y 0,30); acima (3,00–3,55) fica vazio
   bx(0, 0.15, 0, 0.30, 3.00, STAND.facadeH, mat(0xf6f6f3, { roughness: 0.6, envMapIntensity: 0.6 }));   // coluna branca (continua a parede esquerda)
   bx(4.85, 5.0, 0, 0.30, 3.00, STAND.facadeH, tealM);
@@ -793,7 +793,7 @@ function init3D() {
     g.applyMatrix4(new THREE.Matrix4().set(0, 0, 1, x0 - 2.5, 0, 1, 0, 0, -1, 0, 0, 2, 0, 0, 0, 1));
     const tm = (x0 === 0 ? mat(0xf6f6f3, { roughness: 0.6, envMapIntensity: 0.6 }) : tealM.clone()); tm.side = THREE.DoubleSide; const me = new THREE.Mesh(g, tm); me.castShadow = true; me.receiveShadow = true; S.add(me);
   });
-  const hdrZ = 2 - 0.0, hdrMid = 3.775;
+  const hdrZ = 2 - 0.0, hdrMid = (STAND.bandZ + STAND.facadeH) / 2;
   const halo = new THREE.Mesh(new THREE.PlaneGeometry(5, 0.45), new THREE.MeshBasicMaterial({ map: haloTex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false, opacity: 0.95 }));
   halo.position.set(0, hdrMid, hdrZ + 0.0015); halo.scale.set(0.84, 0.84, 1); S.add(halo);
   const layers = 7, dz = 0.0065;
@@ -803,8 +803,8 @@ function init3D() {
     const pl = new THREE.Mesh(new THREE.PlaneGeometry(5, 0.45), m); pl.position.set(0, hdrMid, hdrZ + 0.004 + i * dz); pl.scale.set(0.84, 0.84, 1); S.add(pl);
   }
   // fitas de LED: sob a testeira e no topo do vão
-  addLED(0.15, 4.85, -0.006, 0.018, 3.52, 3.55);
-  addLED(0.15, 0.17, -0.006, 0.010, 3.55, STAND.facadeH - 0.015);
+  addLED(0.15, 4.85, -0.006, 0.018, STAND.bandZ - 0.03, STAND.bandZ);
+  addLED(0.15, 0.17, -0.006, 0.010, STAND.bandZ, STAND.facadeH - 0.015);
   // paredes laterais até o fundo e parede de fundo
   bx(0, 0.15, 0, 4.00, 0, 3.00, mat(0xf6f6f3, { roughness: 0.6, envMapIntensity: 0.6 })); bx(4.85, 5.00, 0, 4.00, 0, 3.00, tealM);
   bx(0.15, 4.85, 3.90, 4.00, 0, 3.00, sideMats(tealM, washM));
@@ -812,9 +812,9 @@ function init3D() {
   bx(0.15, 4.85, -0.006, 0.02, 0, 0.012, ledM, { shadow: false });
   // brilhos (additive) dos LEDs principais
   const gl = (w, h, tx, op, pos, ry = 0, rx = 0) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), glowM(tx, op)); m.position.copy(pos); m.rotation.set(rx, ry, 0); S.add(m); return m; };
-  gl(4.7, 0.20, glowH, 0.55, P(2.5, -0.012, 3.535));                    // sob a testeira
+  gl(4.7, 0.20, glowH, 0.55, P(2.5, -0.012, STAND.bandZ - 0.015));                    // sob a testeira
   gl(4.7, 0.34, glowH, 0.5, P(2.5, 0.16, 0.003), 0, -Math.PI / 2);      // piso, frente
-  gl(0.16, 0.44, glowV, 0.4, P(0.16, -0.012, 3.775));
+  gl(0.16, STAND.facadeH - STAND.bandZ - 0.02, glowV, 0.4, P(0.16, -0.012, hdrMid));
   [1, 2, 3, 4].forEach((x) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(1.0, 1.0), glowM(poolTex, 0.3)); m.position.copy(P(x, 3.894, 2.38)); S.add(m); });   // luz dos spots lavando o fundo
 
   /* ---------- ripado: painéis contínuos com LED amarelo nas bordas verticais ---------- */
